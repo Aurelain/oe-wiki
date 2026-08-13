@@ -7,8 +7,8 @@ import esbuild from 'esbuild';
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const DESTINATION_DIR = 'docs';
-const args = Array.from(process.argv);
-const isDev = args.includes('--dev');
+const argv = Array.from(process.argv);
+const isDev = argv.includes('--dev');
 
 // =====================================================================================================================
 //  P U B L I C
@@ -16,13 +16,14 @@ const isDev = args.includes('--dev');
 /**
  *
  */
-async function build() {
-    const {target, destinationDir} = decidePaths();
+async function build(...parameters) {
+    const now = Date.now();
+    const {target, destinationDir} = decidePaths([...parameters, ...argv]);
 
     removeOldJsFileFrom(destinationDir); // also removes any *.map file
     const outfile = await createBuild(target, destinationDir);
 
-    displaySummary(outfile);
+    displaySummary(outfile, Date.now() - now);
 }
 
 // =====================================================================================================================
@@ -31,7 +32,7 @@ async function build() {
 /**
  *
  */
-function decidePaths() {
+function decidePaths(args) {
     const target = args.find((arg) => arg.startsWith('src'));
     const parentDirName = path.basename(path.dirname(target));
     const destinationDir = path.join(DESTINATION_DIR, parentDirName);
@@ -72,14 +73,15 @@ async function createBuild(target, outdir) {
 /**
  *
  */
-function displaySummary(outfile) {
+function displaySummary(outfile, milliseconds) {
     const name = path.basename(outfile);
     const size = (fs.statSync(outfile).size / 1024).toFixed(2);
-    const duration = (performance.now() / 1000).toFixed(2);
-    console.log(`Build created "${name}" (${size} KB) in ${duration} seconds.`);
+    // const duration = (milliseconds / 1000).toFixed(2);
+    console.log(`Build created "${name}" (${size} KB) in ${milliseconds} ms.`);
 }
 
 // =====================================================================================================================
 //  R U N
 // =====================================================================================================================
-build();
+process.argv.join('').includes('build') && (await build());
+export default build;
