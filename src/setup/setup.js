@@ -27,6 +27,11 @@ async function setup() {
     // External scripts:
     const config = parseConfig(configText);
     log('config:', config);
+    const worker = importWorker(config.parse);
+    setTimeout(() => {
+        log('Sending foo...');
+        worker.postMessage('foo');
+    }, 1000);
 }
 
 // =====================================================================================================================
@@ -44,6 +49,19 @@ function parseConfig(text) {
         return {};
     }
 }
+
+/**
+ *
+ */
+function importWorker(url) {
+    log('Loading parser...', url);
+    const worker = new Worker(`data:application/javascript,importScripts('${url}');`);
+    worker.onmessage = (event) => {
+        console.log('Received result:', event.data);
+    };
+    return worker;
+}
+
 // =====================================================================================================================
 //  R U N
 // =====================================================================================================================

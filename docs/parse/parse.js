@@ -1,0 +1,1 @@
+(()=>{function n(){console.log("parse initialization"),self.onmessage=l}function l(e){let{data:s}=e;console.log("onSelfMessage",s);let o=a(s);self.postMessage(o)}function a(e){return e+"_hello"}n();})();
