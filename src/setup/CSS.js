@@ -1,16 +1,38 @@
 import styled from './styled.js';
-import {LOG_HOST, LOG_TITLE} from './SETTINGS.js';
 
 // noinspection CssUnusedSymbol
 const CSS = styled`
     #setup {
         color: #fff;
     }
+    
+    #setup .step {
+        padding: 16px;
+        border-top: solid 1px #cbced1;
+    }
+    
+    #setup .step:first-child {
+        border: none;
+    }
+    
+    #setup .title {
+        font-size: 150%;
+        font-weight: bold;
+        color: #c8b36c;
+    }
+    
+    #setup .action {
+        margin-top:8px;
+    }
+
+    #setup .log-title {
+        margin-top: 32px;
+        padding: 8px 0;
+    }
 
     #setup table {
         width: 100%;
         border-collapse: collapse;
-        border: solid 1px #cbced1;
     }
 
     #setup th {
@@ -20,30 +42,34 @@ const CSS = styled`
     #setup th,
     #setup td {
         border: solid 1px #cbced1;
+        border-left:none;
+        border-right:none;
         vertical-align: top;
         padding: 4px;
     }
-
-    #setup .${LOG_TITLE} {
-        margin-top: 32px;
-        padding: 8px 0;
+    #setup th {
+        border-top:none;
+    }
+    
+    #setup table {
+        border: solid 1px #cbced1;
     }
 
-    #setup .${LOG_HOST} th {
+    #setup th {
         background: rgba(255, 255, 255, 0.1);
     }
 
-    #setup .${LOG_HOST} td:nth-child(1) {
+    #setup td:nth-child(1) {
         width: 90px;
     }
 
-    #setup .${LOG_HOST} td:nth-child(2),
-    #setup .${LOG_HOST} th:nth-child(2) {
+    #setup td:nth-child(2),
+    #setup th:nth-child(2) {
         width: 20px;
         text-align: center;
     }
 
-    #setup .${LOG_HOST} td > div > div {
+    #setup td > div > div {
         cursor: pointer;
         border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
         width: max-content;

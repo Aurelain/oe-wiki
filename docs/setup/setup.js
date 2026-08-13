@@ -1,12 +1,35 @@
-(()=>{function g(t,...e){let o=[],{length:i}=t;for(let r=0;r<i;r++)o.push(t[r],e[r]);o.pop();let n=o.join("");return n=n.replaceAll(/\/\*[\s\S]*?\*\//g,""),n=n.replaceAll(/\s\/\/.*/g,""),n}var s=g;var d="log-host",l="log-title";var b=s`
+(()=>{function g(t,...e){let i=[],{length:s}=t;for(let n=0;n<s;n++)i.push(t[n],e[n]);i.pop();let o=i.join("");return o=o.replaceAll(/\/\*[\s\S]*?\*\//g,""),o=o.replaceAll(/\s\/\/.*/g,""),o}var r=g;var v=r`
     #setup {
         color: #fff;
+    }
+    
+    #setup .step {
+        padding: 16px;
+        border-top: solid 1px #cbced1;
+    }
+    
+    #setup .step:first-child {
+        border: none;
+    }
+    
+    #setup .title {
+        font-size: 150%;
+        font-weight: bold;
+        color: #c8b36c;
+    }
+    
+    #setup .action {
+        margin-top:8px;
+    }
+
+    #setup .log-title {
+        margin-top: 32px;
+        padding: 8px 0;
     }
 
     #setup table {
         width: 100%;
         border-collapse: collapse;
-        border: solid 1px #cbced1;
     }
 
     #setup th {
@@ -16,30 +39,34 @@
     #setup th,
     #setup td {
         border: solid 1px #cbced1;
+        border-left:none;
+        border-right:none;
         vertical-align: top;
         padding: 4px;
     }
-
-    #setup .${l} {
-        margin-top: 32px;
-        padding: 8px 0;
+    #setup th {
+        border-top:none;
+    }
+    
+    #setup table {
+        border: solid 1px #cbced1;
     }
 
-    #setup .${d} th {
+    #setup th {
         background: rgba(255, 255, 255, 0.1);
     }
 
-    #setup .${d} td:nth-child(1) {
+    #setup td:nth-child(1) {
         width: 90px;
     }
 
-    #setup .${d} td:nth-child(2),
-    #setup .${d} th:nth-child(2) {
+    #setup td:nth-child(2),
+    #setup th:nth-child(2) {
         width: 20px;
         text-align: center;
     }
 
-    #setup .${d} td > div > div {
+    #setup td > div > div {
         cursor: pointer;
         border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
         width: max-content;
@@ -49,38 +76,59 @@
         width: calc(100% - 8px);
         height: 200px;
     }
-`,p=b;var x=`
-<style>${p}</style>
-<table>
-    <tr>
-        <th>Step</th>        
-        <th>Action</th>        
-        <th>Status</th>
-    </tr>
-    <tr>
-        <td>1. Select game data files</td>        
-        <td><button>Pick</button> or <button>Browse</button></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>2. Retrieve wiki data pages</td>        
-        <td><button>Retrieve</button></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>3. Preview changes</td>        
-        <td><button>Preview</button></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>4. Save changes</td>        
-        <td><button>Save</button></td>
-        <td></td>
-    </tr>
-</table>
-<div class='${l}'>Log:</div>
-<div class='${d}'>
-    <table>
+`,c=v;var a="log-host";var f=`
+<style>${c}</style>
+<div class='steps'>
+    <!-- ==== SELECT =================================== -->
+    <div class='step'>
+        <div class='title'>1. Select game data files</div>
+        <div class='about'>
+            Make the internal data files available.<br/>
+            Either give read-access to the local install directory of the game, or upload/drag-and-drop a zip archive.<br>
+            <i>Note: Allowing read-access to the directory is easier because you only need to do it once,
+            and you don't need to manually zip files.</i>
+        </div>
+        <div class='action'>
+            Action: <button>Pick directory</button> or <button>Browse for zip</button> 
+        </div>
+    </div>
+    <!-- ==== RETRIEVE =================================== -->
+    <div class='step'>
+        <div class='title'>2. Retrieve wiki data pages</div>
+        <div class='about'>
+            Temporarily download all relevant data pages from this wiki so they can be used as a comparison base. <br/>
+            This step is optional, but highly recommended, because it gives awareness in the following steps and
+            reduces the number of updates needed.</i>
+        </div>
+        <div class='action'>
+            Action: <button>Retrieve</button> 
+        </div>
+    </div>
+    <!-- ==== PREVIEW =================================== -->
+    <div class='step'>
+        <div class='title'>3. Preview changes</div>
+        <div class='about'>
+            Opens a popup window listing each page that is about to be updated, potentially highlighting differences.
+        </div>
+        <div class='action'>
+            Action: <button>Preview</button> 
+        </div>
+    </div>
+    <!-- ==== SAVE =================================== -->
+    <div class='step'>
+        <div class='title'>4. Save changes</div>
+        <div class='about'>
+            Writes the changes to each page using the current account, just as if you had done them manually.
+        </div>
+        <div class='action'>
+            Action: <button>SAVE</button> 
+        </div>
+    </div>
+</div>
+<!-- ==== LOG =================================== -->
+<div class='log-title'>Log:</div>
+<div class='${a}'>
+    <table class='wikitable'>
         <tr>
             <th>Timestamp</th>
             <th>\u{1F197}</th>
@@ -88,4 +136,4 @@
         </tr>
     </table>
 </div>  
-`,u=x;var h,f,S={info:"\u2139\uFE0F",warning:"\u26A0\uFE0F",error:"\u26D4"};function T(t,...e){let o=t.endsWith("!")?t.startsWith("!")?"error":"warning":"info";L(o,t,e)}function m(t){h=t,f=h.querySelector("table")}function L(t,e,o){let n=new Date().toLocaleTimeString("en-GB",{hour12:!1}),r=document.createElement("tr");a(r,n),a(r,S[t]),a(r,y(e,o)),f.appendChild(r)}function a(t,e){let o=document.createElement("td");e=e instanceof Node?e:document.createTextNode(e),o.appendChild(e),t.appendChild(o)}function y(t,e){if(!e.length)return document.createTextNode(t);let o=document.createElement("div"),i=document.createElement("div");i.innerHTML=t,i.onclick=function(){let r=this.nextElementSibling.style.display!=="none";this.nextElementSibling.style.display=r?"none":"block"},o.appendChild(i);let n=document.createElement("textarea");return n.style.display="none",n.innerHTML=JSON.stringify(e,null,4),o.appendChild(n),o}var c=T;async function v(){let t=document.getElementById("setup");if(!t)return;let e=t.innerHTML;t.innerHTML=u,m(t.querySelector("."+d)),c("Initialized.");let o=O(e);c("config:",o)}function O(t){t=t.replaceAll(/<.*?>/g,"");try{return JSON.parse(t)}catch(e){return c("!Failed to parse JSON!",e),{}}}v();})();
+`,p=f;var u,h,m={info:"\u2139\uFE0F",warning:"\u26A0\uFE0F",error:"\u26D4"};function y(t,...e){let i=t.endsWith("!")?t.startsWith("!")?"error":"warning":"info";x(i,t,e)}function b(t){u=t,h=u.querySelector("table")}function x(t,e,i){let o=new Date().toLocaleTimeString("en-GB",{hour12:!1}),n=document.createElement("tr");l(n,o),l(n,m[t]),l(n,w(e,i)),h.appendChild(n)}function l(t,e){let i=document.createElement("td");e=e instanceof Node?e:document.createTextNode(e),i.appendChild(e),t.appendChild(i)}function w(t,e){if(!e.length)return document.createTextNode(t);let i=document.createElement("div"),s=document.createElement("div");s.innerHTML=t,s.onclick=function(){let n=this.nextElementSibling.style.display!=="none";this.nextElementSibling.style.display=n?"none":"block"},i.appendChild(s);let o=document.createElement("textarea");return o.style.display="none",o.innerHTML=JSON.stringify(e,null,4),i.appendChild(o),i}var d=y;async function S(){let t=document.getElementById("setup");if(!t)return;let e=t.innerHTML;t.innerHTML=p,b(t.querySelector("."+a)),d("Initialized.");let i=T(e);d("config:",i)}function T(t){t=t.replaceAll(/<.*?>/g,"");try{return JSON.parse(t)}catch(e){return d("!Failed to parse JSON!",e),{}}}S();})();
