@@ -1,9 +1,7 @@
-(()=>{function l(t,...n){let e=[],{length:s}=t;for(let r=0;r<s;r++)e.push(t[r],n[r]);e.pop();let o=e.join("");return o=o.replaceAll(/\/\*[\s\S]*?\*\//g,""),o=o.replaceAll(/\s\/\/.*/g,""),o}var d=l;var a=d`
-    #setup {
-        background:yellow;
-    }
-`,u=a;var i=`
-    <style>${u}</style>
+import CSS from './CSS.js';
+
+const HTML = `
+    <style>${CSS}</style>
     <table>
         <tr>
             <th>Step</th>        
@@ -31,4 +29,6 @@
             <td></td>
         </tr>
     </table>    
-`,c=i;async function p(){let t=document.getElementById("setup");if(!t)return;let n=t.innerHTML;t.innerHTML=c;let e=f(n);console.log("config:",e)}function f(t){try{return JSON.parse(t)}catch{}}p();})();
+`;
+
+export default HTML;

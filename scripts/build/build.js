@@ -20,7 +20,9 @@ async function build() {
     const {target, destinationDir} = decidePaths();
 
     removeOldJsFileFrom(destinationDir); // also removes any *.map file
-    await createBuild(target, destinationDir);
+    const outfile = await createBuild(target, destinationDir);
+
+    displaySummary(outfile);
 }
 
 // =====================================================================================================================
@@ -64,6 +66,17 @@ async function createBuild(target, outdir) {
         sourcemap: isDev,
         outfile,
     });
+    return outfile;
+}
+
+/**
+ *
+ */
+function displaySummary(outfile) {
+    const name = path.basename(outfile);
+    const size = (fs.statSync(outfile).size / 1024).toFixed(2);
+    const duration = (performance.now() / 1000).toFixed(2);
+    console.log(`Build created "${name}" (${size} KB) in ${duration} seconds.`);
 }
 
 // =====================================================================================================================
