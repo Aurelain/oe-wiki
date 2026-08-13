@@ -1,4 +1,6 @@
 import HTML from './HTML.js';
+import log, {setLogHost} from './log.js';
+import {LOG_HOST} from './SETTINGS.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -15,10 +17,16 @@ async function setup() {
     if (!root) {
         return;
     }
+
+    // Markup:
     const configText = root.innerHTML;
     root.innerHTML = HTML;
+    setLogHost(root.querySelector('.' + LOG_HOST));
+    log('Initialized.');
+
+    // External scripts:
     const config = parseConfig(configText);
-    console.log('config:', config);
+    log('config:', config);
 }
 
 // =====================================================================================================================
@@ -28,10 +36,12 @@ async function setup() {
  *
  */
 function parseConfig(text) {
+    text = text.replaceAll(/<.*?>/g, '');
     try {
         return JSON.parse(text);
     } catch (e) {
-        // log(e.message);
+        log('!Failed to parse JSON!', e);
+        return {};
     }
 }
 // =====================================================================================================================

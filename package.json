@@ -3,7 +3,8 @@
     "version": "0.0.1",
     "type": "module",
     "scripts": {
-        "setup": "node scripts/build/build src/setup/setup.js"
+        "setup": "node scripts/build/build src/setup/setup.js",
+        "setup-dev": "node scripts/build/build src/setup/setup.js --dev"
     },
     "devDependencies": {
         "esbuild": "0.28.2",
