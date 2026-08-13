@@ -19,15 +19,14 @@ async function setup() {
     }
 
     // Markup:
-    const configText = root.innerHTML;
     root.innerHTML = HTML;
     setLogHost(root.querySelector('.' + LOG_HOST));
     log('Initialized.');
 
-    // External scripts:
-    const config = parseConfig(configText);
-    log('config:', config);
-    const worker = importWorker(config.parse);
+    // Import parser:
+    // const isDev = root.dataset.dev === '1';
+    const parsePath = root.dataset.parse;
+    const worker = importWorker(parsePath);
     setTimeout(() => {
         log('Sending foo...');
         worker.postMessage('foo');
@@ -40,21 +39,8 @@ async function setup() {
 /**
  *
  */
-function parseConfig(text) {
-    text = text.replaceAll(/<.*?>/g, '');
-    try {
-        return JSON.parse(text);
-    } catch (e) {
-        log('!Failed to parse JSON!', e);
-        return {};
-    }
-}
-
-/**
- *
- */
 function importWorker(url) {
-    log('Loading parser...', url);
+    log('Loading parser', url);
     const worker = new Worker(`data:application/javascript,importScripts('${url}');`);
     worker.onmessage = (event) => {
         console.log('Received result:', event.data);

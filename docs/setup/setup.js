@@ -1,4 +1,4 @@
-(()=>{function g(t,...e){let i=[],{length:s}=t;for(let n=0;n<s;n++)i.push(t[n],e[n]);i.pop();let o=i.join("");return o=o.replaceAll(/\/\*[\s\S]*?\*\//g,""),o=o.replaceAll(/\s\/\/.*/g,""),o}var r=g;var v=r`
+(()=>{function v(t,...e){let o=[],{length:s}=t;for(let n=0;n<s;n++)o.push(t[n],e[n]);o.pop();let i=o.join("");return i=i.replaceAll(/\/\*[\s\S]*?\*\//g,""),i=i.replaceAll(/\s\/\/.*/g,""),i}var r=v;var g=r`
     #setup {
         color: #fff;
     }
@@ -76,7 +76,7 @@
         width: calc(100% - 8px);
         height: 200px;
     }
-`,c=v;var a="log-host";var f=`
+`,c=g;var a="log-host";var f=`
 <style>${c}</style>
 <div class='steps'>
     <!-- ==== SELECT =================================== -->
@@ -136,4 +136,4 @@
         </tr>
     </table>
 </div>  
-`,p=f;var u,h,m={info:"\u2139\uFE0F",warning:"\u26A0\uFE0F",error:"\u26D4"};function y(t,...e){let i=t.endsWith("!")?t.startsWith("!")?"error":"warning":"info";x(i,t,e)}function b(t){u=t,h=u.querySelector("table")}function x(t,e,i){let o=new Date().toLocaleTimeString("en-GB",{hour12:!1}),n=document.createElement("tr");l(n,o),l(n,m[t]),l(n,w(e,i)),h.appendChild(n)}function l(t,e){let i=document.createElement("td");e=e instanceof Node?e:document.createTextNode(e),i.appendChild(e),t.appendChild(i)}function w(t,e){if(!e.length)return document.createTextNode(t);let i=document.createElement("div"),s=document.createElement("div");s.innerHTML=t,s.onclick=function(){let n=this.nextElementSibling.style.display!=="none";this.nextElementSibling.style.display=n?"none":"block"},i.appendChild(s);let o=document.createElement("textarea");return o.style.display="none",o.innerHTML=JSON.stringify(e,null,4),i.appendChild(o),i}var d=y;async function S(){let t=document.getElementById("setup");if(!t)return;let e=t.innerHTML;t.innerHTML=p,b(t.querySelector("."+a)),d("Initialized.");let i=T(e);d("config:",i)}function T(t){t=t.replaceAll(/<.*?>/g,"");try{return JSON.parse(t)}catch(e){return d("!Failed to parse JSON!",e),{}}}S();})();
+`,p=f;var u,h,m={info:"\u2139\uFE0F",warning:"\u26A0\uFE0F",error:"\u26D4"};function x(t,...e){let o=t.endsWith("!")?t.startsWith("!")?"error":"warning":"info";y(o,t,e)}function b(t){u=t,h=u.querySelector("table")}function y(t,e,o){let i=new Date().toLocaleTimeString("en-GB",{hour12:!1}),n=document.createElement("tr");l(n,i),l(n,m[t]),l(n,w(e,o)),h.appendChild(n),console.log(e,...o)}function l(t,e){let o=document.createElement("td");e=e instanceof Node?e:document.createTextNode(e),o.appendChild(e),t.appendChild(o)}function w(t,e){if(!e.length)return document.createTextNode(t);let o=document.createElement("div"),s=document.createElement("div");s.innerHTML=t,s.onclick=function(){let n=this.nextElementSibling.style.display!=="none";this.nextElementSibling.style.display=n?"none":"block"},o.appendChild(s);let i=document.createElement("textarea");return i.style.display="none",i.innerHTML=JSON.stringify(e,null,4),o.appendChild(i),o}var d=x;async function S(){let t=document.getElementById("setup");if(!t)return;t.innerHTML=p,b(t.querySelector("."+a)),d("Initialized.");let e=t.dataset.parse,o=E(e);setTimeout(()=>{d("Sending foo..."),o.postMessage("foo")},1e3)}function E(t){d("Loading parser",t);let e=new Worker(`data:application/javascript,importScripts('${t}');`);return e.onmessage=o=>{console.log("Received result:",o.data)},e}S();})();

@@ -44,6 +44,7 @@ function add(type, message, args) {
     addCell(row, buildMessage(message, args));
 
     table.appendChild(row);
+    console.log(message, ...args);
 }
 
 /**
