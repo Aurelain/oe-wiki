@@ -6,24 +6,33 @@ import esbuild from 'esbuild';
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-const DESTINATION_DIR = 'docs';
-const argv = Array.from(process.argv);
-const isDev = argv.includes('--dev');
+const INPUT_DIR = 'src';
+const OUTPUT_DIR = 'docs';
 
 // =====================================================================================================================
 //  P U B L I C
 // =====================================================================================================================
 /**
- *
+ * Can be called either from the console (`node build foo.js`) or directly from code (`build('foo.js')`).
+ * Examples:
+ * - build()
+ * - build('foo.js')
+ * - build('foo.js', 'bar.js')
+ * - build('foo.js', 'bar.js', '-o', 'dir1')
+ * - build('-i', 'dir1')
+ * - build('-i', 'dir1', '-o', 'dir2')
+ * - build('--dev')
  */
-async function build(...parameters) {
-    const now = Date.now();
-    const {target, destinationDir} = decidePaths([...parameters, ...argv]);
+async function build(...args) {
+    const configurations = parseArguments(args);
+    if (!configurations.length) {
+        console.log('Nothing to build!');
+        return;
+    }
 
-    removeOldJsFileFrom(destinationDir); // also removes any *.map file
-    const outfile = await createBuild(target, destinationDir);
-
-    displaySummary(outfile, Date.now() - now);
+    for (const config of configurations) {
+        await createBuild(config);
+    }
 }
 
 // =====================================================================================================================
@@ -32,42 +41,74 @@ async function build(...parameters) {
 /**
  *
  */
-function decidePaths(args) {
-    const target = args.find((arg) => arg.startsWith('src'));
-    const parentDirName = path.basename(path.dirname(target));
-    const destinationDir = path.join(DESTINATION_DIR, parentDirName);
-    return {target, destinationDir};
+function parseArguments(args) {
+    const isDev = args.includes('--dev');
+
+    const outputDir = args.find((arg, i) => args[i - 1] === '-o') || OUTPUT_DIR;
+    const inputArg = args.find((arg, i) => args[i - 1] === '-i');
+    if (inputArg) {
+        return generateConfigurations(inputArg, outputDir, isDev);
+    }
+
+    let entryPoints = args.filter((arg) => !arg.startsWith('-') && !arg.includes('node') && !arg.includes('build'));
+    entryPoints = entryPoints.length ? entryPoints : INPUT_DIR;
+    return generateConfigurations(entryPoints, outputDir, isDev);
 }
 
 /**
  *
  */
-function removeOldJsFileFrom(dirPath) {
-    for (const file of fs.readdirSync(dirPath)) {
-        if (file.endsWith('js')) {
-            const filePath = path.join(dirPath, file);
-            fs.unlinkSync(filePath);
-            const mapFilePath = filePath + '.map';
-            if (fs.existsSync(mapFilePath)) {
-                fs.unlinkSync(mapFilePath);
+function generateConfigurations(entryPoints, outputArg, isDev) {
+    entryPoints = Array.isArray(entryPoints) ? entryPoints : collectEntryPoints(entryPoints);
+    const isMultiple = entryPoints.length > 0;
+    const configurations = [];
+    for (const entryPoint of entryPoints) {
+        const fileName = path.basename(entryPoint);
+        const stem = isMultiple ? fileName.replace(/\.[^.]*$/, '') : '';
+        const outfile = path.join(outputArg, stem, fileName);
+        configurations.push({
+            entryPoint,
+            outfile,
+            isDev,
+        });
+    }
+    return configurations;
+}
+
+/**
+ *
+ */
+function collectEntryPoints(dirPath) {
+    const output = [];
+    const list = fs.readdirSync(dirPath);
+    for (const item of list) {
+        const longPath = path.join(dirPath, item);
+        if (fs.statSync(longPath).isDirectory()) {
+            const filePath = path.join(longPath, item + '.js');
+            if (fs.existsSync(filePath)) {
+                output.push(filePath);
             }
         }
     }
+    return output;
 }
 
 /**
  *
  */
-async function createBuild(target, outdir) {
-    const outfile = path.join(outdir, path.basename(target));
+async function createBuild(config) {
+    const {entryPoint, outfile, isDev} = config;
+    const now = Date.now();
+
     await esbuild.build({
-        entryPoints: [target],
+        entryPoints: [entryPoint],
         bundle: true,
         minify: !isDev,
         sourcemap: isDev,
         outfile,
     });
-    return outfile;
+
+    displaySummary(outfile, Date.now() - now);
 }
 
 /**
@@ -83,5 +124,5 @@ function displaySummary(outfile, milliseconds) {
 // =====================================================================================================================
 //  R U N
 // =====================================================================================================================
-process.argv.join('').includes('build') && (await build());
+process.argv.join('').includes('build') && (await build(...process.argv));
 export default build;
