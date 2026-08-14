@@ -4,21 +4,11 @@
 /**
  *
  */
-async function sendAndReceive(worker, payload) {
-    return new Promise((resolve) => {
-        const listener = (event) => {
-            const data = event.data && typeof event.data === 'object' ? event.data : {};
-            if (data.type === payload.type) {
-                worker.removeEventListener('message', listener);
-                resolve(data);
-            }
-        };
-        worker.addEventListener('message', listener);
-        worker.postMessage(payload);
-    });
+function send(worker, type, payload) {
+    worker.postMessage({type, payload});
 }
 
 // =====================================================================================================================
 //  E X P O R T
 // =====================================================================================================================
-export default sendAndReceive;
+export default send;

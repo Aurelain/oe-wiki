@@ -12,22 +12,22 @@ let actuatorFunction;
  */
 function initialize(actuator) {
     actuatorFunction = actuator;
-    self.onmessage = onMessageFromParent;
-    self.postMessage({type: 'ready'});
+    self.addEventListener('message', onMessageFromParent);
+    send('ready');
 }
 
 /**
  *
  */
-async function list() {
-    return [];
+async function find(...args) {
+    await sendAndReceive('find', args);
 }
 
 /**
  *
  */
-async function read(key) {
-    return '';
+function log(...args) {
+    send('log', args);
 }
 
 // =====================================================================================================================
@@ -39,15 +39,40 @@ async function read(key) {
 async function onMessageFromParent(event) {
     const data = event.data && typeof event.data === 'object' ? event.data : {};
     const {type} = data;
-    console.log(`Child received a "${type}" message!`);
     switch (type) {
         case 'run':
+            console.log(`Child received a "${type}" inquiry.`);
             const result = await actuatorFunction();
-            self.postMessage({type: 'run', result});
+            send('run', result);
             break;
         default:
         // nothing
     }
+}
+
+/**
+ *
+ */
+function send(type, payload) {
+    self.postMessage({type, payload});
+}
+
+/**
+ *
+ */
+async function sendAndReceive(type, payload) {
+    return new Promise((resolve) => {
+        const listener = (event) => {
+            const data = event.data && typeof event.data === 'object' ? event.data : {};
+            if (data.type === type) {
+                console.log(`Child received a "${type}" reply.`);
+                self.removeEventListener('message', listener);
+                resolve(data.payload);
+            }
+        };
+        self.addEventListener('message', listener);
+        self.postMessage({type, payload});
+    });
 }
 
 // =====================================================================================================================
@@ -55,7 +80,7 @@ async function onMessageFromParent(event) {
 // =====================================================================================================================
 const API = {
     initialize,
-    list,
-    read,
+    find,
+    log,
 };
 export default API;

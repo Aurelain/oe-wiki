@@ -4,7 +4,9 @@ import {BTN_GAME, BTN_MIRROR, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
 import on from './utils/on.js';
 import {readFromDb, writeToDb} from './utils/LocalDb.js';
-import sendAndReceive from './sendAndReceive.js';
+import sendAndReceive from './helpers/sendAndReceive.js';
+import send from './helpers/send.js';
+import findInDirectory from './helpers/findInDirectory.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -33,7 +35,7 @@ async function setup() {
     // Markup:
     root.innerHTML = isDev ? HTML_DEV : HTML_USER;
     setLogHost(root.querySelector('.' + LOG_HOST));
-    await checkGrantedDirs();
+    await updateGrantedIcons();
     log('Initialized.');
 
     // Events:
@@ -41,16 +43,35 @@ async function setup() {
 
     // Import parser:
     await importParser(parsePath);
-    if (isDev) {
-        await runParse();
-        // await getMirror();
-        // buildDiff();
-    }
+
+    // Start the show:
+    isDev && (await refreshDiff());
 }
 
 // =====================================================================================================================
 //  P R I V A T E
 // =====================================================================================================================
+/**
+ *
+ */
+async function updateGrantedIcons() {
+    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
+    const isGameGranted = await checkPermission(gameDirHandle);
+    document.querySelector('.' + BTN_GAME)?.classList.toggle(IS_GRANTED, isGameGranted);
+
+    const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
+    const isMirrorGranted = await checkPermission(mirrorDirHandle);
+    document.querySelector('.' + BTN_MIRROR)?.classList.toggle(IS_GRANTED, isMirrorGranted);
+}
+
+/**
+ *
+ */
+async function checkPermission(dirHandle) {
+    const permission = await dirHandle?.queryPermission();
+    return permission === 'granted';
+}
+
 /**
  *
  */
@@ -62,39 +83,41 @@ function addEvents() {
 /**
  *
  */
-async function checkGrantedDirs() {
-    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    document.querySelector('.' + BTN_GAME)?.classList.toggle(IS_GRANTED, !!gameDirHandle);
-
-    const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
-    document.querySelector('.' + BTN_MIRROR)?.classList.toggle(IS_GRANTED, !!mirrorDirHandle);
-}
-
-/**
- *
- */
 async function onGameClick() {
-    let dirHandle;
-    try {
-        dirHandle = await window.showDirectoryPicker({mode: 'read'});
-    } catch (e) {}
-    if (dirHandle) {
-        await writeToDb(GAME_DIR_HANDLE, dirHandle);
-        await checkGrantedDirs();
-    }
+    await refreshDirHandle(GAME_DIR_HANDLE);
 }
 
 /**
  *
  */
 async function onMirrorClick() {
-    let dirHandle;
+    await refreshDirHandle(MIRROR_DIR_HANDLE);
+}
+
+/**
+ *
+ */
+async function refreshDirHandle(key) {
+    let dirHandle = await readFromDb(key);
+    if (dirHandle) {
+        if (await checkPermission(dirHandle)) {
+            // nothing, the user already has the permission, but clicked to change the path
+        } else {
+            await dirHandle.requestPermission();
+            if (await checkPermission(dirHandle)) {
+                await updateGrantedIcons();
+                return; // by clicking this button, the user managed to renew their permission
+            } else {
+                // nothing, the user failed to renew, so we pass-on to change the path
+            }
+        }
+    }
     try {
         dirHandle = await window.showDirectoryPicker({mode: 'read'});
     } catch (e) {}
     if (dirHandle) {
-        await writeToDb(MIRROR_DIR_HANDLE, dirHandle);
-        await checkGrantedDirs();
+        await writeToDb(key, dirHandle);
+        await updateGrantedIcons();
     }
 }
 
@@ -102,9 +125,10 @@ async function onMirrorClick() {
  *
  */
 async function importParser(url) {
+    // log('Connecting to parser...');
     parser = new Worker(`data:application/javascript,importScripts('${url}');`);
     parser.addEventListener('error', () => log('!Parser error!'));
-    await sendAndReceive(parser, {type: 'ready'});
+    await sendAndReceive(parser, 'ready');
     log('Connected to parser.');
     parser.addEventListener('message', onMessageFromParser);
 }
@@ -112,17 +136,40 @@ async function importParser(url) {
 /**
  *
  */
-function onMessageFromParser(event) {
+async function onMessageFromParser(event) {
     const data = event.data && typeof event.data === 'object' ? event.data : {};
     const {type} = data;
-    console.log(`Parent received a "${type}" message!`);
+    switch (type) {
+        case 'find':
+            console.log(`Parent received a "${type}" inquiry.`);
+            const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
+            send(parser, 'find', await findInDirectory(gameDirHandle));
+            break;
+    }
+}
+
+/**
+ *
+ */
+async function refreshDiff() {
+    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
+    const permission = await gameDirHandle?.queryPermission();
+    if (permission !== 'granted') {
+        return;
+    }
+
+    await runParse();
+    // await getMirror();
+    // buildDiff();
 }
 
 /**
  *
  */
 async function runParse() {
-    const {result} = await sendAndReceive(parser, {type: 'run'});
+    const result = await sendAndReceive(parser, 'run');
+    log('Received parsing results.');
+    console.log('result:', result);
     parserResult = result;
 }
 
