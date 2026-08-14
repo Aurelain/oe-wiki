@@ -9,7 +9,7 @@ import build from '../build/build.js';
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const PORT = 8000;
-const BUILD_TIMEOUT = 100; // milliseconds, how long to wait after a file change before we call build()
+const BUILD_TIMEOUT = 200; // milliseconds, how long to wait after a file change before we call build()
 const LIVE_RELOAD_ENDPOINT = '/live-reload';
 const INPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'src'));
 const OUTPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'dev')); // not docs!
@@ -58,7 +58,12 @@ async function start() {
 async function performBuild() {
     await fs.rm(OUTPUT_DIR, {recursive: true, force: true});
     await fs.cp(PRODUCTION_DIR, OUTPUT_DIR, {recursive: true});
-    await build('-o', OUTPUT_DIR, '--dev', '--mute');
+    try {
+        await build('-o', OUTPUT_DIR, '--dev');
+    } catch (e) {
+        console.error('Build failed!');
+        return;
+    }
     for (const res of buildAudience) {
         res.write('data: reload\n\n'); // broadcast reload command
     }
@@ -122,6 +127,7 @@ async function serveFile(filePath, extname, req, res) {
 async function watchDir(dirPath) {
     const watcher = fs.watch(dirPath, {recursive: true});
     for await (const event of watcher) {
+        // console.log(event.filename, 'changed!');
         if (event.filename && !event.filename.startsWith('.')) {
             clearTimeout(buildTimeout);
             buildTimeout = setTimeout(performBuild, BUILD_TIMEOUT);
