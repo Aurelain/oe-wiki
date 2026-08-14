@@ -1,6 +1,8 @@
-import HTML from './HTML.js';
+import HTML from './html/HTML.js';
 import log, {setLogHost} from './log.js';
-import {LOG_HOST} from './SETTINGS.js';
+import {BTN_GAME, LOG_HOST} from './SETTINGS.js';
+import HTML_DEV from './html/HTML_DEV.js';
+import on from './utils/on.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -18,14 +20,21 @@ async function setup() {
         return;
     }
 
+    // Config:
+    const isDev = root.dataset.dev === '1';
+    const parsePath = root.dataset.parse;
+
     // Markup:
-    root.innerHTML = HTML;
+    root.innerHTML = isDev ? HTML_DEV : HTML;
     setLogHost(root.querySelector('.' + LOG_HOST));
     log('Initialized.');
 
+    // Events:
+    addEvents();
+
+    return;
+
     // Import parser:
-    // const isDev = root.dataset.dev === '1';
-    const parsePath = root.dataset.parse;
     const worker = importWorker(parsePath);
     setTimeout(() => {
         log('Sending foo...');
@@ -36,6 +45,24 @@ async function setup() {
 // =====================================================================================================================
 //  P R I V A T E
 // =====================================================================================================================
+/**
+ *
+ */
+function addEvents() {
+    on('click', '.' + BTN_GAME, onGameClick);
+}
+
+/**
+ *
+ */
+async function onGameClick() {
+    let dirHandle;
+    try {
+        dirHandle = await window.showDirectoryPicker({mode: 'read'});
+    } catch (e) {}
+    console.log('dirHandle:', dirHandle);
+}
+
 /**
  *
  */

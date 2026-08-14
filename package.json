@@ -4,9 +4,7 @@
     "type": "module",
     "scripts": {
         "start": "node scripts/start/start",
-        "setup": "node scripts/build/build src/setup/setup.js",
-        "setup-dev": "node scripts/build/build src/setup/setup.js --dev",
-        "parse": "node scripts/build/build src/parse/parse.js"
+        "build": "node scripts/build/build"
     },
     "devDependencies": {
         "esbuild": "0.28.2",

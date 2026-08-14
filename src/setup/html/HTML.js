@@ -1,5 +1,5 @@
-import CSS from './CSS.js';
-import {LOG_HOST} from './SETTINGS.js';
+import CSS from '../css/CSS.js';
+import {LOG_HOST} from '../SETTINGS.js';
 
 const HTML = `
 <style>${CSS}</style>
