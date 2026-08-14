@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import fsp from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
 import build from '../build/build.js';
@@ -7,15 +8,18 @@ import build from '../build/build.js';
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const PORT = 8000;
-const BUILDS_TIMEOUT = 100; // milliseconds, how long to wait before trigger the builds in `buildPending`
+const BUILD_TIMEOUT = 100; // milliseconds, how long to wait after a file change before we call build()
 const LIVERELOAD_ENDPOINT = '/livereload';
-const SRC = 'src';
-const OUT = 'docs';
+const INPUT_DIR = 'src';
+const OUTPUT_DIR = 'dev';
+const PRODUCTION_DIR = 'docs';
+const INPUT_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', INPUT_DIR));
+const OUTPUT_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', OUTPUT_DIR));
+const PRODUCTION_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', PRODUCTION_DIR));
 const CONTENT_TYPE = {
     '.js': 'text/javascript',
     '.css': 'text/css',
 };
-
 // Script injected into HTML pages to listen for reload triggers:
 const LIVERELOAD_SCRIPT = `
     <script>
@@ -25,19 +29,13 @@ const LIVERELOAD_SCRIPT = `
                 window.location.reload();
             }
         };
+        eventSource.onerror = () => {
+            eventSource.close();
+        };
     </script>`;
-const SRC_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', SRC));
-const OUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', OUT));
 
-/*
-{
-    'parse': Set([res, res, ...]),
-    'setup': Set([res, res, ...]),
-    ...
-}
- */
-let buildsPending = {};
-let buildsTimeout;
+const buildAudience = new Set(); // contains <res> objects
+let buildTimeout;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -45,11 +43,10 @@ let buildsTimeout;
 /**
  *
  */
-function start() {
+async function start() {
+    await performBuild();
     const server = http.createServer(onRequest);
-    server.listen(PORT, () => {
-        console.log(`Reflecting "${SRC}" to "${OUT}" at http://localhost:${PORT}.`);
-    });
+    server.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}.`));
 }
 
 // =====================================================================================================================
@@ -64,7 +61,7 @@ function onRequest(req, res) {
     }
 
     const url = req.url === '/' ? '/index.html' : req.url;
-    const filePath = OUT_DIR + url;
+    const filePath = OUTPUT_PATH + url;
     const extname = path.extname(filePath);
 
     fs.readFile(filePath, (err, content) => handleFileRead(err, content, extname, req, res));
@@ -81,13 +78,10 @@ function handleLiveReloadEndpoint(req, res) {
     });
 
     // Watch the current directory for file changes
-    const watcher = fs.watch(SRC_DIR, {recursive: true}, (eventType, filename) => {
-        const dirName = path.dirname(filename);
-        // console.log(`${filename} changed, so "${dirName}" will soon be rebuilt.`);
-        buildsPending[dirName] = buildsPending[dirName] || new Set();
-        buildsPending[dirName].add(res);
-        clearTimeout(buildsTimeout);
-        buildsTimeout = setTimeout(performBuilds, BUILDS_TIMEOUT);
+    const watcher = fs.watch(INPUT_PATH, {recursive: true}, () => {
+        buildAudience.add(res);
+        clearTimeout(buildTimeout);
+        buildTimeout = setTimeout(performBuild, BUILD_TIMEOUT);
     });
 
     req.on('close', () => watcher.close());
@@ -115,16 +109,16 @@ function handleFileRead(err, content, extname, req, res) {
 /**
  *
  */
-async function performBuilds() {
-    for (const key in buildsPending) {
-        const target = path.join(SRC, key, key + '.js');
-        await build(target);
-        const list = buildsPending[key];
-        for (const res of list) {
-            res.write('data: reload\n\n');
-        }
-        delete buildsPending[key];
+async function performBuild() {
+    if (OUTPUT_PATH !== PRODUCTION_PATH) {
+        await fsp.rm(OUTPUT_PATH, {recursive: true, force: true});
+        await fsp.cp(PRODUCTION_PATH, OUTPUT_PATH, {recursive: true});
     }
+    await build('-o', OUTPUT_PATH, '--dev', '--mute');
+    for (const res of buildAudience) {
+        res.write('data: reload\n\n');
+    }
+    buildAudience.clear();
 }
 
 // =====================================================================================================================

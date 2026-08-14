@@ -8,6 +8,8 @@ import esbuild from 'esbuild';
 // =====================================================================================================================
 const INPUT_DIR = 'src';
 const OUTPUT_DIR = 'docs';
+const INPUT_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', INPUT_DIR));
+const OUTPUT_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', OUTPUT_DIR));
 
 // =====================================================================================================================
 //  P U B L I C
@@ -42,24 +44,47 @@ async function build(...args) {
  *
  */
 function parseArguments(args) {
-    const isDev = args.includes('--dev');
-
-    const outputDir = args.find((arg, i) => args[i - 1] === '-o') || OUTPUT_DIR;
-    const inputArg = args.find((arg, i) => args[i - 1] === '-i');
-    if (inputArg) {
-        return generateConfigurations(inputArg, outputDir, isDev);
+    let isDev = false;
+    let isMute = false;
+    let inputArg = undefined;
+    let outputArg = undefined;
+    const freeArgs = [];
+    for (const [i, arg] of args.entries()) {
+        switch (arg) {
+            case '-i':
+                inputArg = args[i + 1];
+                break;
+            case '-o':
+                outputArg = args[i + 1];
+                break;
+            case '--dev':
+                isDev = true;
+                break;
+            case '--mute':
+                isMute = true;
+                break;
+            default:
+                if (arg === inputArg || arg === outputArg) {
+                    continue;
+                }
+                if (arg.includes('node') || arg.includes('build')) {
+                    continue;
+                }
+                freeArgs.push(arg);
+        }
     }
-
-    let entryPoints = args.filter((arg) => !arg.startsWith('-') && !arg.includes('node') && !arg.includes('build'));
-    entryPoints = entryPoints.length ? entryPoints : INPUT_DIR;
-    return generateConfigurations(entryPoints, outputDir, isDev);
+    const outputDir = outputArg || OUTPUT_PATH;
+    const entryPoints = inputArg ? collectEntryPoints(inputArg) : freeArgs;
+    if (!inputArg && !freeArgs.length) {
+        entryPoints.push(...collectEntryPoints(INPUT_PATH));
+    }
+    return generateConfigurations(entryPoints, outputDir, isDev, isMute);
 }
 
 /**
  *
  */
-function generateConfigurations(entryPoints, outputArg, isDev) {
-    entryPoints = Array.isArray(entryPoints) ? entryPoints : collectEntryPoints(entryPoints);
+function generateConfigurations(entryPoints, outputArg, isDev, isMute) {
     const isMultiple = entryPoints.length > 0;
     const configurations = [];
     for (const entryPoint of entryPoints) {
@@ -70,6 +95,7 @@ function generateConfigurations(entryPoints, outputArg, isDev) {
             entryPoint,
             outfile,
             isDev,
+            isMute,
         });
     }
     return configurations;
@@ -97,7 +123,7 @@ function collectEntryPoints(dirPath) {
  *
  */
 async function createBuild(config) {
-    const {entryPoint, outfile, isDev} = config;
+    const {entryPoint, outfile, isDev, isMute} = config;
     const now = Date.now();
 
     await esbuild.build({
@@ -108,7 +134,7 @@ async function createBuild(config) {
         outfile,
     });
 
-    displaySummary(outfile, Date.now() - now);
+    !isMute && displaySummary(outfile, Date.now() - now);
 }
 
 /**
