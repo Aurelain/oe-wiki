@@ -36,7 +36,13 @@ function setLogHost(element) {
  */
 function add(type, message, args) {
     const now = new Date();
-    const localTimeISO = now.toLocaleTimeString('en-GB', {hour12: false});
+    const localTimeISO = now.toLocaleTimeString('en-GB', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        fractionalSecondDigits: 3,
+    });
 
     const row = document.createElement('tr');
     addCell(row, localTimeISO);

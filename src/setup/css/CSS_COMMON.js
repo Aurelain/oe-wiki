@@ -2,7 +2,7 @@ import styled from '../utils/styled.js';
 import {LOG_HOST} from '../SETTINGS.js';
 
 // noinspection CssUnusedSymbol
-const CSS_LOG = styled`
+const CSS_COMMON = styled`
     #setup .log-title {
         margin-top: 32px;
         padding: 8px 0;
@@ -59,4 +59,4 @@ const CSS_LOG = styled`
     }
 `;
 
-export default CSS_LOG;
+export default CSS_COMMON;

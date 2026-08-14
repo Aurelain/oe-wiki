@@ -1,8 +1,9 @@
 import styled from '../utils/styled.js';
-import CSS_LOG from './CSS_LOG.js';
+import CSS_COMMON from './CSS_COMMON.js';
+import {IS_GRANTED} from '../SETTINGS.js';
 
 // noinspection CssUnusedSymbol
-const CSS = styled`
+const CSS_USER = styled`
     #setup {
         color: #fff;
     }
@@ -26,7 +27,11 @@ const CSS = styled`
         margin-top:8px;
     }
 
-    ${CSS_LOG}
+    #setup .${IS_GRANTED}:after {
+        content: ' ✅';
+    }
+    
+    ${CSS_COMMON}
 `;
 
-export default CSS;
+export default CSS_USER;

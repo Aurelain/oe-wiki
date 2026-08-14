@@ -1,6 +1,6 @@
 import styled from '../utils/styled.js';
-import {LOG_HOST} from '../SETTINGS.js';
-import CSS_LOG from './CSS_LOG.js';
+import {BTN_GAME, BTN_MIRROR, IS_GRANTED, LOG_HOST} from '../SETTINGS.js';
+import CSS_COMMON from './CSS_COMMON.js';
 
 // noinspection CssUnusedSymbol
 const CSS_DEV = styled`
@@ -8,12 +8,13 @@ const CSS_DEV = styled`
         padding:0;
         margin:0;
         height:100%;
-    }
-    #setup {
+        font-size: 13px;
         background:#1e242c;
         color: #fff;
-        height:100%;
         font-family: "JetBrains Mono", monospace;
+    }
+    #setup {
+        height:100%;
         display:flex;
         flex-direction: column;
     }
@@ -29,7 +30,16 @@ const CSS_DEV = styled`
         height: 200px;
     }
 
-    ${CSS_LOG}
+    #setup .${BTN_GAME}:after,
+    #setup .${BTN_MIRROR}:after {
+        content: ' ⚠️';
+    }
+
+    #setup .${IS_GRANTED}:after {
+        content: ' ✅';
+    }
+    
+    ${CSS_COMMON}
 `;
 
 export default CSS_DEV;

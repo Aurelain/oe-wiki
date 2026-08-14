@@ -1,8 +1,8 @@
-import CSS from '../css/CSS.js';
-import {LOG_HOST} from '../SETTINGS.js';
+import CSS_USER from '../css/CSS_USER.js';
+import {BTN_GAME, LOG_HOST} from '../SETTINGS.js';
 
-const HTML = `
-<style>${CSS}</style>
+const HTML_USER = `
+<style>${CSS_USER}</style>
 <div class='steps'>
     <!-- ==== SELECT =================================== -->
     <div class='step'>
@@ -14,7 +14,7 @@ const HTML = `
             and you don't need to manually zip files.</i>
         </div>
         <div class='action'>
-            Action: <button>Pick directory</button> or <button>Browse for zip</button> 
+            Action: <button class='${BTN_GAME}'>Pick directory</button> or <button>Browse for zip</button> 
         </div>
     </div>
     <!-- ==== RETRIEVE =================================== -->
@@ -63,4 +63,4 @@ const HTML = `
 </div>  
 `;
 
-export default HTML;
+export default HTML_USER;
