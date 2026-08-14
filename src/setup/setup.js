@@ -4,13 +4,15 @@ import {BTN_GAME, BTN_MIRROR, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
 import on from './utils/on.js';
 import {readFromDb, writeToDb} from './utils/LocalDb.js';
+import sendAndReceive from './sendAndReceive.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const GAME_DIR_HANDLE = 'gameDirHandle';
 const MIRROR_DIR_HANDLE = 'mirrorDirHandle';
-let parseResults;
+let parser;
+let parserResult;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -37,17 +39,10 @@ async function setup() {
     // Events:
     addEvents();
 
-    return;
-
     // Import parser:
-    const worker = importWorker(parsePath);
-    setTimeout(() => {
-        log('Sending foo...');
-        worker.postMessage('foo');
-    }, 1000);
-
+    await importParser(parsePath);
     if (isDev) {
-        // await runParse();
+        await runParse();
         // await getMirror();
         // buildDiff();
     }
@@ -106,13 +101,29 @@ async function onMirrorClick() {
 /**
  *
  */
-function importWorker(url) {
-    log('Loading parser', url);
-    const worker = new Worker(`data:application/javascript,importScripts('${url}');`);
-    worker.onmessage = (event) => {
-        console.log('Received result:', event.data);
-    };
-    return worker;
+async function importParser(url) {
+    parser = new Worker(`data:application/javascript,importScripts('${url}');`);
+    parser.addEventListener('error', () => log('!Parser error!'));
+    await sendAndReceive(parser, {type: 'ready'});
+    log('Connected to parser.');
+    parser.addEventListener('message', onMessageFromParser);
+}
+
+/**
+ *
+ */
+function onMessageFromParser(event) {
+    const data = event.data && typeof event.data === 'object' ? event.data : {};
+    const {type} = data;
+    console.log(`Parent received a "${type}" message!`);
+}
+
+/**
+ *
+ */
+async function runParse() {
+    const {result} = await sendAndReceive(parser, {type: 'run'});
+    parserResult = result;
 }
 
 // =====================================================================================================================

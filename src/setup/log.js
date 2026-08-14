@@ -67,6 +67,7 @@ function addCell(row, content) {
  *
  */
 function buildMessage(message, args) {
+    message = message.replace(/^!/, '');
     if (!args.length) {
         return document.createTextNode(message);
     }
