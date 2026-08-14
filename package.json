@@ -6,6 +6,9 @@
         "start": "node scripts/start/start",
         "build": "node scripts/build/build"
     },
+    "dependencies": {
+        "fflate": "^0.8.3"
+    },
     "devDependencies": {
         "esbuild": "0.28.2",
         "prettier": "3.9.6"

@@ -1,59 +1,59 @@
-(()=>{function $(t,...o){let e=[],{length:n}=t;for(let i=0;i<n;i++)e.push(t[i],o[i]);e.pop();let r=e.join("");return r=r.replaceAll(/\/\*[\s\S]*?\*\//g,""),r=r.replaceAll(/\s\/\/.*/g,""),r}var l=$;var a="log-host",s="btn-game",c="btn-mirror",d="is-granted";var N=l`
+(()=>{function F(t,...e){let o=[],{length:n}=t;for(let i=0;i<n;i++)o.push(t[i],e[i]);o.pop();let a=o.join("");return a=a.replaceAll(/\/\*[\s\S]*?\*\//g,""),a=a.replaceAll(/\s\/\/.*/g,""),a}var u=F;var r="log-host",s="btn-game",c="btn-mirror",w="btn-preview",d="is-granted";var W=u`
     #setup .log-title {
         margin-top: 32px;
         padding: 8px 0;
     }
 
-    #setup .${a} table {
+    #setup .${r} table {
         width: 100%;
         border-collapse: collapse;
     }
 
-    #setup .${a} th {
+    #setup .${r} th {
         text-align: left;
     }
 
-    #setup .${a} th,
-    #setup .${a} td {
+    #setup .${r} th,
+    #setup .${r} td {
         border: solid 1px #cbced1;
         border-left:none;
         border-right:none;
         vertical-align: top;
         padding: 4px;
     }
-    #setup .${a} th {
+    #setup .${r} th {
         border-top:none;
     }
     
-    #setup .${a} table {
+    #setup .${r} table {
         border: solid 1px #cbced1;
     }
 
-    #setup .${a} th {
+    #setup .${r} th {
         background: rgba(255, 255, 255, 0.1);
     }
 
-    #setup .${a} td:nth-child(1) {
+    #setup .${r} td:nth-child(1) {
         width: 90px;
     }
 
-    #setup .${a} td:nth-child(2),
-    #setup .${a} th:nth-child(2) {
+    #setup .${r} td:nth-child(2),
+    #setup .${r} th:nth-child(2) {
         width: 20px;
         text-align: center;
     }
 
-    #setup .${a} td > div > div {
+    #setup .${r} td > div > div {
         cursor: pointer;
         border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
         width: max-content;
     }
 
-    #setup .${a} textarea {
+    #setup .${r} textarea {
         width: calc(100% - 8px);
         height: 200px;
     }
-`,m=N;var H=l`
+`,v=W;var z=u`
     #setup {
         color: #fff;
     }
@@ -81,9 +81,9 @@
         content: ' ✅';
     }
     
-    ${m}
-`,S=H;var k=`
-<style>${S}</style>
+    ${v}
+`,M=z;var U=`
+<style>${M}</style>
 <div class='steps'>
     <!-- ==== SELECT =================================== -->
     <div class='step'>
@@ -117,7 +117,7 @@
             Opens a popup window listing each page that is about to be updated, potentially highlighting differences.
         </div>
         <div class='action'>
-            Action: <button>Preview</button> 
+            Action: <button class='${w}'>Preview</button> 
         </div>
     </div>
     <!-- ==== SAVE =================================== -->
@@ -133,7 +133,7 @@
 </div>
 <!-- ==== LOG =================================== -->
 <div class='log-title'>Log:</div>
-<div class='${a}'>
+<div class='${r}'>
     <table class='wikitable'>
         <tr>
             <th>Timestamp</th>
@@ -142,7 +142,7 @@
         </tr>
     </table>
 </div>  
-`,x=k;var E,T,C={info:"\u2139\uFE0F",warning:"\u26A0\uFE0F",error:"\u26D4"};function G(t,...o){let e=t.endsWith("!")?t.startsWith("!")?"error":"warning":"info";P(e,t,o)}function _(t){E=t,T=E.querySelector("table")}function P(t,o,e){let r=new Date().toLocaleTimeString("en-GB",{hour12:!1,hour:"2-digit",minute:"2-digit",second:"2-digit",fractionalSecondDigits:3}),i=document.createElement("tr");b(i,r),b(i,C[t]),b(i,B(o,e)),T.appendChild(i),console.log(o,...e)}function b(t,o){let e=document.createElement("td");o=o instanceof Node?o:document.createTextNode(o),e.appendChild(o),t.appendChild(e)}function B(t,o){if(t=t.replace(/^!/,""),!o.length)return document.createTextNode(t);let e=document.createElement("div"),n=document.createElement("div");n.innerHTML=t,n.onclick=function(){let i=this.nextElementSibling.style.display!=="none";this.nextElementSibling.style.display=i?"none":"block"},e.appendChild(n);let r=document.createElement("textarea");return r.style.display="none",r.innerHTML=JSON.stringify(o,null,4),e.appendChild(r),e}var f=G;var I=l`
+`,O=U;var N,$,J={info:"\u2139\uFE0F",warning:"\u26A0\uFE0F",error:"\u26D4"};function K(t,...e){let o=t.endsWith("!")?t.startsWith("!")?"error":"warning":"info";Q(o,t,e)}function A(t){N=t,$=N.querySelector("table")}function Q(t,e,o){let a=new Date().toLocaleTimeString("en-GB",{hour12:!1,hour:"2-digit",minute:"2-digit",second:"2-digit",fractionalSecondDigits:3}),i=document.createElement("tr");_(i,a),_(i,J[t]),_(i,X(e,o)),$.appendChild(i),console.log(e,...o)}function _(t,e){let o=document.createElement("td");e=e instanceof Node?e:document.createTextNode(e),o.appendChild(e),t.appendChild(o)}function X(t,e){if(t=t.replace(/^!/,""),!e.length)return document.createTextNode(t);let o=document.createElement("div"),n=document.createElement("div");n.innerHTML=t,n.onclick=function(){let i=this.nextElementSibling.style.display!=="none";this.nextElementSibling.style.display=i?"none":"block"},o.appendChild(n);let a=document.createElement("textarea");return a.style.display="none",a.innerHTML=JSON.stringify(e,null,4),o.appendChild(a),o}var f=K;var Y=u`
     html, body {
         padding:0;
         margin:0;
@@ -165,7 +165,7 @@
         color:#000;
         flex-grow: 1;
     }
-    .${a} {
+    .${r} {
         height: 200px;
     }
 
@@ -178,16 +178,16 @@
         content: ' ✅';
     }
     
-    ${m}
-`,D=I;var j=`
-<style>${D}</style>
+    ${v}
+`,L=Y;var Z=`
+<style>${L}</style>
 <div class='bar'>
     <button class='${s}'>Pick game directory</button>
     <button class='${c}'>Pick mirror directory</button> 
 </div>
 <div class='list'>
 </div>
-<div class='${a}'>
+<div class='${r}'>
     <table class='wikitable'>
         <tr>
             <th>Timestamp</th>
@@ -196,4 +196,4 @@
         </tr>
     </table>
 </div>  
-`,M=j;function V(t,o,e){let n;typeof o=="string"?n=Array.from(document.querySelectorAll(o)):Array.isArray(o)?n=o:n=[o];for(let r of n)r.addEventListener(t,e)}var h=V;var R=window.location.host||"localhost",p="store";async function g(t){if(!(await indexedDB.databases()).find(n=>n.name===R))return;let e=await O();if(!e.objectStoreNames.contains(p)){e.close();return}return new Promise((n,r)=>{let i=e.transaction(p).objectStore(p).get(t);i.onsuccess=()=>{n(i.result),e.close()},i.onerror=()=>{r(i.error),e.close()}})}async function v(t,o){let e=await O();return new Promise((n,r)=>{let i=e.transaction(p,"readwrite");i.objectStore(p).put(o,t),i.oncomplete=()=>{n(),e.close()},i.onerror=()=>{r(i.error),e.close()}})}function O(){return new Promise((t,o)=>{let e=indexedDB.open(R);e.onupgradeneeded=n=>n.target.result.createObjectStore(p),e.onsuccess=()=>t(e.result),e.onerror=()=>o(e.error)})}async function q(t,o){return new Promise(e=>{let n=r=>{let i=r.data&&typeof r.data=="object"?r.data:{};i.type===o.type&&(t.removeEventListener("message",n),e(i))};t.addEventListener("message",n),t.postMessage(o)})}var y=q;var A="gameDirHandle",L="mirrorDirHandle",u,z;async function W(){let t=document.getElementById("setup");if(!t)return;let o=t.dataset.dev==="1",e=t.dataset.parse;t.innerHTML=o?M:x,_(t.querySelector("."+a)),await w(),f("Initialized."),U(),await K(e),o&&await X()}function U(){h("click","."+s,F),h("click","."+c,J)}async function w(){let t=await g(A);document.querySelector("."+s)?.classList.toggle(d,!!t);let o=await g(L);document.querySelector("."+c)?.classList.toggle(d,!!o)}async function F(){let t;try{t=await window.showDirectoryPicker({mode:"read"})}catch{}t&&(await v(A,t),await w())}async function J(){let t;try{t=await window.showDirectoryPicker({mode:"read"})}catch{}t&&(await v(L,t),await w())}async function K(t){u=new Worker(`data:application/javascript,importScripts('${t}');`),u.addEventListener("error",()=>f("!Parser error!")),await y(u,{type:"ready"}),f("Connected to parser."),u.addEventListener("message",Q)}function Q(t){let o=t.data&&typeof t.data=="object"?t.data:{},{type:e}=o;console.log(`Parent received a "${e}" message!`)}async function X(){let{result:t}=await y(u,{type:"run"});z=t}W();})();
+`,H=Z;function tt(t,e,o){let n;typeof e=="string"?n=Array.from(document.querySelectorAll(e)):Array.isArray(e)?n=e:n=[e];for(let a of n)a.addEventListener(t,o)}var E=tt;var P=window.location.host||"localhost",m="store";async function b(t){if(!(await indexedDB.databases()).find(n=>n.name===P))return;let o=await G();if(!o.objectStoreNames.contains(m)){o.close();return}return new Promise((n,a)=>{let i=o.transaction(m).objectStore(m).get(t);i.onsuccess=()=>{n(i.result),o.close()},i.onerror=()=>{a(i.error),o.close()}})}async function k(t,e){let o=await G();return new Promise((n,a)=>{let i=o.transaction(m,"readwrite");i.objectStore(m).put(e,t),i.oncomplete=()=>{n(),o.close()},i.onerror=()=>{a(i.error),o.close()}})}function G(){return new Promise((t,e)=>{let o=indexedDB.open(P);o.onupgradeneeded=n=>n.target.result.createObjectStore(m),o.onsuccess=()=>t(o.result),o.onerror=()=>e(o.error)})}async function et(t,e,o){return new Promise(n=>{let a=i=>{let l=i.data&&typeof i.data=="object"?i.data:{};l.type===e&&(console.log(`Parent received a "${e}" reply.`),t.removeEventListener("message",a),n(l.payload))};t.addEventListener("message",a),t.postMessage({type:e,payload:o})})}var D=et;function ot(t,e,o){t.postMessage({type:e,payload:o})}var C=ot;async function nt(t,e,o,n){return I(t,"",e,o,n)}async function I(t,e,o,n,a){e+=e?"/":"";let i={},l=await it(t);for(let[T,g]of l){let y=e+T;if(!(n&&y.match(n))){if(g.kind==="directory"){let p=await I(g,y,o,n,a);if(p instanceof File)return p;Object.assign(i,p)}else if(y.match(o)){let p=await g.getFile();if(a)return p;i[y]=p}}}return i}async function it(t){let e=[];try{for await(let o of t.entries())e.push(o)}catch{}return e}var B=nt;var x="gameDirHandle",q="mirrorDirHandle",h,at;async function rt(){let t=document.getElementById("setup");if(!t)return;let e=t.dataset.dev==="1",o=t.dataset.parse;t.innerHTML=e?H:O,A(t.querySelector("."+r)),await R(),f("Initialized."),st(),await pt(o),e&&await j()}async function R(){let t=await b(x),e=await S(t);document.querySelector("."+s)?.classList.toggle(d,e);let o=await b(q),n=await S(o);document.querySelector("."+c)?.classList.toggle(d,n)}async function S(t){return await t?.queryPermission()==="granted"}function st(){E("click","."+s,ct),E("click","."+c,dt),E("click","."+w,lt)}async function ct(){await V(x)}async function dt(){await V(q)}async function lt(){await j()}async function V(t){let e=await b(t);if(e&&!await S(e)){if(await e.requestPermission(),await S(e)){await R();return}}try{e=await window.showDirectoryPicker({mode:"read"})}catch{}e&&(await k(t,e),await R())}async function pt(t){h=new Worker(`data:application/javascript,importScripts('${t}');`),h.addEventListener("error",()=>f("!Parser error!")),await D(h,"ready"),f("Connected to parser."),h.addEventListener("message",ut)}async function ut(t){let e=t.data&&typeof t.data=="object"?t.data:{},{type:o,payload:n}=e;if(o==="find"){console.log(`Parent received a "${o}" inquiry.`);let a=await b(x),[i,l,T]=n,g=await B(a,i,l,T);C(h,"find",g)}}async function j(){await(await b(x))?.queryPermission()==="granted"&&await ft()}async function ft(){f("Started parsing...");let t=await D(h,"run");f("Received parsing results.",Object.keys(t)),at=t}rt();})();

@@ -20,7 +20,7 @@ function initialize(actuator) {
  *
  */
 async function find(...args) {
-    await sendAndReceive('find', args);
+    return await sendAndReceive('find', args);
 }
 
 /**

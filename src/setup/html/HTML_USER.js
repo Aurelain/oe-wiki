@@ -1,5 +1,5 @@
 import CSS_USER from '../css/CSS_USER.js';
-import {BTN_GAME, LOG_HOST} from '../SETTINGS.js';
+import {BTN_GAME, BTN_PREVIEW, LOG_HOST} from '../SETTINGS.js';
 
 const HTML_USER = `
 <style>${CSS_USER}</style>
@@ -36,7 +36,7 @@ const HTML_USER = `
             Opens a popup window listing each page that is about to be updated, potentially highlighting differences.
         </div>
         <div class='action'>
-            Action: <button>Preview</button> 
+            Action: <button class='${BTN_PREVIEW}'>Preview</button> 
         </div>
     </div>
     <!-- ==== SAVE =================================== -->

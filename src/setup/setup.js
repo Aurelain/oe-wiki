@@ -1,12 +1,12 @@
 import HTML_USER from './html/HTML_USER.js';
 import log, {setLogHost} from './log.js';
-import {BTN_GAME, BTN_MIRROR, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
+import {BTN_GAME, BTN_MIRROR, BTN_PREVIEW, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
 import on from './utils/on.js';
 import {readFromDb, writeToDb} from './utils/LocalDb.js';
 import sendAndReceive from './helpers/sendAndReceive.js';
 import send from './helpers/send.js';
-import findInDirectory from './helpers/findInDirectory.js';
+import findFiles from './helpers/findFiles.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -78,6 +78,7 @@ async function checkPermission(dirHandle) {
 function addEvents() {
     on('click', '.' + BTN_GAME, onGameClick);
     on('click', '.' + BTN_MIRROR, onMirrorClick);
+    on('click', '.' + BTN_PREVIEW, onPreviewClick);
 }
 
 /**
@@ -92,6 +93,13 @@ async function onGameClick() {
  */
 async function onMirrorClick() {
     await refreshDirHandle(MIRROR_DIR_HANDLE);
+}
+
+/**
+ *
+ */
+async function onPreviewClick() {
+    await refreshDiff();
 }
 
 /**
@@ -138,12 +146,14 @@ async function importParser(url) {
  */
 async function onMessageFromParser(event) {
     const data = event.data && typeof event.data === 'object' ? event.data : {};
-    const {type} = data;
+    const {type, payload} = data;
     switch (type) {
         case 'find':
             console.log(`Parent received a "${type}" inquiry.`);
             const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-            send(parser, 'find', await findInDirectory(gameDirHandle));
+            const [pattern, exclude, onlyFirstResult] = payload;
+            const result = await findFiles(gameDirHandle, pattern, exclude, onlyFirstResult);
+            send(parser, 'find', result);
             break;
     }
 }
@@ -167,9 +177,9 @@ async function refreshDiff() {
  *
  */
 async function runParse() {
+    log('Started parsing...');
     const result = await sendAndReceive(parser, 'run');
-    log('Received parsing results.');
-    console.log('result:', result);
+    log('Received parsing results.', Object.keys(result));
     parserResult = result;
 }
 
