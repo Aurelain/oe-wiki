@@ -1,5 +1,6 @@
-import fs from 'node:fs';
-import fsp from 'node:fs/promises';
+// noinspection JSIgnoredPromiseFromCall,ES6MissingAwait
+
+import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
 import build from '../build/build.js';
@@ -9,13 +10,10 @@ import build from '../build/build.js';
 // =====================================================================================================================
 const PORT = 8000;
 const BUILD_TIMEOUT = 100; // milliseconds, how long to wait after a file change before we call build()
-const LIVERELOAD_ENDPOINT = '/livereload';
-const INPUT_DIR = 'src';
-const OUTPUT_DIR = 'dev';
-const PRODUCTION_DIR = 'docs';
-const INPUT_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', INPUT_DIR));
-const OUTPUT_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', OUTPUT_DIR));
-const PRODUCTION_PATH = path.resolve(path.join(import.meta.dirname, '..', '..', PRODUCTION_DIR));
+const LIVE_RELOAD_ENDPOINT = '/live-reload';
+const INPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'src'));
+const OUTPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'dev')); // not docs!
+const PRODUCTION_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'docs'));
 const CONTENT_TYPE = {
     '.js': 'text/javascript',
     '.css': 'text/css',
@@ -23,7 +21,7 @@ const CONTENT_TYPE = {
 // Script injected into HTML pages to listen for reload triggers:
 const LIVERELOAD_SCRIPT = `
     <script>
-        const eventSource = new EventSource('${LIVERELOAD_ENDPOINT}');
+        const eventSource = new EventSource('${LIVE_RELOAD_ENDPOINT}');
         eventSource.onmessage = (e) => {
             if (e.data === 'reload') {
                 window.location.reload();
@@ -47,6 +45,8 @@ async function start() {
     await performBuild();
     const server = http.createServer(onRequest);
     server.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}.`));
+    watchDir(INPUT_DIR);
+    watchDir(PRODUCTION_DIR);
 }
 
 // =====================================================================================================================
@@ -55,16 +55,29 @@ async function start() {
 /**
  *
  */
+async function performBuild() {
+    await fs.rm(OUTPUT_DIR, {recursive: true, force: true});
+    await fs.cp(PRODUCTION_DIR, OUTPUT_DIR, {recursive: true});
+    await build('-o', OUTPUT_DIR, '--dev', '--mute');
+    for (const res of buildAudience) {
+        res.write('data: reload\n\n'); // broadcast reload command
+    }
+    buildAudience.clear();
+}
+
+/**
+ *
+ */
 function onRequest(req, res) {
-    if (req.url === LIVERELOAD_ENDPOINT) {
+    if (req.url === LIVE_RELOAD_ENDPOINT) {
         return handleLiveReloadEndpoint(req, res);
     }
 
     const url = req.url === '/' ? '/index.html' : req.url;
-    const filePath = OUTPUT_PATH + url;
+    const filePath = OUTPUT_DIR + url;
     const extname = path.extname(filePath);
 
-    fs.readFile(filePath, (err, content) => handleFileRead(err, content, extname, req, res));
+    serveFile(filePath, extname, req, res);
 }
 
 /**
@@ -76,31 +89,28 @@ function handleLiveReloadEndpoint(req, res) {
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive',
     });
-
-    // Watch the current directory for file changes
-    const watcher = fs.watch(INPUT_PATH, {recursive: true}, () => {
-        buildAudience.add(res);
-        clearTimeout(buildTimeout);
-        buildTimeout = setTimeout(performBuild, BUILD_TIMEOUT);
-    });
-
-    req.on('close', () => watcher.close());
+    buildAudience.add(res);
+    req.on('close', () => buildAudience.delete(res));
 }
 
 /**
  *
  */
-function handleFileRead(err, content, extname, req, res) {
-    if (err) {
+async function serveFile(filePath, extname, req, res) {
+    let content;
+    try {
+        content = await fs.readFile(filePath);
+    } catch (err) {
         res.writeHead(404, {'Content-Type': 'text/plain'});
         res.end('404 Not Found');
         return;
     }
+
     const contentType = CONTENT_TYPE[extname] || 'text/html';
     res.writeHead(200, {'Content-Type': contentType});
 
-    // Inject livereload script automatically into HTML files:
-    if (extname === '.html' || req.url === '/') {
+    // Inject live-reload script automatically into HTML files:
+    if (extname === '.html') {
         content = content.toString().replace('</body>', `${LIVERELOAD_SCRIPT}\n</body>`);
     }
     res.end(content);
@@ -109,16 +119,14 @@ function handleFileRead(err, content, extname, req, res) {
 /**
  *
  */
-async function performBuild() {
-    if (OUTPUT_PATH !== PRODUCTION_PATH) {
-        await fsp.rm(OUTPUT_PATH, {recursive: true, force: true});
-        await fsp.cp(PRODUCTION_PATH, OUTPUT_PATH, {recursive: true});
+async function watchDir(dirPath) {
+    const watcher = fs.watch(dirPath, {recursive: true});
+    for await (const event of watcher) {
+        if (event.filename && !event.filename.startsWith('.')) {
+            clearTimeout(buildTimeout);
+            buildTimeout = setTimeout(performBuild, BUILD_TIMEOUT);
+        }
     }
-    await build('-o', OUTPUT_PATH, '--dev', '--mute');
-    for (const res of buildAudience) {
-        res.write('data: reload\n\n');
-    }
-    buildAudience.clear();
 }
 
 // =====================================================================================================================
