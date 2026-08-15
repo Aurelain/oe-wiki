@@ -1,25 +1,19 @@
 import HTML_USER from './html/HTML_USER.js';
 import log, {setLogHost} from './log.js';
-import {BTN_GAME, BTN_MIRROR, DIFF_LIST, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
+import {LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
 import {readFromDb} from './utils/LocalDb.js';
 import sendAndReceive from './helpers/sendAndReceive.js';
 import send from './helpers/send.js';
 import findFiles from './utils/findFiles.js';
-import getFile from './utils/getFile.js';
-import buildDiff from './helpers/buildDiff.js';
 import vitalizeUser from './vitalizeUser.js';
 import vitalizeDev from './vitalizeDev.js';
-import checkPermission from './helpers/checkPermission.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const GAME_DIR_HANDLE = 'gameDirHandle';
-const MIRROR_DIR_HANDLE = 'mirrorDirHandle';
 let parser;
-let parserResult;
-let mirrorResult;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -52,19 +46,6 @@ async function setup() {
 // =====================================================================================================================
 //  P R I V A T E
 // =====================================================================================================================
-/**
- *
- */
-async function updateGrantedIcons() {
-    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    const isGameGranted = await checkPermission(gameDirHandle);
-    document.querySelector('.' + BTN_GAME)?.classList.toggle(IS_GRANTED, isGameGranted);
-
-    const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
-    const isMirrorGranted = await checkPermission(mirrorDirHandle);
-    document.querySelector('.' + BTN_MIRROR)?.classList.toggle(IS_GRANTED, isMirrorGranted);
-}
-
 /**
  *
  */
@@ -103,43 +84,11 @@ async function onMessageFromParser(event) {
 /**
  *
  */
-async function refreshDevDiff() {
-    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    if (!(await checkPermission(gameDirHandle))) {
-        return;
-    }
-    await runParse();
-    await runDevMirror();
-    buildDiff(mirrorResult, parserResult, document.querySelector('.' + DIFF_LIST));
-}
-
-/**
- *
- */
 async function runParse() {
     log('Started parsing...');
     const result = await sendAndReceive(parser, 'run');
     log(`Received parsing results (${Object.keys(result).length}).`);
     return result;
-}
-
-/**
- *
- */
-async function runDevMirror() {
-    mirrorResult = {};
-    const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
-    if (!(await checkPermission(mirrorDirHandle))) {
-        return;
-    }
-    for (const path in parserResult) {
-        const file = await getFile(mirrorDirHandle, path);
-        mirrorResult[path] = file ? await file.text() : undefined;
-    }
-    // mirrorResult['Data/Difficulty~Easy.wiki'] += 'x';
-    // mirrorResult['Data/Difficulty~Normal.wiki'] = undefined;
-    // mirrorResult['Data/Difficulty~Expert.wiki'] = undefined;
-    // mirrorResult['Data/Difficulty~Impossible.wiki'] = undefined;
 }
 
 // =====================================================================================================================

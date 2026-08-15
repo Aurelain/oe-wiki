@@ -6,7 +6,6 @@ const CSS_COMMON = styled`
     #setup button {
         padding: 4px 6px;
         cursor: pointer;
-        font-family: inherit;
         font-size: inherit;
     }
     

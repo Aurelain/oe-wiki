@@ -15,7 +15,7 @@ async function refreshDirHandle(key) {
         } else {
             await dirHandle.requestPermission();
             if (await checkPermission(dirHandle)) {
-                return; // by clicking this button, the user managed to renew their permission
+                return dirHandle; // by clicking this button, the user managed to renew their permission
             } else {
                 // nothing, the user failed to renew, so we pass-on to change the path
             }
@@ -27,6 +27,7 @@ async function refreshDirHandle(key) {
     if (dirHandle) {
         await writeToDb(key, dirHandle);
     }
+    return dirHandle;
 }
 
 // =====================================================================================================================

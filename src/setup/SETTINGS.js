@@ -1,4 +1,5 @@
 export const GAME_DIR_HANDLE = 'gameDirHandle';
+export const MIRROR_DIR_HANDLE = 'mirrorDirHandle';
 export const LOG_HOST = 'log-host';
 export const BTN_GAME = 'btn-game';
 export const BTN_MIRROR = 'btn-mirror';
