@@ -191,16 +191,18 @@ async function runParse() {
 /**
  *
  */
-async function runDevMirror(dirHandle) {
+async function runDevMirror() {
     mirrorResult = {};
     const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
     if (!(await checkPermission(mirrorDirHandle))) {
         return;
     }
     for (const path in parserResult) {
-        const file = await getFile(dirHandle, path);
-        mirrorResult[path] = file ? await file.text() : null;
+        const file = await getFile(mirrorDirHandle, path);
+        mirrorResult[path] = file ? await file.text() : undefined;
     }
+    mirrorResult['Data/Difficulty~Easy.wiki'] += 'x';
+    mirrorResult['Data/Difficulty~Normal.wiki'] = undefined;
 }
 
 // =====================================================================================================================
