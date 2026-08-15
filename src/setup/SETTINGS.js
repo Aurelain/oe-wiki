@@ -3,3 +3,4 @@ export const BTN_GAME = 'btn-game';
 export const BTN_MIRROR = 'btn-mirror';
 export const BTN_PREVIEW = 'btn-preview';
 export const IS_GRANTED = 'is-granted';
+export const DIFF_LIST = 'diff-list';

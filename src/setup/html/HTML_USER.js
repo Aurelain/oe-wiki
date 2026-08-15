@@ -33,7 +33,7 @@ const HTML_USER = `
     <div class='step'>
         <div class='title'>3. Preview changes</div>
         <div class='about'>
-            Opens a popup window listing each page that is about to be updated, potentially highlighting differences.
+            Open a popup window listing each page that is about to be updated, potentially highlighting differences.
         </div>
         <div class='action'>
             Action: <button class='${BTN_PREVIEW}'>Preview</button> 
@@ -43,7 +43,7 @@ const HTML_USER = `
     <div class='step'>
         <div class='title'>4. Save changes</div>
         <div class='about'>
-            Writes the changes to each page using the current account, just as if you had done them manually.
+            Write the changes to each page using the current account, just as if you had done them manually.
         </div>
         <div class='action'>
             Action: <button>SAVE</button> 

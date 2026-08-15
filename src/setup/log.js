@@ -50,7 +50,6 @@ function add(type, message, args) {
     addCell(row, buildMessage(message, args));
 
     table.appendChild(row);
-    console.log(message, ...args);
 }
 
 /**
@@ -68,6 +67,7 @@ function addCell(row, content) {
  */
 function buildMessage(message, args) {
     message = message.replace(/^!/, '');
+    console.log(message, ...args);
     if (!args.length) {
         return document.createTextNode(message);
     }

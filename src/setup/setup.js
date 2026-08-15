@@ -1,12 +1,14 @@
 import HTML_USER from './html/HTML_USER.js';
 import log, {setLogHost} from './log.js';
-import {BTN_GAME, BTN_MIRROR, BTN_PREVIEW, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
+import {BTN_GAME, BTN_MIRROR, BTN_PREVIEW, DIFF_LIST, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
 import on from './utils/on.js';
 import {readFromDb, writeToDb} from './utils/LocalDb.js';
 import sendAndReceive from './helpers/sendAndReceive.js';
 import send from './helpers/send.js';
-import findFiles from './helpers/findFiles.js';
+import findFiles from './utils/findFiles.js';
+import getFile from './utils/getFile.js';
+import buildDiff from './helpers/buildDiff.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -15,6 +17,7 @@ const GAME_DIR_HANDLE = 'gameDirHandle';
 const MIRROR_DIR_HANDLE = 'mirrorDirHandle';
 let parser;
 let parserResult;
+let mirrorResult;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -45,7 +48,9 @@ async function setup() {
     await importParser(parsePath);
 
     // Start the show:
-    isDev && (await refreshDiff());
+    if (isDev) {
+        await refreshDevDiff();
+    }
 }
 
 // =====================================================================================================================
@@ -86,6 +91,7 @@ function addEvents() {
  */
 async function onGameClick() {
     await refreshDirHandle(GAME_DIR_HANDLE);
+    await refreshDevDiff();
 }
 
 /**
@@ -93,13 +99,14 @@ async function onGameClick() {
  */
 async function onMirrorClick() {
     await refreshDirHandle(MIRROR_DIR_HANDLE);
+    await refreshDevDiff();
 }
 
 /**
  *
  */
 async function onPreviewClick() {
-    await refreshDiff();
+    // await refreshDevDiff();
 }
 
 /**
@@ -161,16 +168,14 @@ async function onMessageFromParser(event) {
 /**
  *
  */
-async function refreshDiff() {
+async function refreshDevDiff() {
     const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    const permission = await gameDirHandle?.queryPermission();
-    if (permission !== 'granted') {
+    if (!(await checkPermission(gameDirHandle))) {
         return;
     }
-
     await runParse();
-    // await getMirror();
-    // buildDiff();
+    await runDevMirror();
+    buildDiff(mirrorResult, parserResult, document.querySelector('.' + DIFF_LIST));
 }
 
 /**
@@ -179,8 +184,23 @@ async function refreshDiff() {
 async function runParse() {
     log('Started parsing...');
     const result = await sendAndReceive(parser, 'run');
-    log('Received parsing results.', Object.keys(result));
+    log(`Received parsing results (${Object.keys(result).length}).`);
     parserResult = result;
+}
+
+/**
+ *
+ */
+async function runDevMirror(dirHandle) {
+    mirrorResult = {};
+    const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
+    if (!(await checkPermission(mirrorDirHandle))) {
+        return;
+    }
+    for (const path in parserResult) {
+        const file = await getFile(dirHandle, path);
+        mirrorResult[path] = file ? await file.text() : null;
+    }
 }
 
 // =====================================================================================================================

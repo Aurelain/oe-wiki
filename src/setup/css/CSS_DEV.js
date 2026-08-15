@@ -1,5 +1,5 @@
 import styled from '../utils/styled.js';
-import {BTN_GAME, BTN_MIRROR, IS_GRANTED, LOG_HOST} from '../SETTINGS.js';
+import {BTN_GAME, BTN_MIRROR, DIFF_LIST, IS_GRANTED, LOG_HOST} from '../SETTINGS.js';
 import CSS_COMMON from './CSS_COMMON.js';
 
 // noinspection CssUnusedSymbol
@@ -21,7 +21,7 @@ const CSS_DEV = styled`
     .bar {
         padding:8px;
     }
-    .list {
+    .${DIFF_LIST} {
         background: #fff;
         color:#000;
         flex-grow: 1;
