@@ -32,15 +32,6 @@ const CSS_DEV = styled`
         height: 200px;
         flex-shrink: 0;
     }
-
-    #setup .${BTN_GAME}:after,
-    #setup .${BTN_MIRROR}:after {
-        content: ' ⚠️';
-    }
-
-    #setup .${IS_GRANTED}:after {
-        content: ' ✅';
-    }
     
     ${CSS_COMMON}
     ${CSS_DIFF}

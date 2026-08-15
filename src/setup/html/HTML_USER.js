@@ -1,20 +1,17 @@
 import CSS_USER from '../css/CSS_USER.js';
-import {BTN_GAME, BTN_PREVIEW, LOG_HOST} from '../SETTINGS.js';
+import {BTN_GAME, BTN_PREVIEW, BTN_RETRIEVE, BTN_SAVE, LOG_HOST} from '../SETTINGS.js';
 
 const HTML_USER = `
 <style>${CSS_USER}</style>
 <div class='steps'>
     <!-- ==== SELECT =================================== -->
     <div class='step'>
-        <div class='title'>1. Select game data files</div>
+        <div class='title'>1. Select game data directory</div>
         <div class='about'>
-            Make the internal data files available.<br/>
-            Either give read-access to the local install directory of the game, or upload/drag-and-drop a zip archive.<br>
-            <i>Note: Allowing read-access to the directory is easier because you only need to do it once,
-            and you don't need to manually zip files.</i>
+            Give read-access to the local install directory of the game so the parser can choose what files it needs.
         </div>
         <div class='action'>
-            Action: <button class='${BTN_GAME}'>Pick directory</button> or <button>Browse for zip</button> 
+            Action: <button class='${BTN_GAME}'>Pick directory</button> 
         </div>
     </div>
     <!-- ==== RETRIEVE =================================== -->
@@ -22,11 +19,11 @@ const HTML_USER = `
         <div class='title'>2. Retrieve wiki data pages</div>
         <div class='about'>
             Temporarily download all relevant data pages from this wiki so they can be used as a comparison base. <br/>
-            This step is optional, but highly recommended, because it gives awareness in the following steps and
+            This step is optional, but recommended, because it gives awareness in the following steps and
             reduces the number of updates needed.</i>
         </div>
         <div class='action'>
-            Action: <button>Retrieve</button> 
+            Action: <button class='${BTN_RETRIEVE}'>Retrieve <progress/></button> 
         </div>
     </div>
     <!-- ==== PREVIEW =================================== -->
@@ -36,7 +33,7 @@ const HTML_USER = `
             Open a popup window listing each page that is about to be updated, potentially highlighting differences.
         </div>
         <div class='action'>
-            Action: <button class='${BTN_PREVIEW}'>Preview</button> 
+            Action: <button class='${BTN_PREVIEW}'>Preview <progress/></button> 
         </div>
     </div>
     <!-- ==== SAVE =================================== -->
@@ -46,7 +43,7 @@ const HTML_USER = `
             Write the changes to each page using the current account, just as if you had done them manually.
         </div>
         <div class='action'>
-            Action: <button>SAVE</button> 
+            Action: <button class='${BTN_SAVE}'>SAVE <progress/></button> 
         </div>
     </div>
 </div>

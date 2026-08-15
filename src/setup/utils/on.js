@@ -1,7 +1,10 @@
 /**
  *
  */
-function on(name, selector, handler) {
+function on(eventName, selector, handler) {
+    if (selector.match(/^[a-z]/)) {
+        selector = '.' + selector;
+    }
     let all;
     if (typeof selector === 'string') {
         all = Array.from(document.querySelectorAll(selector));
@@ -11,7 +14,7 @@ function on(name, selector, handler) {
         all = [selector];
     }
     for (const element of all) {
-        element.addEventListener(name, handler);
+        element.addEventListener(eventName, handler);
     }
 }
 

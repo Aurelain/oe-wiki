@@ -1,14 +1,16 @@
 import HTML_USER from './html/HTML_USER.js';
 import log, {setLogHost} from './log.js';
-import {BTN_GAME, BTN_MIRROR, BTN_PREVIEW, DIFF_LIST, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
+import {BTN_GAME, BTN_MIRROR, DIFF_LIST, IS_GRANTED, LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
-import on from './utils/on.js';
-import {readFromDb, writeToDb} from './utils/LocalDb.js';
+import {readFromDb} from './utils/LocalDb.js';
 import sendAndReceive from './helpers/sendAndReceive.js';
 import send from './helpers/send.js';
 import findFiles from './utils/findFiles.js';
 import getFile from './utils/getFile.js';
 import buildDiff from './helpers/buildDiff.js';
+import vitalizeUser from './vitalizeUser.js';
+import vitalizeDev from './vitalizeDev.js';
+import checkPermission from './helpers/checkPermission.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -38,19 +40,13 @@ async function setup() {
     // Markup:
     root.innerHTML = isDev ? HTML_DEV : HTML_USER;
     setLogHost(root.querySelector('.' + LOG_HOST));
-    await updateGrantedIcons();
     log('Initialized.');
-
-    // Events:
-    addEvents();
 
     // Import parser:
     await importParser(parsePath);
 
-    // Start the show:
-    if (isDev) {
-        await refreshDevDiff();
-    }
+    // Add event handlers and make dynamic touch-ups:
+    isDev ? await vitalizeDev(runParse) : await vitalizeUser(runParse);
 }
 
 // =====================================================================================================================
@@ -67,73 +63,6 @@ async function updateGrantedIcons() {
     const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
     const isMirrorGranted = await checkPermission(mirrorDirHandle);
     document.querySelector('.' + BTN_MIRROR)?.classList.toggle(IS_GRANTED, isMirrorGranted);
-}
-
-/**
- *
- */
-async function checkPermission(dirHandle) {
-    const permission = await dirHandle?.queryPermission();
-    return permission === 'granted';
-}
-
-/**
- *
- */
-function addEvents() {
-    on('click', '.' + BTN_GAME, onGameClick);
-    on('click', '.' + BTN_MIRROR, onMirrorClick);
-    on('click', '.' + BTN_PREVIEW, onPreviewClick);
-}
-
-/**
- *
- */
-async function onGameClick() {
-    await refreshDirHandle(GAME_DIR_HANDLE);
-    await refreshDevDiff();
-}
-
-/**
- *
- */
-async function onMirrorClick() {
-    await refreshDirHandle(MIRROR_DIR_HANDLE);
-    await refreshDevDiff();
-}
-
-/**
- *
- */
-async function onPreviewClick() {
-    // await refreshDevDiff();
-}
-
-/**
- *
- */
-async function refreshDirHandle(key) {
-    let dirHandle = await readFromDb(key);
-    if (dirHandle) {
-        if (await checkPermission(dirHandle)) {
-            // nothing, the user already has the permission, but clicked to change the path
-        } else {
-            await dirHandle.requestPermission();
-            if (await checkPermission(dirHandle)) {
-                await updateGrantedIcons();
-                return; // by clicking this button, the user managed to renew their permission
-            } else {
-                // nothing, the user failed to renew, so we pass-on to change the path
-            }
-        }
-    }
-    try {
-        dirHandle = await window.showDirectoryPicker({mode: 'read'});
-    } catch (e) {}
-    if (dirHandle) {
-        await writeToDb(key, dirHandle);
-        await updateGrantedIcons();
-    }
 }
 
 /**
@@ -191,7 +120,7 @@ async function runParse() {
     log('Started parsing...');
     const result = await sendAndReceive(parser, 'run');
     log(`Received parsing results (${Object.keys(result).length}).`);
-    parserResult = result;
+    return result;
 }
 
 /**

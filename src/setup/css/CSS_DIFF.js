@@ -5,12 +5,25 @@ import {
     DIFF_CONTENT,
     DIFF_IDENTICAL,
     DIFF_LABEL,
+    DIFF_LIST,
     DIFF_NEW,
     DIFF_PATH,
 } from '../SETTINGS.js';
 
 // noinspection CssUnusedSymbol
 const CSS_DIFF = styled`
+    html, body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        font-size: 13px;
+        font-family: "JetBrains Mono", monospace;
+    }
+
+    .${DIFF_LIST} pre {
+        font-family: "JetBrains Mono", monospace;
+    }
+
     .${DIFF_PATH} {
         font-weight: bold;
         background: silver;
@@ -48,11 +61,11 @@ const CSS_DIFF = styled`
     }
 
     .${DIFF_CONTENT}.${DIFF_COLLAPSED} {
-        display:none;
+        display: none;
     }
 
     .${DIFF_CONTENT} pre {
-        margin:0;
+        margin: 0;
         flex: 1;
         min-width: 0;
         padding: 8px;
@@ -61,12 +74,13 @@ const CSS_DIFF = styled`
     .${DIFF_CONTENT} pre:nth-child(2) {
         border-left: solid 2px rgba(255, 100, 0, 0.2);
     }
-    
+
     del {
         background: #f5a7a7;
         text-decoration: none;
         outline: solid 1px #f5a7a7;
     }
+
     ins {
         background: #BEE6BE;
         text-decoration: none;

@@ -1,8 +1,12 @@
+export const GAME_DIR_HANDLE = 'gameDirHandle';
 export const LOG_HOST = 'log-host';
 export const BTN_GAME = 'btn-game';
 export const BTN_MIRROR = 'btn-mirror';
+export const BTN_RETRIEVE = 'btn-retrieve';
 export const BTN_PREVIEW = 'btn-preview';
+export const BTN_SAVE = 'btn-save';
 export const IS_GRANTED = 'is-granted';
+export const HAS_PROGRESS = 'has-progress';
 export const DIFF_LIST = 'diff-list';
 export const DIFF_PATH = 'diff-path';
 export const DIFF_LABEL = 'diff-label';
