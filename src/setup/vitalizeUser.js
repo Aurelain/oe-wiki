@@ -70,7 +70,7 @@ async function onRetrieveClick(event) {
 async function onPreviewClick(event) {
     await ensureParserResult(event);
 
-    const popup = window.open('', 'Diff');
+    const popup = window.open('', 'Preview');
     if (!popup) {
         return;
     }
