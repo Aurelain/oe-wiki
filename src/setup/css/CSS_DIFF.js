@@ -61,6 +61,17 @@ const CSS_DIFF = styled`
     .${DIFF_CONTENT} pre:nth-child(2) {
         border-left: solid 2px rgba(255, 100, 0, 0.2);
     }
+    
+    del {
+        background: #f5a7a7;
+        text-decoration: none;
+        outline: solid 1px #f5a7a7;
+    }
+    ins {
+        background: #BEE6BE;
+        text-decoration: none;
+        outline: solid 1px #BEE6BE;
+    }
 `;
 
 export default CSS_DIFF;

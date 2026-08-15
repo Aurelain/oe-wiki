@@ -26,9 +26,11 @@ const CSS_DEV = styled`
         background: #fff;
         color:#000;
         flex-grow: 1;
+        overflow-y: scroll;
     }
     .${LOG_HOST} {
         height: 200px;
+        flex-shrink: 0;
     }
 
     #setup .${BTN_GAME}:after,

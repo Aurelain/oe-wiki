@@ -50,6 +50,10 @@ function add(type, message, args) {
     addCell(row, buildMessage(message, args));
 
     table.appendChild(row);
+    host.scrollTo({
+        top: host.scrollHeight,
+        behavior: 'smooth',
+    });
 }
 
 /**

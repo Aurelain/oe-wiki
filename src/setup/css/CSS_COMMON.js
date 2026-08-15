@@ -3,9 +3,17 @@ import {LOG_HOST} from '../SETTINGS.js';
 
 // noinspection CssUnusedSymbol
 const CSS_COMMON = styled`
+    textarea, pre {
+        font-family: "JetBrains Mono", monospace;
+    }
+    
     #setup .log-title {
         margin-top: 32px;
         padding: 8px 0;
+    }
+
+    #setup .${LOG_HOST} {
+        overflow-y:scroll;
     }
 
     #setup .${LOG_HOST} table {
@@ -19,7 +27,7 @@ const CSS_COMMON = styled`
 
     #setup .${LOG_HOST} th,
     #setup .${LOG_HOST} td {
-        border: solid 1px #cbced1;
+        border: solid 1px rgba(255,255,255,0.1);
         border-left:none;
         border-right:none;
         vertical-align: top;
@@ -49,8 +57,8 @@ const CSS_COMMON = styled`
 
     #setup .${LOG_HOST} td > div > div {
         cursor: pointer;
-        border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
-        width: max-content;
+        color: yellow;
+        //border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
     }
 
     #setup .${LOG_HOST} textarea {

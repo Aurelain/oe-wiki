@@ -8,6 +8,7 @@ import {
     DIFF_NEW,
     DIFF_PATH,
 } from '../SETTINGS.js';
+import on from '../utils/on.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -32,11 +33,15 @@ function buildDiff(oldHub, freshHub, hostElement) {
             const {text1, text2} = compareTexts(old, fresh);
             old = text1;
             fresh = text2;
+        } else {
+            fresh = convertSymbols(fresh);
         }
         const items = buildFile(key, old, fresh);
         lines.push(...items);
     }
-    hostElement.innerHTML = lines.join('\n');
+    hostElement.innerHTML = lines.join('');
+    on('click', '.' + DIFF_PATH, onPathClick);
+    scrollToFirstUncollapsed(hostElement);
 }
 
 // =====================================================================================================================
@@ -59,6 +64,37 @@ function buildFile(path, oldText, freshText) {
     output.push(`<pre>${freshText}</pre>`);
     output.push(`</div>`);
     return output;
+}
+
+/**
+ *
+ */
+function convertSymbols(text) {
+    return text.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;');
+}
+
+/**
+ *
+ */
+function onPathClick(event) {
+    const content = event.currentTarget.nextElementSibling;
+    content.classList.toggle(DIFF_COLLAPSED);
+}
+
+/**
+ *
+ */
+function scrollToFirstUncollapsed(hostElement) {
+    const pathElements = hostElement.querySelectorAll('.' + DIFF_PATH);
+    for (const pathElement of pathElements) {
+        if (!pathElement.nextElementSibling.classList.contains(DIFF_COLLAPSED)) {
+            pathElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+            break;
+        }
+    }
 }
 
 // =====================================================================================================================

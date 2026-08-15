@@ -9,7 +9,7 @@ async function sendAndReceive(worker, type, payload) {
         const listener = (event) => {
             const data = event.data && typeof event.data === 'object' ? event.data : {};
             if (data.type === type) {
-                console.log(`Parent received a "${type}" reply.`);
+                // console.log(`Parent received a "${type}" reply.`);
                 worker.removeEventListener('message', listener);
                 resolve(data.payload);
             }

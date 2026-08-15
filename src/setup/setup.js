@@ -155,13 +155,19 @@ async function onMessageFromParser(event) {
     const data = event.data && typeof event.data === 'object' ? event.data : {};
     const {type, payload} = data;
     switch (type) {
-        case 'find':
-            console.log(`Parent received a "${type}" inquiry.`);
+        case 'find': {
+            // console.log(`Parent received a "${type}" inquiry.`);
             const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
             const [pattern, exclude, onlyFirstResult] = payload;
             const result = await findFiles(gameDirHandle, pattern, exclude, onlyFirstResult);
             send(parser, 'find', result);
             break;
+        }
+        case 'log': {
+            // console.log(`Parent received a "${type}" command.`);
+            log(...payload);
+            break;
+        }
     }
 }
 
@@ -201,8 +207,10 @@ async function runDevMirror() {
         const file = await getFile(mirrorDirHandle, path);
         mirrorResult[path] = file ? await file.text() : undefined;
     }
-    mirrorResult['Data/Difficulty~Easy.wiki'] += 'x';
-    mirrorResult['Data/Difficulty~Normal.wiki'] = undefined;
+    // mirrorResult['Data/Difficulty~Easy.wiki'] += 'x';
+    // mirrorResult['Data/Difficulty~Normal.wiki'] = undefined;
+    // mirrorResult['Data/Difficulty~Expert.wiki'] = undefined;
+    // mirrorResult['Data/Difficulty~Impossible.wiki'] = undefined;
 }
 
 // =====================================================================================================================

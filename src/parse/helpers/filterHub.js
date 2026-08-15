@@ -41,7 +41,9 @@ function filterHub(hub, pattern, exclude = null, directResult = false) {
     }
     if (directResult) {
         const value = Object.values(output)[0];
-        API.log('Cannot offer a direct result for this pattern!', pattern);
+        if (value === undefined) {
+            API.log('Cannot offer a direct result for this pattern!', pattern);
+        }
         return value;
     }
     return output;

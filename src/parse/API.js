@@ -41,7 +41,7 @@ async function onMessageFromParent(event) {
     const {type} = data;
     switch (type) {
         case 'run':
-            console.log(`Child received a "${type}" inquiry.`);
+            // console.log(`Child received a "${type}" inquiry.`);
             const result = await actuatorFunction();
             send('run', result);
             break;
@@ -65,7 +65,7 @@ async function sendAndReceive(type, payload) {
         const listener = (event) => {
             const data = event.data && typeof event.data === 'object' ? event.data : {};
             if (data.type === type) {
-                console.log(`Child received a "${type}" reply.`);
+                // console.log(`Child received a "${type}" reply.`);
                 self.removeEventListener('message', listener);
                 resolve(data.payload);
             }
