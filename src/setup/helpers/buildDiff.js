@@ -40,7 +40,8 @@ function buildDiff(oldHub, freshHub, hostElement) {
         lines.push(...items);
     }
     hostElement.innerHTML = lines.join('');
-    on('click', '.' + DIFF_PATH, onPathClick);
+    const titles = Array.from(hostElement.querySelectorAll('.' + DIFF_PATH));
+    on('click', titles, onPathClick);
     scrollToFirstUncollapsed(hostElement);
 }
 

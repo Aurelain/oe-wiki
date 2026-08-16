@@ -13,6 +13,9 @@ function on(eventName, selector, handler) {
     } else {
         all = [selector];
     }
+    if (!all.length) {
+        return console.log(`No target for ${eventName}!`);
+    }
     for (const element of all) {
         element.addEventListener(eventName, handler);
     }
