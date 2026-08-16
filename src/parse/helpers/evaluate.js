@@ -47,9 +47,9 @@ const ACTIONS = {
  */
 function evaluate(functionName, repository, data, isDebug = false) {
     isDebug && console.log(`${functionName}():`);
-    assume(functionName in repository, functionName, 'Unknown function!');
+    assume(functionName in repository, 'Unknown function!', functionName);
     const compiled = repository[functionName];
-    assume(compiled.body.at(-1).variable === 'return', compiled, 'Must end with return variable!');
+    assume(compiled.body.at(-1).variable === 'return', 'Must end with return variable!', compiled);
     const vars = {};
     for (const step of compiled.body) {
         const action = step.action;
@@ -61,8 +61,8 @@ function evaluate(functionName, repository, data, isDebug = false) {
             isDebug,
         };
         const [actionFunction, paramCount] = ACTIONS[action] || [];
-        assume(actionFunction, step, context.about, 'Unknown action!');
-        assume(paramCount === -1 || step.params.length === paramCount, context.about, 'Mismatched param count!');
+        assume(actionFunction, 'Unknown action!', step, context.about);
+        assume(paramCount === -1 || step.params.length === paramCount, 'Mismatched param count!', context.about);
         const params = resolveParams(step.params, vars, context.about);
         params.push(context);
         vars[step.variable] = actionFunction.apply(null, params);
@@ -82,7 +82,7 @@ function resolveParams(params, vars, about) {
     for (const param of params) {
         if (typeof param === 'string' && param.charAt(0) === '#') {
             const varName = param.substring(1);
-            assume(varName in vars, about, varName, 'Unknown variable!');
+            assume(varName in vars, 'Unknown variable!', about, varName);
             output.push(vars[varName]);
         } else {
             output.push(param);
@@ -96,7 +96,7 @@ function resolveParams(params, vars, about) {
  */
 function resolveValue(origin, path, context) {
     const value = fishValue(origin, path);
-    assume(value !== undefined, origin, context.about, path, 'Unresolved path!');
+    assume(value !== undefined, 'Unresolved path!', origin, context.about, path);
     return value;
 }
 
@@ -119,7 +119,7 @@ function formatValue(value, type) {
         case 'string':
             return String(value);
         default:
-            assume(false, type, 'Unknown type!');
+            assume(false, 'Unknown type!', type);
     }
 }
 
@@ -129,7 +129,7 @@ function formatValue(value, type) {
 function handleHomonymousAction(path, context) {
     const {action} = context;
     const json = context.data[action];
-    assume(json, context.about, `Missing "${action}" from data!`);
+    assume(json, `Missing "${action}" from data!`, context.about);
     const value = resolveValue(json, path, context);
     return value;
 }
@@ -162,8 +162,8 @@ function CurrentSkillLevel(context) {
 function Add(a, b, context) {
     a = Number(a);
     b = Number(b);
-    assume(checkNumber(a), context.about, a, 'Expecting number!');
-    assume(checkNumber(b), context.about, b, 'Expecting number!');
+    assume(checkNumber(a), 'Expecting number!', context.about, a);
+    assume(checkNumber(b), 'Expecting number!', context.about, b);
     return a + b;
 }
 
@@ -173,8 +173,8 @@ function Add(a, b, context) {
 function Sub(a, b, context) {
     a = Number(a);
     b = Number(b);
-    assume(checkNumber(a), context.about, a, 'Expecting number!');
-    assume(checkNumber(b), context.about, b, 'Expecting number!');
+    assume(checkNumber(a), 'Expecting number!', context.about, a);
+    assume(checkNumber(b), 'Expecting number!', context.about, b);
     return a - b;
 }
 
@@ -184,8 +184,8 @@ function Sub(a, b, context) {
 function Mul(a, b, context) {
     a = Number(a);
     b = Number(b);
-    assume(checkNumber(a), context.about, a, 'Expecting number!');
-    assume(checkNumber(b), context.about, b, 'Expecting number!');
+    assume(checkNumber(a), 'Expecting number!', context.about, a);
+    assume(checkNumber(b), 'Expecting number!', context.about, b);
     return a * b;
 }
 
@@ -198,8 +198,8 @@ function Div(numerator, denominator, {about}) {
         return 0;
     }
     denominator = Number(denominator);
-    assume(checkNumber(numerator), about, numerator, 'Invalid numerator!');
-    assume(denominator && checkNumber(denominator), about, denominator, 'Invalid denominator!');
+    assume(checkNumber(numerator), 'Invalid numerator!', about, numerator);
+    assume(denominator && checkNumber(denominator), 'Invalid denominator!', about, denominator);
     return numerator / denominator;
 }
 
@@ -211,7 +211,7 @@ function Avg(...members) {
     let result = 0;
     for (const member of members) {
         const nr = Number(member);
-        assume(checkNumber(nr), about, member, 'Expecting number!');
+        assume(checkNumber(nr), 'Expecting number!', about, member);
         result += nr;
     }
     return result / members.length;
@@ -222,7 +222,7 @@ function Avg(...members) {
  */
 function Floor(target, {about}) {
     target = Number(target);
-    assume(typeof target === 'number', about, target, 'Invalid target!');
+    assume(typeof target === 'number', 'Invalid target!', about, target);
     return Math.floor(target);
 }
 
@@ -239,7 +239,7 @@ function Text(payload) {
 function DbBuff(buffSid, path, context) {
     const {buffs} = context.data;
     const buff = buffs[buffSid];
-    assume(buff, context.about, buffSid, 'No such buff!');
+    assume(buff, 'No such buff!', context.about, buffSid);
 
     const value = resolveValue(buff, path, context);
     return value;
@@ -251,9 +251,9 @@ function DbBuff(buffSid, path, context) {
 function DbSideBuff(sideBuffSid, path, context) {
     const {buffs, sideBuffs} = context.data;
     const sideBuff = sideBuffs[sideBuffSid];
-    assume(sideBuff, context.about, sideBuffSid, 'No such sideBuff!');
+    assume(sideBuff, 'No such sideBuff!', context.about, sideBuffSid);
     const buff = buffs[sideBuff.sid];
-    assume(buff, context.about, sideBuff.sid, 'No such buff!');
+    assume(buff, 'No such buff!', context.about, sideBuff.sid);
 
     const value = resolveValue(buff, path, context);
     return value;
@@ -265,7 +265,7 @@ function DbSideBuff(sideBuffSid, path, context) {
 function DbObstacle(summonSid, path, context) {
     const {obstacles} = context.data;
     const obstacle = obstacles[summonSid];
-    assume(obstacle, context.about, summonSid, 'No such obstacle!');
+    assume(obstacle, 'No such obstacle!', context.about, summonSid);
 
     const value = resolveValue(obstacle, path, context);
     return value;
@@ -277,7 +277,7 @@ function DbObstacle(summonSid, path, context) {
 function DbTrap(summonSid, path, context) {
     const {traps} = context.data;
     const trap = traps[summonSid];
-    assume(trap, context.about, summonSid, 'No such trap!');
+    assume(trap, 'No such trap!', context.about, summonSid);
 
     const value = resolveValue(trap, path, context);
     return value;
@@ -289,9 +289,9 @@ function DbTrap(summonSid, path, context) {
 function DbAbility(abilitySid, abilityLevel, path, context) {
     const {abilities} = context.data;
     const ability = abilities[abilitySid];
-    assume(ability, context.about, abilitySid, abilityLevel, 'No such ability!');
+    assume(ability, 'No such ability!', context.about, abilitySid, abilityLevel);
     const level = ability.levels[abilityLevel];
-    assume(level, context.about, abilitySid, abilityLevel, 'No such level!');
+    assume(level, 'No such level!', context.about, abilitySid, abilityLevel);
     const value = resolveValue(level, path, context);
     return value;
 }
@@ -301,7 +301,7 @@ function DbAbility(abilitySid, abilityLevel, path, context) {
  */
 function Invoke(functionName, context) {
     const {repository, data, isDebug} = context;
-    assume(repository[functionName], context.about, functionName, 'No such function to invoke!');
+    assume(repository[functionName], 'No such function to invoke!', context.about, functionName);
     return evaluate(functionName, repository, data, isDebug);
 }
 

@@ -21,7 +21,7 @@ function compile(text) {
     for (const functionText of functions) {
         const [compiled, error] = to(compileFunction, functionText);
         if (error) {
-            log(error);
+            log('Failed to compile!', error.message, ...error.extra);
         } else {
             Object.assign(output, compiled);
         }
@@ -37,12 +37,12 @@ function compile(text) {
  */
 function compileFunction(functionText) {
     const parts = functionText.split('{');
-    assume(parts.length === 2, functionText, 'Function must have 2 parts!');
+    assume(parts.length === 2, 'Function must have 2 parts!', functionText);
     const header = parts[0].trim();
     const headerParts = header.split(' ');
-    assume(headerParts.length === 2, functionText, 'Header must have 2 parts!');
+    assume(headerParts.length === 2, 'Header must have 2 parts!', functionText);
     const name = headerParts[1];
-    assume(checkIdentifier(name), functionText, 'Invalid function name!');
+    assume(checkIdentifier(name), 'Invalid function name!', functionText);
     return {
         [name]: {
             type: headerParts[0],
@@ -58,7 +58,7 @@ function compileBody(text, functionName) {
     const output = [];
     const lines = text.split(')');
     lines.pop();
-    assume(lines.length > 0, functionName, 'No lines!');
+    assume(lines.length > 0, 'No lines!', functionName);
     for (const line of lines) {
         output.push(compileLine(line, functionName));
     }
@@ -70,12 +70,12 @@ function compileBody(text, functionName) {
  */
 function compileLine(line, functionName) {
     const parts = line.split('(');
-    assume(parts.length === 2, functionName, line, 'Invalid line!');
+    assume(parts.length === 2, 'Invalid line!', functionName, line);
     const action = parts[0].trim();
-    assume(checkIdentifier(action), functionName, line, 'Invalid action!');
+    assume(checkIdentifier(action), 'Invalid action!', functionName, line);
     const parameters = parts[1].split(',');
     const variable = parameters.shift().trim();
-    assume(checkIdentifier(variable), functionName, line, 'Invalid variable!');
+    assume(checkIdentifier(variable), 'Invalid variable!', functionName, line);
     return {
         variable,
         action,
@@ -91,12 +91,12 @@ function compileParams(parameters, functionName, line) {
     for (const param of parameters) {
         let value = param.trim();
         if (value.startsWith('"')) {
-            assume(value.endsWith('"'), functionName, line, 'Unexpected quotes!');
+            assume(value.endsWith('"'), 'Unexpected quotes!', functionName, line);
             value = value.substring(1, value.length - 1);
         } else if (value.match(/^\d+$/)) {
             value = Number(value);
         } else {
-            assume(checkIdentifier(value), functionName, line, 'Invalid variable!');
+            assume(checkIdentifier(value), 'Invalid variable!', functionName, line);
             value = '#' + value;
         }
         output.push(value);
