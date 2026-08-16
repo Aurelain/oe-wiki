@@ -11,7 +11,7 @@ const HTML_USER = `
             Give read-access to the local install directory of the game so the parser can choose what files it needs.
         </div>
         <div class='action'>
-            Action: <button class='${BTN_GAME}'>Pick directory</button> 
+            <button class='${BTN_GAME}'>Pick directory</button> 
         </div>
     </div>
     <!-- ==== RETRIEVE =================================== -->
@@ -23,7 +23,7 @@ const HTML_USER = `
             reduces the number of updates needed.</i>
         </div>
         <div class='action'>
-            Action: <button class='${BTN_RETRIEVE}'>Retrieve <progress/></button> 
+            <button class='${BTN_RETRIEVE}'>Retrieve <progress/></button> 
         </div>
     </div>
     <!-- ==== PREVIEW =================================== -->
@@ -33,7 +33,7 @@ const HTML_USER = `
             Open a popup window listing each page that is about to be updated, potentially highlighting differences.
         </div>
         <div class='action'>
-            Action: <button class='${BTN_PREVIEW}'>Preview <progress/></button> 
+            <button class='${BTN_PREVIEW}'>Preview <progress/></button> 
         </div>
     </div>
     <!-- ==== SAVE =================================== -->
@@ -43,7 +43,7 @@ const HTML_USER = `
             Write the changes to each page using the current account, just as if you had done them manually.
         </div>
         <div class='action'>
-            Action: <button class='${BTN_SAVE}'>SAVE <progress/></button> 
+            <button class='${BTN_SAVE}'>SAVE <progress/></button> 
         </div>
     </div>
 </div>
