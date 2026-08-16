@@ -40,7 +40,7 @@ async function setup() {
     await importParser(parsePath);
 
     // Add event handlers and make dynamic touch-ups:
-    isDev ? await vitalizeDev(runParse) : await vitalizeUser(runParse);
+    isDev ? await vitalizeDev(root, runParse) : await vitalizeUser(root, runParse);
 }
 
 // =====================================================================================================================

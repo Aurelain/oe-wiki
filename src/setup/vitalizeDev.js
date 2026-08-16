@@ -20,7 +20,7 @@ let mirrorResult = null;
 /**
  *
  */
-async function vitalizeDev(runParse) {
+async function vitalizeDev(root, runParse) {
     parsingFunction = runParse;
     on('click', BTN_GAME, onGameClick);
     on('click', BTN_MIRROR, onMirrorClick);

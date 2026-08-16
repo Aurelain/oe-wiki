@@ -1,31 +1,36 @@
 import styled from '../utils/styled.js';
-import {BTN_GAME, BTN_MIRROR, DIFF_LIST, HAS_PROGRESS, IS_GRANTED, LOG_HOST} from '../SETTINGS.js';
+import {DIFF_LIST, IS_DISABLED, LOG_HOST, STATUS_OK, STATUS_PROGRESS, STATUS_WARNING} from '../SETTINGS.js';
 
 // noinspection CssUnusedSymbol
 const CSS_COMMON = styled`
+    /* ================== GENERAL ================== */
+
+    #setup.${IS_DISABLED} {
+        pointer-events: none;
+    }
+
     #setup button {
         padding: 4px 6px;
         cursor: pointer;
         font-size: inherit;
     }
-    
+
     #setup button progress {
         display: none;
     }
-    
-    #setup button.${HAS_PROGRESS} progress {
-        display: inline-block;
+
+    /* ================== STATUSES ================== */
+
+    #setup .${STATUS_OK}:after {
+        content: ' ✅';
     }
 
-    /* ================== LOG ================== */
-
-    #setup .${BTN_GAME}:after,
-    #setup .${BTN_MIRROR}:after {
+    #setup .${STATUS_WARNING}:after {
         content: ' ⚠️';
     }
 
-    #setup .${IS_GRANTED}:after {
-        content: ' ✅';
+    #setup .${STATUS_PROGRESS} progress {
+        display: inline-block;
     }
 
     /* ================== LOG ================== */
@@ -37,7 +42,8 @@ const CSS_COMMON = styled`
 
     #setup .${LOG_HOST} {
         overflow-y: scroll;
-
+        height: 200px;
+        flex-shrink: 0;
     }
 
     #setup .${DIFF_LIST} textarea {
@@ -47,6 +53,7 @@ const CSS_COMMON = styled`
     #setup .${LOG_HOST} table {
         width: 100%;
         border-collapse: collapse;
+        margin: 0;
     }
 
     #setup .${LOG_HOST} th {
@@ -87,7 +94,6 @@ const CSS_COMMON = styled`
     #setup .${LOG_HOST} td > div > div {
         cursor: pointer;
         color: yellow;
-        //border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
     }
 
     #setup .${LOG_HOST} textarea {

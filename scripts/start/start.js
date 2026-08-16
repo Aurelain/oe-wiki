@@ -79,7 +79,7 @@ function onRequest(req, res) {
     }
 
     const url = req.url === '/' ? '/index.html' : req.url;
-    const filePath = OUTPUT_DIR + url;
+    const filePath = OUTPUT_DIR + url.replace(/\?.*$/, '');
     const extname = path.extname(filePath);
 
     serveFile(filePath, extname, req, res);

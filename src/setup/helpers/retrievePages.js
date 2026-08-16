@@ -2,6 +2,7 @@ import convertPathToTitle from './convertPathToTitle.js';
 import getWikiUrl from './getWikiUrl.js';
 import log from '../log.js';
 import to from './to.js';
+import convertTitleToPath from './convertTitleToPath.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -16,9 +17,24 @@ const CHUNK_SIZE = 50;
  */
 async function retrievePages(parserResult) {
     const titles = Object.keys(parserResult).map((key) => convertPathToTitle(key));
-    console.log('titles:', titles);
     const result = await fetchWikiPages(titles);
-    console.log('result:', result);
+    if (!result) {
+        return;
+    }
+    const output = {};
+    for (const key in result) {
+        const path = convertTitleToPath(key);
+        if (path) {
+            const content = result[key];
+            if (content === undefined) {
+                log('Invalid page content!', key);
+            } else {
+                output[path] = result[key];
+            }
+        }
+    }
+    log(`Retrieved ${Object.keys(output).length} pages.`);
+    return output;
 }
 
 // =====================================================================================================================
@@ -62,7 +78,7 @@ async function fetchWikiPages(titles) {
         for (const pageId in pages) {
             const page = pages[pageId];
             if (!page.missing) {
-                results[page.title] = page.revisions?.[0]?.slots?.main?.content;
+                results[page.title] = page.revisions?.[0]?.slots?.main?.['*'];
             }
         }
     }
