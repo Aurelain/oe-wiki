@@ -15,6 +15,7 @@ import on from './utils/on.js';
 import refreshDirHandle from './helpers/refreshDirHandle.js';
 import CSS_DIFF from './css/CSS_DIFF.js';
 import buildDiff from './helpers/buildDiff.js';
+import retrievePages from './helpers/retrievePages.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -62,6 +63,7 @@ async function onGameClick() {
  */
 async function onRetrieveClick(event) {
     await ensureParserResult(event);
+    await retrievePages(parserResult);
 }
 
 /**
@@ -80,7 +82,7 @@ async function onPreviewClick(event) {
         <!DOCTYPE html>
         <html lang="en">
         <head>
-            <title>Diff</title>
+            <title>Preview</title>
             <style>${CSS_DIFF}</style>
         </head>
         <body>
@@ -123,6 +125,7 @@ async function ensureParserResult({currentTarget}) {
 
         currentTarget.classList.add(HAS_PROGRESS);
         parserResult = await parsingFunction();
+        // parserResult['Data/Difficulty~Impo/ssible.wiki'] = 'foo';
         currentTarget.classList.remove(HAS_PROGRESS);
 
         isWorking = false;

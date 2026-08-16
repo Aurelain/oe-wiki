@@ -87,10 +87,29 @@ function buildMessage(message, args) {
 
     const textarea = document.createElement('textarea');
     textarea.style.display = 'none';
-    textarea.innerHTML = JSON.stringify(args, null, 4);
+    textarea.innerHTML = stringifyArgs(args);
     div.appendChild(textarea);
 
     return div;
+}
+
+/**
+ *
+ */
+function stringifyArgs(args) {
+    const lines = [];
+    for (const arg of args) {
+        if (typeof arg === 'object' && arg) {
+            if (arg instanceof Error) {
+                lines.push(arg.stack);
+            } else {
+                lines.push(JSON.stringify(arg, null, 4));
+            }
+        } else {
+            lines.push(arg);
+        }
+    }
+    return lines.join('\n');
 }
 
 // =====================================================================================================================
