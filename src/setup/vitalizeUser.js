@@ -19,6 +19,9 @@ import CSS_DIFF from './css/CSS_DIFF.js';
 import buildDiff from './helpers/buildDiff.js';
 import retrievePages from './helpers/retrievePages.js';
 import setButtonStatus from './helpers/setButtonStatus.js';
+import savePages from './helpers/savePages.js';
+import {applySettings} from './helpers/ask.js';
+import getWikiUrl from './helpers/getWikiUrl.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -64,6 +67,10 @@ async function vitalizeUser(root, runParse) {
     const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
     setState({
         hasDirAccess: await checkPermission(gameDirHandle),
+    });
+
+    applySettings({
+        API_URL: getWikiUrl(),
     });
 }
 
@@ -184,9 +191,9 @@ async function onPreviewClick() {
  */
 async function onSaveClick() {
     await ensureParserResult(BTN_SAVE);
-    // onSaveClick
+    const hasSaved = await savePages(state.parserResult, state.mirrorResult);
     setState({
-        hasSaved: true,
+        hasSaved,
     });
 }
 

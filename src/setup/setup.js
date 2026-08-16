@@ -87,7 +87,7 @@ async function onMessageFromParser(event) {
 async function runParse() {
     log('Started parsing...');
     const result = await sendAndReceive(parser, 'run');
-    log(`Received parsing results (${Object.keys(result).length}).`);
+    log(`Received ${Object.keys(result).length} parsing results.`);
     return result;
 }
 

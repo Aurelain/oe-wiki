@@ -1,8 +1,7 @@
 import convertPathToTitle from './convertPathToTitle.js';
-import getWikiUrl from './getWikiUrl.js';
 import log from '../log.js';
-import to from './to.js';
 import convertTitleToPath from './convertTitleToPath.js';
+import {ask} from './ask.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -45,40 +44,28 @@ async function retrievePages(parserResult) {
  */
 async function fetchWikiPages(titles) {
     const results = {};
-    const url = getWikiUrl();
     for (let i = 0; i < titles.length; i += CHUNK_SIZE) {
-        const chunk = titles.slice(i, i + CHUNK_SIZE);
+        const endIndex = Math.min(i + CHUNK_SIZE, titles.length);
+        const chunk = titles.slice(i, endIndex);
+        log(`Retrieving ${i + 1}-${endIndex} of ${titles.length} pages...`);
 
-        // Url
-        const params = new URLSearchParams({
+        const data = await ask({
             action: 'query',
-            format: 'json',
             prop: 'revisions',
             rvprop: 'content',
             rvslots: 'main',
             titles: chunk.join('|'),
             origin: '*',
         });
-        const endpoint = url + '?' + params.toString();
-
-        // Fetch
-        const [response, fetchError] = await to(fetch(endpoint));
-        if (!response) {
-            return log('Retrieval failed!', chunk, fetchError);
-        }
-
-        // Json
-        const [data, jsonError] = await to(response.json());
         if (!data) {
-            return log('Unexpected data!', data, jsonError.message);
+            continue;
         }
 
-        const pages = data.query?.pages || {};
+        const pages = data.query?.pages || [];
 
-        for (const pageId in pages) {
-            const page = pages[pageId];
+        for (const page of pages) {
             if (!page.missing) {
-                results[page.title] = page.revisions?.[0]?.slots?.main?.['*'];
+                results[page.title] = page.revisions?.[0]?.slots?.main?.content;
             }
         }
     }
