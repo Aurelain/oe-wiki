@@ -18,6 +18,7 @@ import refreshDirHandle from './helpers/refreshDirHandle.js';
 import CSS_DIFF from './css/CSS_DIFF.js';
 import buildDiff from './helpers/buildDiff.js';
 import retrievePages from './helpers/retrievePages.js';
+import setButtonStatus from './helpers/setButtonStatus.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -55,10 +56,10 @@ async function vitalizeUser(root, runParse) {
     btnPreview = select(BTN_PREVIEW);
     btnSave = select(BTN_SAVE);
 
-    on('click', BTN_GAME, onGameClick);
-    on('click', BTN_RETRIEVE, onRetrieveClick);
-    on('click', BTN_PREVIEW, onPreviewClick);
-    on('click', BTN_SAVE, onSaveClick);
+    on('click', btnGame, onGameClick);
+    on('click', btnRetrieve, onRetrieveClick);
+    on('click', btnPreview, onPreviewClick);
+    on('click', btnSave, onSaveClick);
 
     const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
     setState({
@@ -114,15 +115,6 @@ function render() {
         saveStatus = hasSaved ? STATUS_OK : null;
     }
     setButtonStatus(btnSave, saveStatus);
-}
-
-/**
- *
- */
-function setButtonStatus(btn, status) {
-    btn.classList.toggle(STATUS_OK, status === STATUS_OK);
-    btn.classList.toggle(STATUS_WARNING, status === STATUS_WARNING);
-    btn.classList.toggle(STATUS_PROGRESS, status === STATUS_PROGRESS);
 }
 
 /**

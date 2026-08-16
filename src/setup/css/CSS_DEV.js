@@ -1,5 +1,5 @@
 import styled from '../utils/styled.js';
-import {BTN_GAME, BTN_MIRROR, DIFF_LIST, IS_GRANTED, LOG_HOST} from '../SETTINGS.js';
+import {DIFF_LIST} from '../SETTINGS.js';
 import CSS_COMMON from './CSS_COMMON.js';
 import CSS_DIFF from './CSS_DIFF.js';
 

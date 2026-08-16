@@ -1,18 +1,33 @@
 import on from './utils/on.js';
-import {BTN_GAME, BTN_MIRROR, DIFF_LIST, GAME_DIR_HANDLE, IS_GRANTED, MIRROR_DIR_HANDLE} from './SETTINGS.js';
+import {
+    BTN_GAME,
+    BTN_MIRROR,
+    DIFF_LIST,
+    GAME_DIR_HANDLE,
+    MIRROR_DIR_HANDLE,
+    STATUS_OK,
+    STATUS_WARNING,
+} from './SETTINGS.js';
 import select from './helpers/select.js';
 import {readFromDb} from './utils/LocalDb.js';
 import refreshDirHandle from './helpers/refreshDirHandle.js';
 import checkPermission from './helpers/checkPermission.js';
 import getFile from './utils/getFile.js';
 import buildDiff from './helpers/buildDiff.js';
+import setButtonStatus from './helpers/setButtonStatus.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 let parsingFunction;
-let parserResult = null;
-let mirrorResult = null;
+
+let btnGame;
+let btnMirror;
+
+const state = {
+    hasGameAccess: false,
+    hasMirrorAccess: false,
+};
 
 // =====================================================================================================================
 //  P U B L I C
@@ -22,9 +37,13 @@ let mirrorResult = null;
  */
 async function vitalizeDev(root, runParse) {
     parsingFunction = runParse;
-    on('click', BTN_GAME, onGameClick);
-    on('click', BTN_MIRROR, onMirrorClick);
-    await updateButtons();
+
+    btnGame = select(BTN_GAME);
+    btnMirror = select(BTN_MIRROR);
+
+    on('click', btnGame, onGameClick);
+    on('click', btnMirror, onMirrorClick);
+
     await refreshDiff();
 }
 
@@ -32,13 +51,29 @@ async function vitalizeDev(root, runParse) {
 //  P R I V A T E
 // =====================================================================================================================
 /**
+ * Mimics the React setState pattern.
+ */
+function setState(changes) {
+    Object.assign(state, changes);
+    render();
+}
+
+/**
+ * Mimics React.
+ */
+function render() {
+    const {hasGameAccess, hasMirrorAccess} = state;
+    setButtonStatus(btnGame, hasGameAccess ? STATUS_OK : STATUS_WARNING);
+    setButtonStatus(btnMirror, hasMirrorAccess ? STATUS_OK : STATUS_WARNING);
+}
+
+/**
  *
  */
 async function onGameClick() {
     const dirHandle = await readFromDb(GAME_DIR_HANDLE);
     const freshHandle = await refreshDirHandle(GAME_DIR_HANDLE);
     if (!(await dirHandle.isSameEntry(freshHandle))) {
-        await updateButtons();
         await refreshDiff();
     }
 }
@@ -50,7 +85,6 @@ async function onMirrorClick() {
     const dirHandle = await readFromDb(MIRROR_DIR_HANDLE);
     const freshHandle = await refreshDirHandle(MIRROR_DIR_HANDLE);
     if (!(await dirHandle.isSameEntry(freshHandle))) {
-        await updateButtons();
         await refreshDiff();
     }
 }
@@ -58,33 +92,27 @@ async function onMirrorClick() {
 /**
  *
  */
-async function updateButtons() {
-    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    const isGameGranted = await checkPermission(gameDirHandle);
-    select(BTN_GAME).classList.toggle(IS_GRANTED, isGameGranted);
-
-    const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
-    const isMirrorGranted = await checkPermission(mirrorDirHandle);
-    select(BTN_MIRROR).classList.toggle(IS_GRANTED, isMirrorGranted);
-}
-
-/**
- *
- */
 async function refreshDiff() {
     const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    if (!(await checkPermission(gameDirHandle))) {
+    const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
+
+    setState({
+        hasGameAccess: checkPermission(gameDirHandle),
+        hasMirrorAccess: checkPermission(mirrorDirHandle),
+    });
+    if (!state.hasGameAccess) {
         return;
     }
-    parserResult = await parsingFunction();
-    mirrorResult = await runDevMirror();
+
+    const parserResult = await parsingFunction();
+    const mirrorResult = await runDevMirror(parserResult);
     buildDiff(mirrorResult, parserResult, select(DIFF_LIST));
 }
 
 /**
  *
  */
-async function runDevMirror() {
+async function runDevMirror(parserResult) {
     const output = {};
     const mirrorDirHandle = await readFromDb(MIRROR_DIR_HANDLE);
     if (!(await checkPermission(mirrorDirHandle))) {
