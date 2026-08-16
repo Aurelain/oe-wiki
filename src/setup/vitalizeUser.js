@@ -11,10 +11,9 @@ import {
     STATUS_WARNING,
 } from './SETTINGS.js';
 import checkPermission from './helpers/checkPermission.js';
-import {readFromDb} from './utils/LocalDb.js';
+import {readFromDb, writeToDb} from './utils/LocalDb.js';
 import select from './helpers/select.js';
 import on from './utils/on.js';
-import refreshDirHandle from './helpers/refreshDirHandle.js';
 import CSS_DIFF from './css/CSS_DIFF.js';
 import buildDiff from './helpers/buildDiff.js';
 import retrievePages from './helpers/retrievePages.js';
@@ -22,6 +21,7 @@ import setButtonStatus from './helpers/setButtonStatus.js';
 import savePages from './helpers/savePages.js';
 import {applySettings} from './helpers/ask.js';
 import getWikiUrl from './helpers/getWikiUrl.js';
+import to from './utils/to.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -33,6 +33,8 @@ let btnGame;
 let btnRetrieve;
 let btnPreview;
 let btnSave;
+
+let dirHandle;
 
 const state = {
     parserResult: null,
@@ -64,9 +66,9 @@ async function vitalizeUser(root, runParse) {
     on('click', btnPreview, onPreviewClick);
     on('click', btnSave, onSaveClick);
 
-    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
+    dirHandle = await readFromDb(GAME_DIR_HANDLE);
     setState({
-        hasDirAccess: await checkPermission(gameDirHandle),
+        hasDirAccess: await checkPermission(dirHandle),
     });
 
     applySettings({
@@ -104,6 +106,7 @@ function render() {
         retrieveStatus = mirrorResult ? STATUS_OK : null;
     }
     setButtonStatus(btnRetrieve, retrieveStatus);
+    btnRetrieve.disabled = !hasDirAccess; // || mirrorResult;
 
     // 3. Preview
     let previewStatus;
@@ -113,6 +116,7 @@ function render() {
         previewStatus = hasPreviewed ? STATUS_OK : null;
     }
     setButtonStatus(btnPreview, previewStatus);
+    btnPreview.disabled = !hasDirAccess;
 
     // 4. Save
     let saveStatus;
@@ -122,29 +126,38 @@ function render() {
         saveStatus = hasSaved ? STATUS_OK : null;
     }
     setButtonStatus(btnSave, saveStatus);
+    btnSave.disabled = !hasDirAccess;
 }
 
 /**
  *
  */
 async function onGameClick() {
-    const gameDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    await refreshDirHandle(GAME_DIR_HANDLE);
-    const freshDirHandle = await readFromDb(GAME_DIR_HANDLE);
-    if (!(await gameDirHandle.isSameEntry(freshDirHandle))) {
-        setState({
-            parserResult: null,
-            mirrorResult: null,
-            progressingButton: null,
-            hasDirAccess: await checkPermission(freshDirHandle),
-            hasPreviewed: false,
-            hasSaved: false,
-        });
+    const {hasDirAccess} = state;
+    let needsPicker = false;
+    if (!dirHandle) {
+        needsPicker = true;
     } else {
-        setState({
-            hasDirAccess: await checkPermission(freshDirHandle),
-        });
+        if (hasDirAccess) {
+            needsPicker = true;
+        } else {
+            await dirHandle.requestPermission();
+        }
     }
+
+    if (needsPicker) {
+        const [freshDirHandle] = await to(window.showDirectoryPicker, {mode: 'read'});
+        dirHandle = freshDirHandle;
+        await writeToDb(GAME_DIR_HANDLE, dirHandle);
+    }
+    setState({
+        parserResult: null,
+        mirrorResult: null,
+        progressingButton: null,
+        hasDirAccess: await checkPermission(dirHandle),
+        hasPreviewed: false,
+        hasSaved: false,
+    });
 }
 
 /**

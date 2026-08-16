@@ -14,6 +14,10 @@ const CSS_COMMON = styled`
         cursor: pointer;
         font-size: inherit;
     }
+    
+    #setup button[disabled] {
+        cursor: default;
+    }
 
     #setup button progress {
         display: none;

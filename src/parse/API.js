@@ -45,7 +45,8 @@ async function onMessageFromParent(event) {
             // console.log(`Child received a "${type}" inquiry.`);
             const [result, error] = await to(actuatorFunction);
             if (error) {
-                log('!Error encountered while parsing!', error.message, ...error.extra);
+                const extra = error.extra || [];
+                log('!Error encountered while parsing!', error.message, ...extra);
                 send('run', {});
             } else {
                 send('run', result);

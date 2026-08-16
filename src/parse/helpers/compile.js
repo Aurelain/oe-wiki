@@ -21,7 +21,8 @@ function compile(text) {
     for (const functionText of functions) {
         const [compiled, error] = to(compileFunction, functionText);
         if (error) {
-            log('Failed to compile!', error.message, ...error.extra);
+            const extra = error.extra || [];
+            log('Failed to compile!', error.message, ...extra);
         } else {
             Object.assign(output, compiled);
         }

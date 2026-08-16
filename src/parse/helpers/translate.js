@@ -332,7 +332,8 @@ function resolveArg(textId, nr, langMap, request, data, isDebug) {
     const [evaluated, error] = to(evaluate, functionName, scripts, data, isDebug);
     if (error) {
         evaluationFailures++;
-        log('Failed to evaluate!', error.message, ...error.extra);
+        const extra = error.extra || [];
+        log('Failed to evaluate!', error.message, ...extra);
         if (evaluationFailures >= MAX_EVALUATION_FAILURES) {
             assume(false);
         }
