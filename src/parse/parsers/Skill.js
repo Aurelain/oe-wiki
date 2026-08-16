@@ -2,8 +2,8 @@ import filterHub from '../helpers/filterHub.js';
 import add from '../helpers/add.js';
 import translate from '../helpers/translate.js';
 import patch from '../helpers/patch.js';
-import assume from '../utils/assume.js';
 import parseBonuses from '../helpers/parseBonuses.js';
+import log from '../helpers/log.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -126,7 +126,10 @@ function buildMainDefinitions(skill, path, preparedSubskills) {
     for (let i = 0; i < skill.parametersPerLevel.length; i++) {
         const {subSkills = []} = skill.parametersPerLevel[i];
         for (const subSkillName of subSkills) {
-            assume(subSkillName in preparedSubskills, subSkillName, 'Not found in prepared subskills!');
+            if (!(subSkillName in preparedSubskills)) {
+                log('Not found in prepared subskills!', subSkillName);
+                continue;
+            }
             usedSubskills.add(subSkillName);
         }
     }

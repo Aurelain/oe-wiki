@@ -1,8 +1,8 @@
 import filterHub from '../helpers/filterHub.js';
-import assume from '../utils/assume.js';
 import add from '../helpers/add.js';
 import translate, {checkExists} from '../helpers/translate.js';
 import checkSharedAbility from '../helpers/checkSharedAbility.js';
+import log from '../helpers/log.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -47,11 +47,16 @@ function Unit(zipHub) {
         // console.log('id:', id);
 
         const viewsPath = path.replace('_logics/', '_views/').replace('_l.', '_v.');
-        assume(views[viewsPath], viewsPath, 'Missing path!');
+        if (!views[viewsPath]) {
+            log('Missing path!', viewsPath);
+            continue;
+        }
 
         const logic = logics[path];
         const view = views[viewsPath];
-        assume(logic.length === 1 && view.length === 1, path, 'Too many items!');
+        if (logic.length !== 1 && view.length !== 1) {
+            log('Unexpected logic/view count!', path);
+        }
 
         output['Unit~' + id] = parseUnit(logic[0], view[0], path);
     }

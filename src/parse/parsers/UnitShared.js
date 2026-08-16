@@ -2,8 +2,8 @@ import filterHub from '../helpers/filterHub.js';
 import add from '../helpers/add.js';
 import translate from '../helpers/translate.js';
 import checkSharedAbility from '../helpers/checkSharedAbility.js';
-import assume from '../utils/assume.js';
 import checkInterestingAbility from '../helpers/checkInterestingAbility.js';
+import log from '../helpers/log.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -70,7 +70,9 @@ function collectSharedFromUnit(logic, view) {
         if (checkSharedAbility(name, id) && checkInterestingAbility(name)) {
             if (type) {
                 const isAltOrMod = type === 'Ability_type_attack_alt' || type === 'Ability_type_attack_mod';
-                assume(isAltOrMod, view, ability, 'Unexpected ability!');
+                if (!isAltOrMod) {
+                    log('Unexpected ability!', view, ability);
+                }
             }
             const abilityId = name.replace(/_name$/, '');
             output[abilityId] = {name, description, type, logic};

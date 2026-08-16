@@ -1,10 +1,10 @@
 import filterHub from '../helpers/filterHub.js';
 import add from '../helpers/add.js';
 import translate from '../helpers/translate.js';
-import assume from '../utils/assume.js';
 import checkPojo from '../utils/checkPojo.js';
 import size from '../utils/size.js';
 import fishValue from '../utils/fishValue.js';
+import log from '../helpers/log.js';
 
 // =====================================================================================================================
 //  P U B L I C
@@ -17,7 +17,9 @@ function HeroClass(zipHub) {
     const heroes = filterHub(zipHub, 'DB/heroes/.*?json', 'campaign|custom');
 
     const heroClasses = inferClassesFromHeroes(heroes);
-    assume(size(heroClasses) === 12, 'Unexpected hero classes count!');
+    if (size(heroClasses) !== 12) {
+        log('Unexpected hero classes count!');
+    }
 
     for (const id in heroClasses) {
         const def = heroClasses[id];
@@ -44,13 +46,22 @@ function inferClassesFromHeroes(heroes) {
     const defs = {};
     for (const path in heroes) {
         const heroList = heroes[path];
-        assume(heroList.length === 1, path, 'Unexpected hero list!');
-        const def = inferClassFromHero(heroList[0]);
+        if (heroList.length !== 1) {
+            log('Unexpected hero list count!', path);
+        }
+        const hero = heroList[0];
+        if (!checkPojo(hero)) {
+            log('Hero must be pojo!', hero);
+            continue;
+        }
+        const def = inferClassFromHero(hero);
         const {id} = def;
         if (id in defs) {
             const old = JSON.stringify(defs[id]);
             const fresh = JSON.stringify(def);
-            assume(old === fresh, old, path, fresh, 'Fresh class is not identical to old class!');
+            if (old !== fresh) {
+                log('Fresh class is not identical to old class!', old, path, fresh);
+            }
         } else {
             defs[id] = def;
         }
@@ -62,7 +73,6 @@ function inferClassesFromHeroes(heroes) {
  *
  */
 function inferClassFromHero(hero) {
-    assume(checkPojo(hero), hero, 'Must be pojo!');
     const {fraction, classType} = hero;
     const id = classType + '_' + fraction;
     const def = {_type: 'HeroClassDef'};

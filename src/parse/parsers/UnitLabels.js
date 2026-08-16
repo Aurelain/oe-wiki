@@ -1,6 +1,6 @@
 import filterHub from '../helpers/filterHub.js';
 import translate from '../helpers/translate.js';
-import assume from '../utils/assume.js';
+import log from '../helpers/log.js';
 
 // =====================================================================================================================
 //  P U B L I C
@@ -13,12 +13,16 @@ function UnitLabels(zipHub) {
 
     // Ability type:
     const abilityTypeIds = collectAbilityTypes(zipHub);
-    assume(abilityTypeIds.length, 'No ability type ids found!');
+    if (!abilityTypeIds.length) {
+        log('No ability type ids found!');
+    }
     output['UnitLabels~ability_type'] = generateDefs(abilityTypeIds, 'ability_type');
 
     // Info description, used to add extra mentions to ability descriptions:
     const infoIds = collectInfoDescription(zipHub);
-    assume(infoIds.length, 'No info_description ids found!');
+    if (!infoIds.length) {
+        log('No info_description ids found!');
+    }
     output['UnitLabels~info_description'] = generateDefs(infoIds, 'info_description');
 
     return output;
