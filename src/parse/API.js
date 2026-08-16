@@ -1,8 +1,9 @@
-let actuatorFunction;
+import to from './utils/to.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
+let actuatorFunction;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -42,8 +43,13 @@ async function onMessageFromParent(event) {
     switch (type) {
         case 'run':
             // console.log(`Child received a "${type}" inquiry.`);
-            const result = await actuatorFunction();
-            send('run', result);
+            const [result, error] = await to(actuatorFunction);
+            if (error) {
+                log('!Error encountered while parsing!', error);
+                send('run', {});
+            } else {
+                send('run', result);
+            }
             break;
         default:
         // nothing
