@@ -47,7 +47,7 @@ async function fetchWikiPages(titles) {
     for (let i = 0; i < titles.length; i += CHUNK_SIZE) {
         const endIndex = Math.min(i + CHUNK_SIZE, titles.length);
         const chunk = titles.slice(i, endIndex);
-        log(`Retrieving ${i + 1}-${endIndex} of ${titles.length} pages...`);
+        log(`Retrieving ${i + 1}-${endIndex} of ${titles.length} pages (${chunk[0]})...`);
 
         const data = await ask({
             action: 'query',
