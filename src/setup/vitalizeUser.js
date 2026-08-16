@@ -140,6 +140,10 @@ async function onGameClick() {
             hasPreviewed: false,
             hasSaved: false,
         });
+    } else {
+        setState({
+            hasDirAccess: await checkPermission(freshDirHandle),
+        });
     }
 }
 
