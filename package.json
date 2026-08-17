@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "start": "node scripts/start/start",
-        "build": "node scripts/build/build"
+        "build": "node scripts/build/build",
+        "write": "node scripts/write/write"
     },
     "dependencies": {
         "diff-match-patch": "^1.0.5",

@@ -4,6 +4,9 @@ import to from './utils/to.js';
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 let actuatorFunction;
+let addMessageHandler;
+let removeMessageHandler;
+let postMessageToHost;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -11,9 +14,10 @@ let actuatorFunction;
 /**
  *
  */
-function initialize(actuator) {
+async function initialize(actuator) {
+    await detectEnvironment();
     actuatorFunction = actuator;
-    self.addEventListener('message', onMessageFromParent);
+    addMessageHandler(onMessageFromParent);
     send('ready');
 }
 
@@ -37,8 +41,29 @@ function log(...args) {
 /**
  *
  */
-async function onMessageFromParent(event) {
-    const data = event.data && typeof event.data === 'object' ? event.data : {};
+async function detectEnvironment() {
+    const isNode = typeof process !== 'undefined' && process.versions?.node !== null;
+    if (isNode) {
+        const nodeWorkerModule = 'node:worker_threads'; // hide the import from ESLint
+        const {parentPort} = await import(nodeWorkerModule);
+        if (!parentPort) {
+            throw new Error('No parent port!');
+        }
+        addMessageHandler = (fn) => parentPort.on('message', fn);
+        removeMessageHandler = (fn) => parentPort.off('message', fn);
+        postMessageToHost = (data) => parentPort.postMessage(data);
+    } else {
+        addMessageHandler = (fn) => self.addEventListener('message', fn);
+        removeMessageHandler = (fn) => self.removeEventListener('message', fn);
+        postMessageToHost = (data) => self.postMessage(data);
+    }
+}
+
+/**
+ *
+ */
+async function onMessageFromParent(eventOrData) {
+    const data = eventOrData?.data || eventOrData;
     const {type} = data;
     switch (type) {
         case 'run':
@@ -61,7 +86,7 @@ async function onMessageFromParent(event) {
  *
  */
 function send(type, payload) {
-    self.postMessage({type, payload});
+    postMessageToHost({type, payload});
 }
 
 /**
@@ -69,16 +94,16 @@ function send(type, payload) {
  */
 async function sendAndReceive(type, payload) {
     return new Promise((resolve) => {
-        const listener = (event) => {
-            const data = event.data && typeof event.data === 'object' ? event.data : {};
+        const listener = (eventOrData) => {
+            const data = eventOrData?.data || eventOrData;
             if (data.type === type) {
                 // console.log(`Child received a "${type}" reply.`);
-                self.removeEventListener('message', listener);
+                removeMessageHandler(listener);
                 resolve(data.payload);
             }
         };
-        self.addEventListener('message', listener);
-        self.postMessage({type, payload});
+        addMessageHandler(listener);
+        postMessageToHost({type, payload});
     });
 }
 

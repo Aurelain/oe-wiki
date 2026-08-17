@@ -14,9 +14,22 @@ async function unzipCore() {
         API.log('!Invalid zip!');
         return {};
     }
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = new Uint8Array(arrayBuffer);
+    const buffer = await convertToUint8Array(file);
     return unzipSync(buffer);
+}
+
+// =====================================================================================================================
+//  P R I V A T E
+// =====================================================================================================================
+/**
+ *
+ */
+async function convertToUint8Array(file) {
+    if (typeof file.arrayBuffer === 'function') {
+        const arrayBuffer = await file.arrayBuffer();
+        return new Uint8Array(arrayBuffer);
+    }
+    return new Uint8Array(file);
 }
 
 // =====================================================================================================================
