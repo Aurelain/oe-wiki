@@ -51,7 +51,7 @@ async function setup() {
  */
 async function importParser(url) {
     // log('Connecting to parser...');
-    parser = new Worker(`data:application/javascript,importScripts('${url}');`);
+    parser = new Worker(`data:application/javascript,importScripts('${url}?${Math.random()}');`);
     parser.addEventListener('error', () => log('!Parser error!'));
     await sendAndReceive(parser, 'ready');
     log('Connected to parser.');
