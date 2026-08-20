@@ -1,5 +1,6 @@
 import {Worker} from 'node:worker_threads';
 import findFiles from './findFiles.js';
+import fs from 'node:fs';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -16,15 +17,18 @@ let worker;
  *
  */
 async function write() {
+    const time = Date.now();
     await loadWorker();
     const results = await sendAndReceive(worker, 'run');
+    console.log(Date.now() - time);
 
     for (const key in results) {
-        const path = WIKI_MIRROR_DIR + '/Data/' + key + '.wiki';
+        const path = WIKI_MIRROR_DIR + '/' + key;
         const content = results[key];
-        console.log('========\n' + path + '\n' + content);
-        // fs.writeFileSync(path, content);
+        // console.log('========\n' + path + '\n' + content);
+        fs.writeFileSync(path, content);
     }
+    process.exit(0);
 }
 
 // =====================================================================================================================

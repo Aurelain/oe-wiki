@@ -40,7 +40,7 @@ async function savePages(parserResult, mirrorResult) {
 /**
  *
  */
-async function findUpdates(parserResult, mirrorResult) {
+function findUpdates(parserResult, mirrorResult) {
     const output = [];
     mirrorResult = mirrorResult || {};
     for (const path in parserResult) {
