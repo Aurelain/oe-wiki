@@ -25,6 +25,13 @@ function UnitLabels(zipHub) {
     }
     output['UnitLabels~info_description'] = generateDefs(infoIds, 'info_description');
 
+    // Immunities:
+    const immunityIds = collectImmunities(zipHub);
+    if (!immunityIds.length) {
+        log('No immunityIds found!');
+    }
+    output['UnitLabels~immunity'] = generateDefs(immunityIds, 'immunity');
+
     return output;
 }
 // =====================================================================================================================
@@ -43,6 +50,7 @@ function collectAbilityTypes(zipHub) {
     }
     return output;
 }
+
 /**
  *
  */
@@ -55,6 +63,24 @@ function collectInfoDescription(zipHub) {
         for (const {infoDescription} of abilities) {
             if (infoDescription) {
                 set.add(infoDescription);
+            }
+        }
+    }
+    return Array.from(set);
+}
+
+/**
+ *
+ */
+function collectImmunities(zipHub) {
+    const set = new Set();
+    const views = filterHub(zipHub, /units_views/);
+    for (const path in views) {
+        const view = views[path][0];
+        const abilities = [...(view.alternativeAttacks || []), ...(view.abilities || [])];
+        for (const {excaptionInTooltip} of abilities) {
+            if (excaptionInTooltip) {
+                set.add(excaptionInTooltip);
             }
         }
     }
