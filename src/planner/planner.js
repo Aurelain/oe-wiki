@@ -38,6 +38,7 @@ async function planner() {
     vars.rootElement = root;
     vars.contentElement = root.querySelector('.content');
     vars.portraitElement = root.querySelector('.portrait');
+    vars.heroesMenuElement = root.querySelector('.heroes-menu');
     vars.heroes = await getHeroes();
 
     render();
@@ -89,6 +90,7 @@ async function getHeroes() {
             continue;
         }
         id = id.replaceAll('&#95;', '_');
+        console.log('id:', id);
         const [, icon] = match(row, /src=['"]([^'"]*)/);
         if (!icon) {
             console.log('No icon!');
@@ -113,6 +115,19 @@ function render() {
     const {portraitElement, heroes} = vars;
     const {hero} = state;
     portraitElement.src = heroes[hero].portrait;
+    fillHeroesMenu();
+}
+
+/**
+ *
+ */
+function fillHeroesMenu() {
+    const {heroes, heroesMenuElement} = vars;
+    const imgs = [];
+    for (const key in heroes) {
+        imgs.push(`<img src='${heroes[key].icon}' />`);
+    }
+    heroesMenuElement.innerHTML = imgs.join('');
 }
 
 /**

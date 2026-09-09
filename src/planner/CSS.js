@@ -46,6 +46,25 @@ const CSS = styled`
         border-radius: 50%;
         cursor: pointer;
     }
+    
+    .planner .heroes-menu {
+        display:none;
+        position:absolute;
+        left:152px;
+        top: 5px;
+        width:508px;
+        height:681px;
+        background:#1f3756;
+        border:solid 1px #BCB096;
+        filter: drop-shadow(0 0 0.3rem black);
+        border-radius:8px;
+        overflow:auto;
+    }
+    
+    .planner .heroes-menu img {
+        width:56px;
+        cursor:pointer;
+    }
 `;
 
 export default CSS;

@@ -18,6 +18,8 @@ const HTML = `
     <div class='level'>
         <img src='@level' alt='level'/>
     </div>
+    
+    <div class='heroes-menu'></div>
 
 </div>  
 `;
