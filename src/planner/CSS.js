@@ -1,21 +1,50 @@
 import styled from './utils/styled.js';
+import {HEIGHT, WIDTH} from './SETTINGS.js';
 
 // noinspection CssUnusedSymbol
 const CSS = styled`
     .planner {
-        //text-align: center;
+        position: relative;
     }
 
     .planner .content {
-        container-type: inline-size;
-        width: 100%;
-        margin: auto;
-        max-width: 708px;
+        position: absolute;
+        width: ${WIDTH}px;
+        height: ${HEIGHT}px;
+        transform-origin: 0 0;
     }
 
     .planner .bg {
         width: 100%;
         filter: drop-shadow(0 0 0.3rem black);
+    }
+
+    .planner .portrait {
+        position: absolute;
+        left: 0;
+        top: -5px;
+        //background: red;
+        width: 140px;
+        height: 140px;
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+        -webkit-mask: url(#compoundMask);
+        mask: url(#compoundMask);
+        cursor:pointer;
+        //filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+    }
+
+    .planner .portrait img {
+        width:100%;
+    }
+    
+    .planner .level {
+        position: absolute;
+        left: 29px;
+        top: 90px;
+        transform: scale(0.5);
+        border-radius: 50%;
+        cursor: pointer;
     }
 `;
 
