@@ -1,0 +1,95 @@
+<meta charset='UTF-8'/>
+<script type='module'>
+    import encode from './encode.js';
+    import focus from '../../../../scripts/focus/focus.js';
+
+    const TESTS = [
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'empty',
+            input: {},
+            output: '',
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'just hero',
+            input: {hero:'necro_hero_8'},
+            output: 'Cn',
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'just level',
+            input: {level:15},
+            output: '14p',
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'just army6 count',
+            input: {army6Count:67},
+            output: 'mEV',
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'all',
+            input: {
+                hero: 'necro_hero_8',
+                level: 1,
+                skill0Id: 'skill_luck',
+                skill0Sub1: 1,
+                skill0Sub2: 1,
+                skill1Id: 'skill_resistance',
+                skill1Sub1: 1,
+                skill1Sub2: 1,
+                skill2Id: 'skill_tactics',
+                skill2Sub1: 1,
+                skill2Sub2: 1,
+                skill3Id: 'skill_formation',
+                skill3Sub1: 1,
+                skill3Sub2: 1,
+                skill4Id: 'skill_siege',
+                skill4Sub1: 1,
+                skill4Sub2: 1,
+                skill5Id: 'skill_trainer',
+                skill5Sub1: 1,
+                skill5Sub2: 1,
+                skill6Id: 'skill_battle_artistry',
+                skill6Sub1: 1,
+                skill6Sub2: 1,
+                skill7Id: 'skill_battlemage',
+                skill7Sub1: 1,
+                skill7Sub2: 1,
+                artifactSword: 'knights_honor_lance_artifact',
+                artifactShield: 'caduceus_artifact',
+                artifactArmor: 'paupers_glory_rags_artifact',
+                artifactHelmet: 'knights_honor_armet_artifact',
+                artifactBoots: 'ethereal_knowledge_mirror_shoes_artifact',
+                artifactBelt: 'paupers_glory_rope_belt_artifact',
+                artifactCape: 'omencaller_artifact',
+                artifactRingL: 'ring_of_neutrality_artifact',
+                artifactRingR: 'sixth_finger_artifact',
+                artifactPouchTL: 'boreolos_hand_artifact',
+                artifactPouchTR: 'boreolos_head_artifact',
+                artifactPouchBL: 'boreolos_heart_artifact',
+                artifactPouchBR: 'inner_song_music_sheet_artifact',
+                artifactBanner: 'holy_sigil_of_eridore_artifact',
+                army0Id: 'esquire',
+                army0Count: 1,
+                army1Id: 'esquire',
+                army1Count: 1,
+                army2Id: 'esquire',
+                army2Count: 1,
+                army3Id: 'esquire',
+                army3Count: 1,
+                army4Id: 'esquire',
+                army4Count: 1,
+                army5Id: 'esquire',
+                army5Count: 1,
+                army6Id: 'esquire',
+                army6Count: 1,
+            },
+            output: '4swxErBt3X5oKCZHfVnY3yewpJ1cJ7akIoniwR1CMi6M8AKWksbxh0bAScT',
+        },
+    ];
+
+    await focus(encode, TESTS);
+</script>
