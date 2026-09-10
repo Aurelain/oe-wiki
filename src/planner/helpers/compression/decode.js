@@ -35,7 +35,7 @@ function decode(symbols) {
 
         const field = FIELDS[currentIndex];
         if (!field) {
-            console.error(`Invalid field index encountered: ${currentIndex}`);
+            console.warn(`Invalid field index encountered: ${currentIndex}`);
             return result;
         }
 
@@ -45,11 +45,14 @@ function decode(symbols) {
         let value = parseInt(valueBits, 2);
         if (field.dictionary) {
             if (value >= field.dictionary.length) {
-                console.error(`Dictionary index ${value} out of bounds for field "${field.key}"!`);
+                console.warn(`Dictionary index ${value} out of bounds for field "${field.key}"!`);
+                return result;
             }
             value = field.dictionary[value];
         }
-        result[field.key] = value;
+        if (value) {
+            result[field.key] = value;
+        }
 
         // Next expected index in sequential order
         expectedIndex = currentIndex + 1;

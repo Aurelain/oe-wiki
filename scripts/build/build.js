@@ -131,6 +131,8 @@ async function createBuild(config) {
         bundle: true,
         minify: !isDev,
         sourcemap: isDev,
+        jsx: 'automatic', // for planner
+        jsxImportSource: 'preact', // for planner
         outfile,
     });
 

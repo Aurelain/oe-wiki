@@ -2,7 +2,8 @@ import HTML from './HTML.js';
 import match from './utils/match.js';
 import {HEIGHT, WIDTH} from './SETTINGS.js';
 import Persistence from './helpers/Persistence.js';
-import persistence from './helpers/Persistence.js';
+import mount from './helpers/mount.jsx';
+import App from './components/App.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -29,10 +30,10 @@ async function planner() {
 
     const bgUrl = root.querySelector('.background img').src;
     const level = root.querySelector('.level img').src;
-    let html = HTML;
-    html = html.replace('@bgUrl', bgUrl);
-    html = html.replace('@level', level);
-    root.innerHTML = html;
+    let markup = HTML;
+    markup = markup.replace('@bgUrl', bgUrl);
+    markup = markup.replace('@level', level);
+    root.innerHTML = markup;
 
     // Vars:
     vars.rootElement = root;
@@ -48,6 +49,9 @@ async function planner() {
 
     // Begin:
     Persistence.setup(setState); // will always call `render()` in the end
+
+    // Mount the App to the DOM
+    mount(App, root);
 }
 
 // =====================================================================================================================
@@ -58,13 +62,13 @@ async function planner() {
  */
 function setState(changes) {
     Object.assign(state, changes);
-    persistence.remember(state);
-    render();
+    Persistence.remember(state);
+    // render();
 }
 
 /**
  * Applies the current state.
- */
+
 function render() {
     const {portraitElement, heroes} = vars;
     const {hero} = state;
@@ -78,7 +82,7 @@ function render() {
         portraitElement.style.visibility = 'hidden';
     }
     fillHeroesMenu();
-}
+}*/
 
 /**
  *

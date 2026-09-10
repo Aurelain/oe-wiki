@@ -17,6 +17,7 @@ const OUTPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'dev'
 async function planner() {
     try {
         await build('src/planner/planner.js', '-o', OUTPUT_DIR, '--dev');
+        // await build('src/planner/planner.js', '-o', OUTPUT_DIR);
     } catch (e) {
         console.error('Build failed!');
         return;
