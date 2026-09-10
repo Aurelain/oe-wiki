@@ -1,23 +1,7 @@
 import styled from './utils/styled.js';
-import {HEIGHT, WIDTH} from './SETTINGS.js';
 
 // noinspection CssUnusedSymbol
 const CSS = styled`
-    .planner {
-        position: relative;
-    }
-
-    .planner .content {
-        position: absolute;
-        width: ${WIDTH}px;
-        height: ${HEIGHT}px;
-        transform-origin: 0 0;
-    }
-
-    .planner .bg {
-        width: 100%;
-        filter: drop-shadow(0 0 0.3rem black);
-    }
 
     .planner .portrait {
         position: absolute;

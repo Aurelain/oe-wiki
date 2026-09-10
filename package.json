@@ -11,6 +11,7 @@
     "dependencies": {
         "diff-match-patch": "^1.0.5",
         "fflate": "^0.8.3",
+        "goober": "^2.1.19",
         "preact": "^10.29.8"
     },
     "devDependencies": {
