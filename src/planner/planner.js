@@ -7,11 +7,6 @@ import App from './components/App.jsx';
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const wikiUrl = getWikiUrl();
-const vars = {
-    rootElement: null,
-    contentElement: null,
-    portraitElement: null,
-};
 const state = {};
 
 // =====================================================================================================================
@@ -26,26 +21,14 @@ async function planner() {
         return;
     }
 
-    const bgUrl = root.querySelector('.background img').src;
-    const level = root.querySelector('.level img').src;
-    // let markup = HTML;
-    // markup = markup.replace('@bgUrl', bgUrl);
-    // markup = markup.replace('@level', level);
-    // root.innerHTML = markup;
-
-    // Vars:
-    vars.rootElement = root;
-    vars.contentElement = root.querySelector('.content');
-    vars.portraitElement = root.querySelector('.portrait');
-    vars.heroesMenuElement = root.querySelector('.heroes-menu');
-    vars.heroes = await getHeroes();
-
     // Begin:
     // Persistence.setup(setState); // will always call `render()` in the end
 
     // Mount the App to the DOM
     mount(App, root, {
-        bgUrl,
+        bgUrl: root.querySelector('.background img').src,
+        levelUrl: root.querySelector('.level img').src,
+        heroes: await getHeroes(),
     });
 }
 
@@ -129,7 +112,7 @@ async function getHeroes() {
             continue;
         }
         portrait = portrait.replaceAll('140px', '600px');
-        heroes[id] = {icon, portrait};
+        heroes[id] = {id, icon, portrait};
     }
     console.log('heroes:', heroes);
     return heroes;

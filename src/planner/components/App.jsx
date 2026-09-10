@@ -1,7 +1,8 @@
 import {Component, createRef} from 'preact';
 import {HEIGHT, WIDTH} from '../SETTINGS.js';
-import CSS from '../CSS.js';
 import {css} from 'goober';
+import Portrait from './Portrait.jsx';
+import Level from './Level.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -27,13 +28,16 @@ class App extends Component {
     };
 
     render() {
+        const {hero = 'dungeon_hero_4'} = this.state;
         const {appRef} = this.vars;
-        const {bgUrl} = this.props.setup;
+        const {bgUrl, levelUrl, heroes} = this.props.setup;
 
         return (
             <div className={APP_CSS} ref={appRef}>
                 <style>{CSS}</style>
                 <img className={BG_CSS} src={bgUrl} alt="empty background" />
+                <Portrait hero={hero} heroes={heroes} />
+                <Level src={levelUrl} />
             </div>
         );
     }
