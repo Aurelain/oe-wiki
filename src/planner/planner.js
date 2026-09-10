@@ -1,6 +1,8 @@
 import HTML from './HTML.js';
 import match from './utils/match.js';
 import {HEIGHT, WIDTH} from './SETTINGS.js';
+import Persistence from './helpers/Persistence.js';
+import persistence from './helpers/Persistence.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -11,9 +13,7 @@ const vars = {
     contentElement: null,
     portraitElement: null,
 };
-const state = {
-    hero: 'human_hero_4',
-};
+const state = {};
 
 // =====================================================================================================================
 //  P U B L I C
@@ -41,17 +41,45 @@ async function planner() {
     vars.heroesMenuElement = root.querySelector('.heroes-menu');
     vars.heroes = await getHeroes();
 
-    render();
-
     // Scale:
     window.addEventListener('resize', onWindowResize);
     refreshScale();
     root.style.visibility = 'visible';
+
+    // Begin:
+    Persistence.setup(setState); // will always call `render()` in the end
 }
 
 // =====================================================================================================================
 //  P R I V A T E
 // =====================================================================================================================
+/**
+ * Mimics the React setState pattern.
+ */
+function setState(changes) {
+    Object.assign(state, changes);
+    persistence.remember(state);
+    render();
+}
+
+/**
+ * Applies the current state.
+ */
+function render() {
+    const {portraitElement, heroes} = vars;
+    const {hero} = state;
+    if (hero) {
+        portraitElement.style.visibility = 'visible';
+        const freshSrc = heroes[hero].portrait;
+        if (freshSrc !== portraitElement.src) {
+            portraitElement.src = freshSrc;
+        }
+    } else {
+        portraitElement.style.visibility = 'hidden';
+    }
+    fillHeroesMenu();
+}
+
 /**
  *
  */
@@ -106,16 +134,6 @@ async function getHeroes() {
     }
     console.log('heroes:', heroes);
     return heroes;
-}
-
-/**
- *
- */
-function render() {
-    const {portraitElement, heroes} = vars;
-    const {hero} = state;
-    portraitElement.src = heroes[hero].portrait;
-    fillHeroesMenu();
 }
 
 /**
