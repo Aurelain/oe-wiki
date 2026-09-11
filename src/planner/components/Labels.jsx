@@ -36,7 +36,6 @@ const CLASS_CSS = css`
 class Labels extends Component {
     render() {
         const {heroData} = this.props;
-        console.log('heroData.name:', heroData?.name);
         return (
             <div className={ROOT_CSS}>
                 {heroData && <div className={NAME_CSS}>{heroData.name}</div>}

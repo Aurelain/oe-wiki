@@ -1,7 +1,4 @@
-// =====================================================================================================================
-//  D E C L A R A T I O N S
-// =====================================================================================================================
-const wikiUrl = getWikiUrl();
+import {WIKI_URL} from './compression/SETTINGS.js';
 
 // =====================================================================================================================
 //  P U B L I C
@@ -9,29 +6,19 @@ const wikiUrl = getWikiUrl();
 /**
  *
  */
-async function downloadPage(page) {
+async function downloadPage(page, lang) {
+    lang = lang || 'en';
+    const suffix = lang === 'en' ? '' : '/' + lang;
+    const url = WIKI_URL + page + suffix;
+
     let response;
     try {
-        response = await fetch(wikiUrl + page);
+        response = await fetch(url);
     } catch (e) {
-        console.warn(`Failed to fetch ${page}!`);
+        console.warn(`Failed to fetch ${url}!`);
         return '';
     }
     return await response.text();
-}
-
-// =====================================================================================================================
-//  P R I V A T E
-// =====================================================================================================================
-/**
- *
- */
-function getWikiUrl() {
-    let {href} = window.location;
-    href = href.replace(/\/..$/, ''); // remove normal language suffix (e.g. `/fr`)
-    href = href.replace(/\/..-\w+$/, ''); // remove advanced language suffix (e.g. `/zh-hans`)
-    href = href.replace(/[^/]*$/, ''); // remove advanced language suffix (e.g. `/zh-hans`)
-    return href;
 }
 
 // =====================================================================================================================

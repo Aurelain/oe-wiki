@@ -60,6 +60,10 @@ class App extends Component {
         Persistence.remember(this.state);
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onWindowResize);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // P R I V A T E
     // -----------------------------------------------------------------------------------------------------------------

@@ -7,8 +7,8 @@ import downloadPage from '../helpers/downloadPage.js';
 /**
  *
  */
-async function getHeroes() {
-    const overview = await downloadPage('Heroes_Overview');
+async function getHeroes(lang) {
+    const overview = await downloadPage('Heroes_Overview', lang);
     const [table = ''] = match(overview, /<table[\s\S]*?<\/table>/);
     const rows = table.split('</tr>');
     rows.shift(); // remove the header

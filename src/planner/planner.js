@@ -11,14 +11,36 @@ import getHeroes from './data/getHeroes.js';
 async function planner() {
     const root = document.querySelector('.planner');
     if (!root) {
-        return;
+        window.addEventListener('load', onWindowLoad);
+    } else {
+        await run(root);
     }
+}
 
-    // Mount the App to the DOM
+// =====================================================================================================================
+//  P R I V A T E
+// =====================================================================================================================
+/**
+ *
+ */
+async function onWindowLoad() {
+    window.removeEventListener('load', onWindowLoad);
+    const root = document.querySelector('.planner');
+    if (root) {
+        await run(root);
+    }
+}
+
+/**
+ *
+ */
+async function run(root) {
+    console.log('Mounting HeroPlanner.');
+    const {lang} = root.dataset;
     mount(App, root, {
         bgUrl: root.querySelector('.background img').src,
         levelUrl: root.querySelector('.level img').src,
-        heroes: await getHeroes(),
+        heroes: await getHeroes(lang),
     });
 }
 

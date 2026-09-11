@@ -24,7 +24,6 @@ const ROOT_CSS = css`
 class Specialization extends Component {
     render() {
         const {heroData} = this.props;
-        console.log('heroData:', heroData);
         return <div className={ROOT_CSS}>{heroData && <img src={heroData.specIcon} />}</div>;
     }
 
