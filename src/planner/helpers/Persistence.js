@@ -19,16 +19,11 @@ function setup(onChange) {
     window.addEventListener('hashchange', onHashChange);
 
     const hash = window.location.hash.substring(1);
-    console.log('hash:', hash);
     if (hash) {
-        parseHash();
+        parseSymbols(hash);
     } else {
         const stored = window.localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            window.location.hash = stored; // will trigger an `onHashChange()`
-        } else {
-            parseHash();
-        }
+        parseSymbols(stored || '');
     }
 }
 
@@ -37,9 +32,7 @@ function setup(onChange) {
  */
 function remember(state) {
     const symbols = encode(state);
-    if (symbols !== sourceOfTruth) {
-        save(symbols);
-    }
+    parseSymbols(symbols);
 }
 
 // =====================================================================================================================
@@ -49,27 +42,24 @@ function remember(state) {
  *
  */
 function onHashChange() {
-    parseHash();
-}
-
-/**
- *
- */
-function save(symbols) {
-    sourceOfTruth = symbols;
-    window.localStorage.setItem(STORAGE_KEY, symbols);
-    window.location.hash = symbols;
-}
-
-/**
- *
- */
-function parseHash() {
     const hash = window.location.hash.substring(1) || '';
-    if (hash !== sourceOfTruth) {
-        save(hash);
-        const decoded = decode(hash);
-        console.log('decoded:', decoded);
+    parseSymbols(hash);
+}
+
+/**
+ *
+ */
+function parseSymbols(symbols) {
+    if (symbols !== sourceOfTruth) {
+        sourceOfTruth = symbols;
+        window.localStorage.setItem(STORAGE_KEY, symbols);
+        if (symbols) {
+            window.location.hash = symbols;
+        } else {
+            // Avoid a jump to top when the hash is empty:
+            history.pushState(null, '', window.location.pathname + window.location.search);
+        }
+        const decoded = decode(symbols);
         changeHandler(decoded);
     }
 }

@@ -4,6 +4,7 @@ import {css} from 'goober';
 import Portrait from './Portrait.jsx';
 import Level from './Level.jsx';
 import Persistence from '../helpers/Persistence.js';
+import Reset from './Reset.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -39,6 +40,7 @@ class App extends Component {
                 <img className={BG_CSS} src={bgUrl} alt="empty background" />
                 <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
                 <Level src={levelUrl} />
+                <Reset />
             </div>
         );
     }
@@ -91,7 +93,9 @@ class App extends Component {
      *
      */
     onHashChange = (stateFragment) => {
-        this.setState(stateFragment);
+        this.setState({
+            hero: stateFragment.hero,
+        });
     };
 }
 
