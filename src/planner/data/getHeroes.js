@@ -46,7 +46,7 @@ function parseRow(row, extraRow) {
     }
 
     // portrait
-    const portrait = icon.replace(/\d*px/, '600px'); // dangerous
+    const portrait = icon.replace(/\d*px/, '600px'); // debatable, that image may not exist
 
     // name
     let [, name] = match(nameColumn, /<a.*?>([^<]*)/);
@@ -68,10 +68,11 @@ function parseRow(row, extraRow) {
     }
 
     // specIcon
-    const [, specIcon] = match(specIconColumn, /src=['"]([^'"]*)/);
+    let [, specIcon] = match(specIconColumn, /src=['"]([^'"]*)/);
     if (!specIcon) {
         return console.warn('No specIcon!');
     }
+    specIcon = specIcon.replace(/\d*px/, '128px'); // debatable, that image may not exist
 
     // specName
     const [, specName] = match(specInfoColumn, /<b>([^<]+)/);
@@ -91,7 +92,7 @@ function parseRow(row, extraRow) {
         return;
     }
 
-    return {id, icon, portrait, classIcon, className, specIcon, specName, specDescription, skills};
+    return {id, icon, portrait, name, classIcon, className, specIcon, specName, specDescription, skills};
 }
 
 /**

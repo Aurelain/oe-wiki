@@ -5,6 +5,8 @@ import Portrait from './Portrait.jsx';
 import Level from './Level.jsx';
 import Persistence from '../helpers/Persistence.js';
 import Reset from './Reset.jsx';
+import Specialization from './Specialization.jsx';
+import Labels from './Labels.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -33,12 +35,15 @@ class App extends Component {
         const {hero} = this.state;
         const {appRef} = this.vars;
         const {bgUrl, levelUrl, heroes} = this.props.setup;
+        const heroData = heroes[hero];
 
         return (
             <div className={APP_CSS} ref={appRef}>
                 <style>{CSS}</style>
                 <img className={BG_CSS} src={bgUrl} alt="empty background" />
                 <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
+                <Specialization heroData={heroData} />
+                <Labels heroData={heroData} />
                 <Level src={levelUrl} />
                 <Reset />
             </div>

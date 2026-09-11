@@ -11,6 +11,7 @@ const ROOT_CSS = css`
     filter: drop-shadow(0 0 0.3rem black);
     border-radius: 8px;
     overflow: auto;
+    z-index: 100;
 
     & img {
         width: 56px;
