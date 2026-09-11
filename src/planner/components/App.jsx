@@ -3,6 +3,7 @@ import {HEIGHT, WIDTH} from '../SETTINGS.js';
 import {css} from 'goober';
 import Portrait from './Portrait.jsx';
 import Level from './Level.jsx';
+import Persistence from '../helpers/Persistence.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -28,7 +29,7 @@ class App extends Component {
     };
 
     render() {
-        const {hero = 'dungeon_hero_4'} = this.state;
+        const {hero} = this.state;
         const {appRef} = this.vars;
         const {bgUrl, levelUrl, heroes} = this.props.setup;
 
@@ -36,7 +37,7 @@ class App extends Component {
             <div className={APP_CSS} ref={appRef}>
                 <style>{CSS}</style>
                 <img className={BG_CSS} src={bgUrl} alt="empty background" />
-                <Portrait hero={hero} heroes={heroes} />
+                <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
                 <Level src={levelUrl} />
             </div>
         );
@@ -44,7 +45,12 @@ class App extends Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.onWindowResize);
+        Persistence.setup(this.onHashChange);
         this.refreshScale();
+    }
+
+    componentDidUpdate() {
+        Persistence.remember(this.state);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -72,6 +78,20 @@ class App extends Component {
         const scaleRatio = coreWidth / WIDTH;
         appElement.style.transform = `scale(${scaleRatio})`;
         appElement.style.left = Math.floor((width - coreWidth) / 2) + 'px';
+    };
+
+    /**
+     *
+     */
+    onHeroChange = (hero) => {
+        this.setState({hero});
+    };
+
+    /**
+     *
+     */
+    onHashChange = (stateFragment) => {
+        this.setState(stateFragment);
     };
 }
 

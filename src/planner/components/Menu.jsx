@@ -6,10 +6,6 @@ import {css} from 'goober';
 // =====================================================================================================================
 const ROOT_CSS = css`
     position: absolute;
-    left: 152px;
-    top: 5px;
-    width: 508px;
-    height: 681px;
     background: #1f3756;
     border: solid 1px #bcb096;
     filter: drop-shadow(0 0 0.3rem black);
@@ -31,11 +27,11 @@ class Menu extends Component {
         timeout: null,
     };
     render() {
-        const {list} = this.props;
+        const {list, left, top, width, height} = this.props;
         return (
-            <div className={ROOT_CSS} ref={this.vars.rootRef}>
+            <div className={ROOT_CSS} ref={this.vars.rootRef} style={{left, top, width, height}}>
                 {Object.values(list).map((hero) => (
-                    <img key={hero.id} src={hero.icon} onClick={this.onIconClick} />
+                    <img key={hero.id} src={hero.icon} data-id={hero.id} onClick={this.onIconClick} />
                 ))}
             </div>
         );
@@ -46,8 +42,9 @@ class Menu extends Component {
     }
 
     componentWillUnmount() {
-        clearTimeout(this.vars.timeout);
         window.removeEventListener('click', this.onWindowClick);
+        clearTimeout(this.vars.timeout);
+        this.vars = null;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -75,8 +72,8 @@ class Menu extends Component {
     /**
      *
      */
-    onIconClick = () => {
-        console.log('onIconClick');
+    onIconClick = (event) => {
+        this.props.onChoice(event.target.dataset.id);
     };
 }
 

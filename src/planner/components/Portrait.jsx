@@ -8,6 +8,16 @@ import Menu from './Menu.jsx';
 const ROOT_CSS = css`
     position: absolute;
     left: 0;
+    top: 0;
+`;
+
+const PIC_CSS = css`
+    width: 100%;
+`;
+
+const MEDALLION_CSS = css`
+    position: absolute;
+    left: 0;
     top: -5px;
     width: 140px;
     height: 140px;
@@ -18,10 +28,6 @@ const ROOT_CSS = css`
     cursor: pointer;
     /*background: red;*/
     /*filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));*/
-`;
-
-const PIC_CSS = css`
-    width: 100%;
 `;
 
 // =====================================================================================================================
@@ -36,17 +42,21 @@ class Portrait extends Component {
         const {hero, heroes} = this.props;
         const {isOpen} = this.state;
         return (
-            <div className={ROOT_CSS} onClick={this.onRootClick}>
-                <svg width="0" height="0" style="position:absolute">
-                    <defs>
-                        <mask id="compoundMask" maskContentUnits="objectBoundingBox">
-                            <rect x="0" y="0" width="1" height="0.35" fill="white" />
-                            <circle cx="0.54" cy="0.58" r="0.41" fill="white" />
-                        </mask>
-                    </defs>
-                </svg>
-                {hero && <img className={PIC_CSS} src={heroes[hero].portrait} />}
-                {isOpen && <Menu list={heroes} onChoice={this.onMenuChoice} />}
+            <div className={ROOT_CSS}>
+                <div className={MEDALLION_CSS} onClick={this.onMedallionClick}>
+                    <svg width="0" height="0" style="position:absolute">
+                        <defs>
+                            <mask id="compoundMask" maskContentUnits="objectBoundingBox">
+                                <rect x="0" y="0" width="1" height="0.35" fill="white" />
+                                <circle cx="0.54" cy="0.58" r="0.41" fill="white" />
+                            </mask>
+                        </defs>
+                    </svg>
+                    {hero && <img className={PIC_CSS} src={heroes[hero].portrait} />}
+                </div>
+                {isOpen && (
+                    <Menu list={heroes} onChoice={this.onMenuChoice} left={152} top={10} width={508} height={681} />
+                )}
             </div>
         );
     }
@@ -54,15 +64,24 @@ class Portrait extends Component {
     // -----------------------------------------------------------------------------------------------------------------
     // P R I V A T E
     // -----------------------------------------------------------------------------------------------------------------
-    onRootClick = () => {
+    /**
+     *
+     */
+    onMedallionClick = () => {
         if (!this.state.isOpen) {
             this.setState({isOpen: true});
         }
     };
 
+    /**
+     *
+     */
     onMenuChoice = (choice) => {
         console.log('choice:', choice);
         this.setState({isOpen: false});
+        if (choice && choice !== this.state.hero) {
+            this.props.onHeroChange(choice);
+        }
     };
 }
 

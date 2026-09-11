@@ -1,5 +1,4 @@
 import match from './utils/match.js';
-import Persistence from './helpers/Persistence.js';
 import mount from './helpers/mount.jsx';
 import App from './components/App.jsx';
 
@@ -7,7 +6,6 @@ import App from './components/App.jsx';
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const wikiUrl = getWikiUrl();
-const state = {};
 
 // =====================================================================================================================
 //  P U B L I C
@@ -21,9 +19,6 @@ async function planner() {
         return;
     }
 
-    // Begin:
-    // Persistence.setup(setState); // will always call `render()` in the end
-
     // Mount the App to the DOM
     mount(App, root, {
         bgUrl: root.querySelector('.background img').src,
@@ -35,33 +30,6 @@ async function planner() {
 // =====================================================================================================================
 //  P R I V A T E
 // =====================================================================================================================
-/**
- * Mimics the React setState pattern.
- */
-function setState(changes) {
-    Object.assign(state, changes);
-    Persistence.remember(state);
-    // render();
-}
-
-/**
- * Applies the current state.
-
-function render() {
-    const {portraitElement, heroes} = vars;
-    const {hero} = state;
-    if (hero) {
-        portraitElement.style.visibility = 'visible';
-        const freshSrc = heroes[hero].portrait;
-        if (freshSrc !== portraitElement.src) {
-            portraitElement.src = freshSrc;
-        }
-    } else {
-        portraitElement.style.visibility = 'hidden';
-    }
-    fillHeroesMenu();
-}*/
-
 /**
  *
  */
@@ -96,38 +64,24 @@ async function getHeroes() {
     for (const [row] of rows) {
         let [, id] = match(row, /data-id=['"]([^'"]*)/);
         if (!id) {
-            console.log('No id!');
+            console.warn('No id!');
             continue;
         }
         id = id.replaceAll('&#95;', '_');
-        console.log('id:', id);
         const [, icon] = match(row, /src=['"]([^'"]*)/);
         if (!icon) {
-            console.log('No icon!');
+            console.warn('No icon!');
             continue;
         }
         let [, portrait] = match(row, /srcset=['"].*?([^ ]*) 2x/);
         if (!portrait) {
-            console.log('No portrait!');
+            console.warn('No portrait!');
             continue;
         }
         portrait = portrait.replaceAll('140px', '600px');
         heroes[id] = {id, icon, portrait};
     }
-    console.log('heroes:', heroes);
     return heroes;
-}
-
-/**
- *
- */
-function fillHeroesMenu() {
-    const {heroes, heroesMenuElement} = vars;
-    const imgs = [];
-    for (const key in heroes) {
-        imgs.push(`<img src='${heroes[key].icon}' />`);
-    }
-    heroesMenuElement.innerHTML = imgs.join('');
 }
 
 // =====================================================================================================================
