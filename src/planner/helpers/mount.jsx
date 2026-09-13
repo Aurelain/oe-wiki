@@ -3,9 +3,9 @@ import {render} from 'preact';
 /**
  *
  */
-function mount(App, root, setup) {
+function mount(App, root, props) {
     root.innerHTML = '';
-    render(<App setup={setup} />, root);
+    render(<App {...props} />, root);
     root.style.position = 'relative';
     root.style.visibility = 'visible';
 }

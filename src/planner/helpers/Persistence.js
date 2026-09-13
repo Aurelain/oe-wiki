@@ -50,6 +50,7 @@ function onHashChange() {
  *
  */
 function parseSymbols(symbols) {
+    // console.log(new Error().stack);
     if (symbols !== sourceOfTruth) {
         sourceOfTruth = symbols;
         window.localStorage.setItem(STORAGE_KEY, symbols);

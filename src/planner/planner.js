@@ -1,6 +1,7 @@
 import mount from './helpers/mount.jsx';
 import App from './components/App.jsx';
 import getHeroes from './data/getHeroes.js';
+import getSkills from './data/getSkills.js';
 
 // =====================================================================================================================
 //  P U B L I C
@@ -41,6 +42,7 @@ async function run(root) {
         bgUrl: root.querySelector('.background img').src,
         levelUrl: root.querySelector('.level img').src,
         heroes: await getHeroes(lang),
+        skills: await getSkills(lang),
     });
 }
 
