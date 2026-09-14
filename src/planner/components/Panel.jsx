@@ -45,6 +45,7 @@ const BOX = css`
     width: max-content;
     border: solid 1px #bcb096;
     border-radius: 8px;
+    filter: drop-shadow(0 0 0.3rem black);
 `;
 
 const DEFAULT_WAY = NORTH;
@@ -62,12 +63,13 @@ class Panel extends Component {
     };
     render() {
         const {className, boxRef, boxClassName, children, maxWidth, way = DEFAULT_WAY} = this.props;
+        const kids = Array.isArray(children) ? children : [children];
         const {boxStyle} = this.state;
         const ref = boxRef || this.vars.boxRef;
         return (
             <div class={cn(ROOT, className)}>
                 <div ref={ref} class={cn(BOX, boxClassName)} style={{maxWidth, ...boxStyle}}>
-                    {...children}
+                    {...kids}
                 </div>
                 <div class={cn(ARROW, ARROW_PLACEMENT[way])} />
             </div>

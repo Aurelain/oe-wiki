@@ -77,7 +77,7 @@ function ensureNativeSkills(draft, heroes) {
             delete draft.skill0Sub1;
             delete draft.skill0Sub2;
         }
-        if (draft.skill1Id !== skills[1].name) {
+        if (skills[1] && draft.skill1Id !== skills[1].name) {
             draft.skill1Id = skills[1].name;
             delete draft.skill1Sub1;
             delete draft.skill1Sub2;

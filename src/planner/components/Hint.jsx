@@ -1,56 +1,66 @@
 import {Component} from 'preact';
 import {css} from 'goober';
-import Hint from './Hint.jsx';
-import {EAST} from '../SETTINGS.js';
+import Panel from './Panel.jsx';
+import {NORTH} from '../SETTINGS.js';
+import cn from '../utils/cn.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-const ROOT_CSS = css`
-    position: absolute;
-    left: 45px;
-    top: 150px;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-
-    & > * {
-        width: 100%;
-        height: 100%;
-    }
-    & img {
-        width: 100%;
-    }
+const ROOT = css`
+    position: relative;
 `;
-
-const HINT = css`
-    top: 50%;
-    left: 100%;
+const PANEL = css`
+    left: 50%;
+    top: 0;
+    pointer-events: none;
+    z-index: 101;
+`;
+const BOX = css`
+    background: #191b2c;
+    border-radius: 4px;
+    padding: 4px 6px;
 `;
 
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
-class Specialization extends Component {
+class Hint extends Component {
+    state = {
+        isOpen: false,
+    };
     render() {
-        const {heroData} = this.props;
+        const {text, way = NORTH, children, hintClassName} = this.props;
+        const {isOpen} = this.state;
+        const kids = Array.isArray(children) ? children : [children];
         return (
-            <div className={ROOT_CSS}>
-                {heroData && (
-                    <Hint text={heroData.specDescription} hintClassName={HINT} way={EAST}>
-                        <img src={heroData.specIcon} />
-                    </Hint>
+            <div class={ROOT} onPointerEnter={this.onRootPointerEnter} onPointerLeave={this.onRootPointerLeave}>
+                {kids[0]}
+                {isOpen && (
+                    <Panel className={cn(PANEL, hintClassName)} boxClassName={BOX} way={way} maxWidth={300}>
+                        {text}
+                    </Panel>
                 )}
             </div>
         );
     }
 
+    componentDidMount() {}
+
+    componentWillUnmount() {}
+
     // -----------------------------------------------------------------------------------------------------------------
     // P R I V A T E
     // -----------------------------------------------------------------------------------------------------------------
+    onRootPointerEnter = () => {
+        this.setState({isOpen: true});
+    };
+    onRootPointerLeave = () => {
+        this.setState({isOpen: false});
+    };
 }
 
 // =====================================================================================================================
 //  E X P O R T
 // =====================================================================================================================
-export default Specialization;
+export default Hint;

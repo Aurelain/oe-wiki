@@ -7,7 +7,6 @@ import Panel from './Panel.jsx';
 // =====================================================================================================================
 const BOX = css`
     background: #1f3756;
-    filter: drop-shadow(0 0 0.3rem black);
     overflow: auto;
     & > img {
         width: 56px;
