@@ -1,6 +1,7 @@
 import {Component} from 'preact';
 import {css} from 'goober';
 import Menu from './Menu.jsx';
+import {EAST} from '../SETTINGS.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -30,6 +31,13 @@ const MEDALLION_CSS = css`
     /*filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));*/
 `;
 
+const MENU = css`
+    left: 152px;
+    top: 84px;
+    width: 520px;
+    max-height: 681px;
+`;
+
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -54,9 +62,7 @@ class Portrait extends Component {
                     </svg>
                     {hero && <img className={PIC_CSS} src={heroes[hero].portrait} />}
                 </div>
-                {isOpen && (
-                    <Menu list={heroes} onChoice={this.onMenuChoice} left={152} top={10} width={508} maxHeight={681} />
-                )}
+                {isOpen && <Menu className={MENU} way={EAST} offset={70} list={heroes} onChoice={this.onMenuChoice} />}
             </div>
         );
     }

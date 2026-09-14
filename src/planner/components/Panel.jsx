@@ -39,9 +39,8 @@ const ARROW_PLACEMENT = {
 
 const BOX = css`
     position: absolute;
-    width: 200px;
-    height: 100px;
-    background: red;
+    width: max-content;
+    max-width: 100%;
     border: solid 1px #bcb096;
     border-radius: 8px;
 `;
@@ -80,13 +79,15 @@ class Panel extends Component {
         marginTop: 0,
     };
     render() {
-        const {way = DEFAULT_WAY} = this.props;
+        const {className, boxRef, boxClassName, children, way = DEFAULT_WAY} = this.props;
         const {marginLeft, marginTop} = this.state;
-        const {boxRef} = this.vars;
+        const ref = boxRef || this.vars.boxRef;
         return (
-            <div class={ROOT}>
+            <div class={cn(ROOT, className)}>
+                <div ref={ref} class={cn(BOX, BOX_PLACEMENT[way], boxClassName)} style={{marginLeft, marginTop}}>
+                    {...children}
+                </div>
                 <div class={cn(ARROW, ARROW_PLACEMENT[way])} />
-                <div ref={boxRef} class={cn(BOX, BOX_PLACEMENT[way])} style={{marginLeft, marginTop}} />
             </div>
         );
     }
@@ -115,7 +116,8 @@ class Panel extends Component {
         } else {
             // Percents
             const value = Number(offset.match(/\d+/)[0]);
-            const boxElement = this.vars.boxRef.current;
+            const ref = this.props.boxRef || this.vars.boxRef;
+            const boxElement = ref.current;
             switch (way) {
                 case NORTH: // fall
                 case SOUTH:

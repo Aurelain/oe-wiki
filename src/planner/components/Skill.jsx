@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import {css} from 'goober';
 import Menu from './Menu.jsx';
-import {ANCHOR_TOP_50, ANCHOR_TOP_RIGHT} from '../SETTINGS.js';
+import {SOUTH} from '../SETTINGS.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -56,15 +56,21 @@ const HIT_CSS = css`
         user-select: none;
     }
 `;
-const MENU = [
-    /* 0 */ {left: 0, top: 52, origin: ANCHOR_TOP_50},
-    /* 1 */ {left: 25, top: 52, origin: ANCHOR_TOP_50},
-    /* 2 */ {left: 0, top: 52, origin: ANCHOR_TOP_50},
-    /* 3 */ {left: 50, top: 52, origin: ANCHOR_TOP_RIGHT},
-    /* 4 */ {left: 0, top: 52},
-    /* 5 */ {left: 0, top: 52},
-    /* 6 */ {left: 0, top: 52},
-    /* 7 */ {left: 0, top: 52},
+
+const MENU = css`
+    width: 340px;
+    left: 25px;
+    top: 52px;
+`;
+const MENU_PROPS = [
+    /* 0 */ {},
+    /* 1 */ {},
+    /* 2 */ {},
+    /* 3 */ {offset: 256},
+    /* 4 */ {},
+    /* 5 */ {},
+    /* 6 */ {},
+    /* 7 */ {offset: 256},
 ];
 
 // =====================================================================================================================
@@ -76,12 +82,12 @@ class Skill extends Component {
     };
 
     render() {
-        const {nr, id, sub1, sub2, skills} = this.props;
+        const {nr, id, skills} = this.props;
         const {isOpen} = this.state;
         const skillData = skills[id];
         console.log('skillData:', skillData);
         const filteredSkills = this.filterSkills(skills);
-        const menuProps = MENU[nr];
+        const menuProps = MENU_PROPS[nr];
         return (
             <div className={`${ROOT_CSS} ${SLOTS[nr]}`} data-nr={nr}>
                 <div className={HIT_CSS} onClick={this.onHitClick}>
@@ -89,10 +95,10 @@ class Skill extends Component {
                 </div>
                 {isOpen && (
                     <Menu
+                        className={MENU}
                         list={filteredSkills}
                         onChoice={this.onMenuChoice}
-                        width={340}
-                        maxHeight={400}
+                        way={SOUTH}
                         {...menuProps}
                     />
                 )}

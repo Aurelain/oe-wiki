@@ -1,19 +1,15 @@
 import {Component, createRef} from 'preact';
 import {css} from 'goober';
+import Panel from './Panel.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-const ROOT_CSS = css`
-    position: absolute;
+const BOX = css`
     background: #1f3756;
-    border: solid 1px #bcb096;
     filter: drop-shadow(0 0 0.3rem black);
-    border-radius: 8px;
     overflow: auto;
-    z-index: 100;
-
-    & img {
+    & > img {
         width: 56px;
         cursor: pointer;
     }
@@ -24,17 +20,17 @@ const ROOT_CSS = css`
 // =====================================================================================================================
 class Menu extends Component {
     vars = {
-        rootRef: createRef(),
+        boxRef: createRef(),
         timeout: null,
     };
     render() {
-        const {list, left, top, width, maxHeight} = this.props;
+        const {list, className, way, offset} = this.props;
         return (
-            <div className={ROOT_CSS} ref={this.vars.rootRef} style={{left, top, width, maxHeight}}>
+            <Panel className={className} boxRef={this.vars.boxRef} boxClassName={BOX} way={way} offset={offset}>
                 {Object.values(list).map((hero) => (
                     <img key={hero.id} src={hero.icon} data-id={hero.id} onClick={this.onIconClick} />
                 ))}
-            </div>
+            </Panel>
         );
     }
 
@@ -62,9 +58,9 @@ class Menu extends Component {
      *
      */
     onWindowClick = (event) => {
-        const rootElement = this.vars.rootRef.current;
+        const boxElement = this.vars.boxRef.current;
         const {target} = event;
-        if (target instanceof Node && rootElement.contains(target)) {
+        if (target instanceof Node && boxElement.contains(target)) {
             return;
         }
         this.props.onChoice();

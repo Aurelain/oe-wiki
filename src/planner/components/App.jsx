@@ -10,7 +10,6 @@ import Labels from './Labels.jsx';
 import FIELDS from '../helpers/compression/FIELDS.js';
 import Skill from './Skill.jsx';
 import sanitize from '../helpers/sanitize.js';
-import Panel from './Panel.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -84,7 +83,6 @@ class App extends Component {
                 <Skill nr={6} id={skill6Id} sub1={skill6Sub1} sub2={skill6Sub2} skills={skills} />
                 <Skill nr={7} id={skill7Id} sub1={skill7Sub1} sub2={skill7Sub2} skills={skills} />
                 <Reset />
-                <Panel />
             </div>
         );
     }
