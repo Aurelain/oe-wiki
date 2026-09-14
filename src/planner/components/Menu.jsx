@@ -28,9 +28,9 @@ class Menu extends Component {
         timeout: null,
     };
     render() {
-        const {list, left, top, width, height} = this.props;
+        const {list, left, top, width, maxHeight} = this.props;
         return (
-            <div className={ROOT_CSS} ref={this.vars.rootRef} style={{left, top, width, height}}>
+            <div className={ROOT_CSS} ref={this.vars.rootRef} style={{left, top, width, maxHeight}}>
                 {Object.values(list).map((hero) => (
                     <img key={hero.id} src={hero.icon} data-id={hero.id} onClick={this.onIconClick} />
                 ))}

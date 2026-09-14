@@ -55,7 +55,7 @@ class Portrait extends Component {
                     {hero && <img className={PIC_CSS} src={heroes[hero].portrait} />}
                 </div>
                 {isOpen && (
-                    <Menu list={heroes} onChoice={this.onMenuChoice} left={152} top={10} width={508} height={681} />
+                    <Menu list={heroes} onChoice={this.onMenuChoice} left={152} top={10} width={508} maxHeight={681} />
                 )}
             </div>
         );
@@ -79,7 +79,7 @@ class Portrait extends Component {
     onMenuChoice = (choice) => {
         console.log('choice:', choice);
         this.setState({isOpen: false});
-        if (choice && choice !== this.state.hero) {
+        if (choice && choice !== this.props.hero) {
             this.props.onHeroChange(choice);
         }
     };

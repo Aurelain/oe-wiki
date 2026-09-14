@@ -9,6 +9,8 @@ import Specialization from './Specialization.jsx';
 import Labels from './Labels.jsx';
 import FIELDS from '../helpers/compression/FIELDS.js';
 import Skill from './Skill.jsx';
+import sanitize from '../helpers/sanitize.js';
+import Panel from './Panel.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -34,7 +36,33 @@ class App extends Component {
     };
 
     render() {
-        const {hero, skill0Id, skill0Sub1, skill0Sub2} = this.state;
+        const {
+            hero,
+            skill0Id,
+            skill0Sub1,
+            skill0Sub2,
+            skill1Id,
+            skill1Sub1,
+            skill1Sub2,
+            skill2Id,
+            skill2Sub1,
+            skill2Sub2,
+            skill3Id,
+            skill3Sub1,
+            skill3Sub2,
+            skill4Id,
+            skill4Sub1,
+            skill4Sub2,
+            skill5Id,
+            skill5Sub1,
+            skill5Sub2,
+            skill6Id,
+            skill6Sub1,
+            skill6Sub2,
+            skill7Id,
+            skill7Sub1,
+            skill7Sub2,
+        } = this.state;
         const {appRef} = this.vars;
         const {bgUrl, levelUrl, heroes, skills} = this.props;
         const heroData = heroes[hero];
@@ -48,7 +76,15 @@ class App extends Component {
                 <Labels heroData={heroData} />
                 <Level src={levelUrl} />
                 <Skill nr={0} id={skill0Id} sub1={skill0Sub1} sub2={skill0Sub2} skills={skills} />
+                <Skill nr={1} id={skill1Id} sub1={skill1Sub1} sub2={skill1Sub2} skills={skills} />
+                <Skill nr={2} id={skill2Id} sub1={skill2Sub1} sub2={skill2Sub2} skills={skills} />
+                <Skill nr={3} id={skill3Id} sub1={skill3Sub1} sub2={skill3Sub2} skills={skills} />
+                <Skill nr={4} id={skill4Id} sub1={skill4Sub1} sub2={skill4Sub2} skills={skills} />
+                <Skill nr={5} id={skill5Id} sub1={skill5Sub1} sub2={skill5Sub2} skills={skills} />
+                <Skill nr={6} id={skill6Id} sub1={skill6Sub1} sub2={skill6Sub2} skills={skills} />
+                <Skill nr={7} id={skill7Id} sub1={skill7Sub1} sub2={skill7Sub2} skills={skills} />
                 <Reset />
+                <Panel />
             </div>
         );
     }
@@ -99,34 +135,22 @@ class App extends Component {
      *
      */
     onHeroChange = (hero) => {
-        const subState = {hero};
-        const {heroes} = this.props;
-        const heroData = heroes[hero] || {};
-        const {skills} = heroData;
-
-        if (skills[0]) {
-            subState.skill0Id = skills[0].name;
-            subState.skill0Sub1 = undefined;
-            subState.skill0Sub2 = undefined;
-        }
-        if (skills[1]) {
-            subState.skill1Id = skills[1].name;
-            subState.skill1Sub1 = undefined;
-            subState.skill1Sub2 = undefined;
-        }
-
-        this.setState(subState);
+        Persistence.remember({hero});
     };
 
     /**
      *
      */
     onHashChange = (stateFragment) => {
+        const {heroes, skills} = this.props;
+        const sanitized = sanitize(stateFragment, heroes, skills);
+
         const subState = {};
         for (const field of FIELDS) {
             const {key} = field;
-            subState[key] = stateFragment[key];
+            subState[key] = sanitized[key];
         }
+
         this.setState(subState);
     };
 }
