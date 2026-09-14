@@ -2,6 +2,7 @@ import {Component, createRef} from 'preact';
 import {css} from 'goober';
 import Panel from './Panel.jsx';
 import Hint from './Hint.jsx';
+import {NONE} from '../SETTINGS.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -15,6 +16,9 @@ const BOX = css`
     & img {
         width: 56px;
         cursor: pointer;
+    }
+    & [data-id=${NONE}] {
+        padding: 16px;
     }
 `;
 

@@ -41,6 +41,7 @@ async function run(root) {
     mount(App, root, {
         bgUrl: root.querySelector('.background img').src,
         levelUrl: root.querySelector('.level img').src,
+        emptyUrl: root.querySelector('.empty img').src,
         heroes: await getHeroes(lang),
         skills: await getSkills(lang),
     });

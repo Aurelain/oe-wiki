@@ -10,6 +10,7 @@ import Labels from './Labels.jsx';
 import FIELDS from '../helpers/compression/FIELDS.js';
 import Skill from './Skill.jsx';
 import sanitize from '../helpers/sanitize.js';
+import acceptSkill from '../helpers/acceptSkill.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -42,7 +43,7 @@ class App extends Component {
     render() {
         const {hero} = this.state;
         const {appRef} = this.vars;
-        const {bgUrl, levelUrl, heroes, skills} = this.props;
+        const {bgUrl, levelUrl, emptyUrl, heroes, skills} = this.props;
         const heroData = heroes[hero];
         const skillNumbers = [0, 1, 2, 3, 4, 5, 6, 7];
 
@@ -63,6 +64,8 @@ class App extends Component {
                         sub2={this.state[`skill${nr}Sub2`]}
                         skills={skills}
                         onChange={this.onSkillChange}
+                        emptyUrl={emptyUrl}
+                        heroData={heroData}
                     />
                 ))}
                 <Reset />
@@ -126,12 +129,8 @@ class App extends Component {
      *
      */
     onSkillChange = (choice, nr) => {
-        Persistence.remember({
-            ...this.state,
-            [`skill${nr}Id`]: choice,
-            [`skill${nr}Sub1`]: 0,
-            [`skill${nr}Sub2`]: 0,
-        });
+        const futureState = acceptSkill(choice, nr, this.state);
+        Persistence.remember(futureState);
     };
 
     /**

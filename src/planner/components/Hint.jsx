@@ -46,6 +46,7 @@ class Hint extends Component {
             >
                 {kids[0]}
                 {isOpen &&
+                    Boolean(title || text) &&
                     createPortal(
                         <Panel
                             rootRef={this.vars.panelRef}
@@ -80,9 +81,12 @@ class Hint extends Component {
     };
 
     refreshPanelPosition = () => {
+        const panelElement = this.vars.panelRef.current;
+        if (!panelElement) {
+            return;
+        }
         const triggerElement = this.vars.triggerRef.current;
         const b = triggerElement.getBoundingClientRect();
-        const panelElement = this.vars.panelRef.current;
         const {way = NORTH} = this.props;
         switch (way) {
             case NORTH:

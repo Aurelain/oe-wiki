@@ -30,7 +30,8 @@ async function getHeroes(lang) {
  *
  */
 function parseRow(row, extraRow) {
-    const [iconColumn, nameColumn, , classColumn, specIconColumn, specInfoColumn, skillsColumn] = row.split('</td>');
+    const [iconColumn, nameColumn, typeColumn, classColumn, specIconColumn, specInfoColumn, skillsColumn] =
+        row.split('</td>');
 
     // id
     let [, id] = match(iconColumn, /data-id=['"]([^'"]*)/);
@@ -54,6 +55,9 @@ function parseRow(row, extraRow) {
         return console.warn('No name!');
     }
     // console.log('name:', name);
+
+    // isMight
+    const isMight = typeColumn.includes('Might');
 
     // classIcon
     const [, classIcon] = match(classColumn, /src=['"]([^'"]*)/);
@@ -92,7 +96,7 @@ function parseRow(row, extraRow) {
         return;
     }
 
-    return {id, icon, portrait, name, classIcon, className, specIcon, specName, description, skills};
+    return {id, icon, portrait, name, isMight, classIcon, className, specIcon, specName, description, skills};
 }
 
 /**

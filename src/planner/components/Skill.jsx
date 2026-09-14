@@ -1,8 +1,9 @@
 import {Component} from 'preact';
 import {css} from 'goober';
 import Menu from './Menu.jsx';
-import {SOUTH} from '../SETTINGS.js';
+import {NONE, SOUTH} from '../SETTINGS.js';
 import Hint from './Hint.jsx';
+import cn from '../utils/cn.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -48,6 +49,7 @@ const SLOTS = [
         top: 143px;
     `,
 ];
+
 const HIT_CSS = css`
     position: absolute;
     inset: 0;
@@ -56,10 +58,15 @@ const HIT_CSS = css`
     }
 `;
 
+const FORBIDDEN = css`
+    cursor: not-allowed;
+`;
+
 const MENU = css`
     left: 25px;
     top: 52px;
 `;
+
 const MENU_PROPS = [
     /* 0 */ {},
     /* 1 */ {},
@@ -80,14 +87,14 @@ class Skill extends Component {
     };
 
     render() {
-        const {nr, id, skills} = this.props;
+        const {nr, id, skills, heroData} = this.props;
         const {isOpen} = this.state;
         const skillData = skills[id];
-        const filteredSkills = this.filterSkills(skills);
         const menuProps = MENU_PROPS[nr];
+        const isDisabled = Boolean(heroData?.skills[nr]);
         return (
-            <div className={`${ROOT_CSS} ${SLOTS[nr]}`} data-nr={nr}>
-                <div className={HIT_CSS} onClick={this.onHitClick}>
+            <div className={cn(ROOT_CSS, SLOTS[nr], isDisabled && FORBIDDEN)} data-nr={nr}>
+                <div className={HIT_CSS} onClick={!isDisabled && this.onHitClick}>
                     {skillData && (
                         <Hint title={skillData.name} text={skillData.description}>
                             <img src={skillData.icon} />
@@ -98,7 +105,7 @@ class Skill extends Component {
                     <Menu
                         className={MENU}
                         maxWidth={340}
-                        list={filteredSkills}
+                        list={this.filterSkills(skills)}
                         onChoice={this.onMenuChoice}
                         way={SOUTH}
                         {...menuProps}
@@ -126,8 +133,25 @@ class Skill extends Component {
     };
 
     filterSkills = (skills) => {
+        const {emptyUrl, heroData = {}} = this.props;
+        const {isMight} = heroData;
         let list = Object.values(skills);
-        list = list.filter((item) => item.subs.length === 0 && !item.id.includes('faction'));
+        list = list.filter((item) => {
+            if (item.subs.length) {
+                return false; // exclude Advanced and Expert
+            }
+            if (item.id.includes('faction')) {
+                return false; // exclude faction skills
+            }
+            if (!isMight && item.id === 'skill_battle_artistry') {
+                return false; // exclude Combat for Magic heroes
+            }
+            if (isMight && item.id === 'skill_wisdom') {
+                return false; // exclude Thaumaturgy for Might heroes
+            }
+            return true;
+        });
+        list.push({id: NONE, icon: emptyUrl});
         return list;
     };
 }
