@@ -2,6 +2,7 @@ import {Component} from 'preact';
 import {css} from 'goober';
 import Menu from './Menu.jsx';
 import {SOUTH} from '../SETTINGS.js';
+import Hint from './Hint.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -50,10 +51,8 @@ const SLOTS = [
 const HIT_CSS = css`
     position: absolute;
     inset: 0;
-    & > img {
+    & img {
         width: 100%;
-        -webkit-user-drag: none;
-        user-select: none;
     }
 `;
 
@@ -84,13 +83,16 @@ class Skill extends Component {
         const {nr, id, skills} = this.props;
         const {isOpen} = this.state;
         const skillData = skills[id];
-        console.log('skillData:', skillData);
         const filteredSkills = this.filterSkills(skills);
         const menuProps = MENU_PROPS[nr];
         return (
             <div className={`${ROOT_CSS} ${SLOTS[nr]}`} data-nr={nr}>
                 <div className={HIT_CSS} onClick={this.onHitClick}>
-                    {skillData && <img src={skillData.icon} />}
+                    {skillData && (
+                        <Hint title={skillData.name} text={skillData.description}>
+                            <img src={skillData.icon} />
+                        </Hint>
+                    )}
                 </div>
                 {isOpen && (
                     <Menu
@@ -118,8 +120,8 @@ class Skill extends Component {
     onMenuChoice = (choice) => {
         console.log('choice:', choice);
         this.setState({isOpen: false});
-        if (choice && choice !== this.props.id) {
-            // this.props.onHeroChange(choice);
+        if (choice !== this.props.id) {
+            this.props.onChange(choice, this.props.nr);
         }
     };
 

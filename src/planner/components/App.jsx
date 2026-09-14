@@ -19,6 +19,11 @@ const APP_CSS = css`
     width: ${WIDTH}px;
     height: ${HEIGHT}px;
     transform-origin: 0 0;
+
+    & img {
+        -webkit-user-drag: none;
+        user-select: none;
+    }
 `;
 
 const BG_CSS = css`
@@ -35,36 +40,11 @@ class App extends Component {
     };
 
     render() {
-        const {
-            hero,
-            skill0Id,
-            skill0Sub1,
-            skill0Sub2,
-            skill1Id,
-            skill1Sub1,
-            skill1Sub2,
-            skill2Id,
-            skill2Sub1,
-            skill2Sub2,
-            skill3Id,
-            skill3Sub1,
-            skill3Sub2,
-            skill4Id,
-            skill4Sub1,
-            skill4Sub2,
-            skill5Id,
-            skill5Sub1,
-            skill5Sub2,
-            skill6Id,
-            skill6Sub1,
-            skill6Sub2,
-            skill7Id,
-            skill7Sub1,
-            skill7Sub2,
-        } = this.state;
+        const {hero} = this.state;
         const {appRef} = this.vars;
         const {bgUrl, levelUrl, heroes, skills} = this.props;
         const heroData = heroes[hero];
+        const skillNumbers = [0, 1, 2, 3, 4, 5, 6, 7];
 
         return (
             <div className={APP_CSS} ref={appRef}>
@@ -74,14 +54,17 @@ class App extends Component {
                 <Specialization heroData={heroData} />
                 <Labels heroData={heroData} />
                 <Level src={levelUrl} />
-                <Skill nr={0} id={skill0Id} sub1={skill0Sub1} sub2={skill0Sub2} skills={skills} />
-                <Skill nr={1} id={skill1Id} sub1={skill1Sub1} sub2={skill1Sub2} skills={skills} />
-                <Skill nr={2} id={skill2Id} sub1={skill2Sub1} sub2={skill2Sub2} skills={skills} />
-                <Skill nr={3} id={skill3Id} sub1={skill3Sub1} sub2={skill3Sub2} skills={skills} />
-                <Skill nr={4} id={skill4Id} sub1={skill4Sub1} sub2={skill4Sub2} skills={skills} />
-                <Skill nr={5} id={skill5Id} sub1={skill5Sub1} sub2={skill5Sub2} skills={skills} />
-                <Skill nr={6} id={skill6Id} sub1={skill6Sub1} sub2={skill6Sub2} skills={skills} />
-                <Skill nr={7} id={skill7Id} sub1={skill7Sub1} sub2={skill7Sub2} skills={skills} />
+                {skillNumbers.map((nr) => (
+                    <Skill
+                        key={'skill' + nr}
+                        nr={nr}
+                        id={this.state[`skill${nr}Id`]}
+                        sub1={this.state[`skill${nr}Sub1`]}
+                        sub2={this.state[`skill${nr}Sub2`]}
+                        skills={skills}
+                        onChange={this.onSkillChange}
+                    />
+                ))}
                 <Reset />
             </div>
         );
@@ -133,7 +116,22 @@ class App extends Component {
      *
      */
     onHeroChange = (hero) => {
-        Persistence.remember({hero});
+        Persistence.remember({
+            ...this.state,
+            hero,
+        });
+    };
+
+    /**
+     *
+     */
+    onSkillChange = (choice, nr) => {
+        Persistence.remember({
+            ...this.state,
+            [`skill${nr}Id`]: choice,
+            [`skill${nr}Sub1`]: 0,
+            [`skill${nr}Sub2`]: 0,
+        });
     };
 
     /**
