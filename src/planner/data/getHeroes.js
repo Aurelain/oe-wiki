@@ -81,9 +81,9 @@ function parseRow(row, extraRow) {
     }
 
     // specDescription
-    const [, specDescription] = match(extraRow || '', /<td.*?>([^<]+)/);
-    if (!specDescription) {
-        return console.warn('No specDescription!');
+    const [, description] = match(extraRow || '', /<td.*?>([^<]+)/);
+    if (!description) {
+        return console.warn('No description!');
     }
 
     // skills
@@ -92,7 +92,7 @@ function parseRow(row, extraRow) {
         return;
     }
 
-    return {id, icon, portrait, name, classIcon, className, specIcon, specName, specDescription, skills};
+    return {id, icon, portrait, name, classIcon, className, specIcon, specName, description, skills};
 }
 
 /**

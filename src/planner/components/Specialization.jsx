@@ -23,11 +23,6 @@ const ROOT_CSS = css`
     }
 `;
 
-const HINT = css`
-    top: 50%;
-    left: 100%;
-`;
-
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -37,7 +32,7 @@ class Specialization extends Component {
         return (
             <div className={ROOT_CSS}>
                 {heroData && (
-                    <Hint text={heroData.specDescription} hintClassName={HINT} way={EAST}>
+                    <Hint title={heroData.specName} text={heroData.description} way={EAST}>
                         <img src={heroData.specIcon} />
                     </Hint>
                 )}

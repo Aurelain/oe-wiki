@@ -1,6 +1,7 @@
 import {Component, createRef} from 'preact';
 import {css} from 'goober';
 import Panel from './Panel.jsx';
+import Hint from './Hint.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -8,7 +9,10 @@ import Panel from './Panel.jsx';
 const BOX = css`
     background: #1f3756;
     overflow: auto;
-    & > img {
+    & > * {
+        display: inline-block;
+    }
+    & img {
         width: 56px;
         cursor: pointer;
     }
@@ -33,8 +37,10 @@ class Menu extends Component {
                 offset={offset}
                 maxWidth={maxWidth}
             >
-                {Object.values(list).map((hero) => (
-                    <img key={hero.id} src={hero.icon} data-id={hero.id} onClick={this.onIconClick} />
+                {Object.values(list).map((item) => (
+                    <Hint title={item.name} text={item.description}>
+                        <img key={item.id} src={item.icon} data-id={item.id} onClick={this.onIconClick} />
+                    </Hint>
                 ))}
             </Panel>
         );
