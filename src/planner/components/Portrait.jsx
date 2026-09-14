@@ -34,7 +34,6 @@ const MEDALLION_CSS = css`
 const MENU = css`
     left: 152px;
     top: 84px;
-    width: 520px;
     max-height: 681px;
 `;
 
@@ -62,7 +61,16 @@ class Portrait extends Component {
                     </svg>
                     {hero && <img className={PIC_CSS} src={heroes[hero].portrait} />}
                 </div>
-                {isOpen && <Menu className={MENU} way={EAST} offset={70} list={heroes} onChoice={this.onMenuChoice} />}
+                {isOpen && (
+                    <Menu
+                        className={MENU}
+                        maxWidth={508}
+                        way={EAST}
+                        offset={70}
+                        list={heroes}
+                        onChoice={this.onMenuChoice}
+                    />
+                )}
             </div>
         );
     }

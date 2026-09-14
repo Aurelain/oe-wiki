@@ -58,7 +58,6 @@ const HIT_CSS = css`
 `;
 
 const MENU = css`
-    width: 340px;
     left: 25px;
     top: 52px;
 `;
@@ -96,6 +95,7 @@ class Skill extends Component {
                 {isOpen && (
                     <Menu
                         className={MENU}
+                        maxWidth={340}
                         list={filteredSkills}
                         onChoice={this.onMenuChoice}
                         way={SOUTH}

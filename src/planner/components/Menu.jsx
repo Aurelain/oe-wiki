@@ -24,9 +24,16 @@ class Menu extends Component {
         timeout: null,
     };
     render() {
-        const {list, className, way, offset} = this.props;
+        const {list, className, way, offset, maxWidth} = this.props;
         return (
-            <Panel className={className} boxRef={this.vars.boxRef} boxClassName={BOX} way={way} offset={offset}>
+            <Panel
+                className={className}
+                boxRef={this.vars.boxRef}
+                boxClassName={BOX}
+                way={way}
+                offset={offset}
+                maxWidth={maxWidth}
+            >
                 {Object.values(list).map((hero) => (
                     <img key={hero.id} src={hero.icon} data-id={hero.id} onClick={this.onIconClick} />
                 ))}

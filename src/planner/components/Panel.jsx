@@ -6,6 +6,9 @@ import {EAST, NORTH, SOUTH, WEST} from '../SETTINGS.js';
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
+const SIZE = 12;
+const HALF = SIZE / 2;
+
 const ROOT = css`
     position: absolute;
     top: 324px;
@@ -15,10 +18,10 @@ const ROOT = css`
 
 const ARROW = css`
     position: absolute;
-    top: -6px;
-    left: -6px;
-    width: 12px;
-    height: 12px;
+    top: -${HALF}px;
+    left: -${HALF}px;
+    width: ${SIZE}px;
+    height: ${SIZE}px;
     background-color: #bcb096;
 `;
 
@@ -40,29 +43,9 @@ const ARROW_PLACEMENT = {
 const BOX = css`
     position: absolute;
     width: max-content;
-    max-width: 100%;
     border: solid 1px #bcb096;
     border-radius: 8px;
 `;
-
-const BOX_PLACEMENT = {
-    [NORTH]: css`
-        left: 0;
-        bottom: 6px;
-    `,
-    [EAST]: css`
-        left: 6px;
-        top: 0;
-    `,
-    [SOUTH]: css`
-        left: 0;
-        top: 6px;
-    `,
-    [WEST]: css`
-        right: 6px;
-        top: 0;
-    `,
-};
 
 const DEFAULT_WAY = NORTH;
 const DEFAULT_OFFSET = '50%';
@@ -75,16 +58,15 @@ class Panel extends Component {
         boxRef: createRef(),
     };
     state = {
-        marginLeft: 0,
-        marginTop: 0,
+        boxStyle: {},
     };
     render() {
-        const {className, boxRef, boxClassName, children, way = DEFAULT_WAY} = this.props;
-        const {marginLeft, marginTop} = this.state;
+        const {className, boxRef, boxClassName, children, maxWidth, way = DEFAULT_WAY} = this.props;
+        const {boxStyle} = this.state;
         const ref = boxRef || this.vars.boxRef;
         return (
             <div class={cn(ROOT, className)}>
-                <div ref={ref} class={cn(BOX, BOX_PLACEMENT[way], boxClassName)} style={{marginLeft, marginTop}}>
+                <div ref={ref} class={cn(BOX, boxClassName)} style={{maxWidth, ...boxStyle}}>
                     {...children}
                 </div>
                 <div class={cn(ARROW, ARROW_PLACEMENT[way])} />
@@ -101,34 +83,38 @@ class Panel extends Component {
     // -----------------------------------------------------------------------------------------------------------------
     applyBoxOffset = () => {
         const {way = DEFAULT_WAY, offset = DEFAULT_OFFSET} = this.props;
-        if (typeof offset === 'number') {
-            switch (way) {
-                case NORTH: // fall
-                case SOUTH:
-                    this.setState({marginLeft: -offset});
-                    break;
-                case EAST: // fall
-                case WEST:
-                    this.setState({marginTop: -offset});
-                    break;
-                default:
-            }
-        } else {
+        let offsetValue = offset;
+        if (typeof offset !== 'number') {
             // Percents
-            const value = Number(offset.match(/\d+/)[0]);
+            const percent = Number(offset.match(/\d+/)[0]);
             const ref = this.props.boxRef || this.vars.boxRef;
             const boxElement = ref.current;
             switch (way) {
                 case NORTH: // fall
                 case SOUTH:
-                    this.setState({marginLeft: -Math.round((boxElement.offsetWidth * value) / 100)});
+                    offsetValue = Math.round((boxElement.offsetWidth * percent) / 100);
                     break;
                 case EAST: // fall
                 case WEST:
-                    this.setState({marginTop: -Math.round((boxElement.offsetHeight * value) / 100)});
+                    offsetValue = Math.round((boxElement.offsetHeight * percent) / 100);
                     break;
                 default:
             }
+        }
+        switch (way) {
+            case NORTH:
+                this.setState({boxStyle: {left: -offsetValue, bottom: HALF}});
+                break;
+            case SOUTH:
+                this.setState({boxStyle: {left: -offsetValue, top: HALF}});
+                break;
+            case EAST:
+                this.setState({boxStyle: {left: HALF, top: -offsetValue}});
+                break;
+            case WEST:
+                this.setState({boxStyle: {right: HALF, top: -offsetValue}});
+                break;
+            default:
         }
     };
 }
