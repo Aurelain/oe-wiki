@@ -20,6 +20,9 @@ const APP_CSS = css`
     width: ${WIDTH}px;
     height: ${HEIGHT}px;
     transform-origin: 0 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 
     & img {
         -webkit-user-drag: none;
@@ -49,7 +52,7 @@ class App extends Component {
         const skillNumbers = [0, 1, 2, 3, 4, 5, 6, 7];
 
         return (
-            <div className={APP_CSS} ref={appRef}>
+            <div className={APP_CSS} ref={appRef} onContextMenu={this.onRootContextMenu}>
                 <style>{CSS}</style>
                 <img className={BG_CSS} src={bgUrl} alt="empty background" />
                 <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
@@ -65,6 +68,7 @@ class App extends Component {
                         sub2={this.state[`skill${nr}Sub2`]}
                         skills={skills}
                         onChange={this.onSkillChange}
+                        onSubskillChange={this.onSubskillChange}
                         emptyUrl={emptyUrl}
                         heroData={heroData}
                     />
@@ -102,6 +106,13 @@ class App extends Component {
     /**
      *
      */
+    onRootContextMenu = (event) => {
+        event.preventDefault();
+    };
+
+    /**
+     *
+     */
     refreshScale = () => {
         const appElement = this.vars.appRef.current;
         const rootElement = appElement.parentNode;
@@ -130,6 +141,16 @@ class App extends Component {
         const {heroes} = this.props;
         const heroData = heroes[this.state.hero];
         const futureState = acceptSkill(choice, nr, this.state, heroData);
+        this.save(futureState);
+    };
+
+    /**
+     *
+     */
+    onSubskillChange = (choice, nr, level) => {
+        const key = `skill${nr}Sub${level}`;
+        const value = choice === -1 ? undefined : choice;
+        const futureState = {...this.state, [key]: value};
         this.save(futureState);
     };
 

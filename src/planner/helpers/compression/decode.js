@@ -42,16 +42,17 @@ function decode(symbols) {
         // Read field value bits
         const valueBits = stream.slice(cursor, cursor + field.bits);
         cursor += field.bits;
-        let value = parseInt(valueBits, 2);
+        const numericValue = parseInt(valueBits, 2);
         if (field.dictionary) {
-            if (value >= field.dictionary.length) {
-                console.warn(`Dictionary index ${value} out of bounds for field "${field.key}"!`);
+            if (numericValue >= field.dictionary.length) {
+                console.warn(`Dictionary index ${numericValue} out of bounds for field "${field.key}"!`);
                 return result;
             }
-            value = field.dictionary[value];
-        }
-        if (value) {
-            result[field.key] = value;
+            result[field.key] = field.dictionary[numericValue];
+        } else {
+            if (!isNaN(numericValue)) {
+                result[field.key] = numericValue;
+            }
         }
 
         // Next expected index in sequential order

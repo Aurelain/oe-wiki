@@ -3,6 +3,7 @@ import {css} from 'goober';
 import Panel from './Panel.jsx';
 import Hint from './Hint.jsx';
 import {NONE} from '../SETTINGS.js';
+import cn from '../utils/cn.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -13,13 +14,14 @@ const BOX = css`
     & > * {
         display: inline-block;
     }
-    & img {
-        width: 56px;
-        cursor: pointer;
-    }
     & [data-id=${NONE}] {
         padding: 16px;
     }
+`;
+
+const ICON = css`
+    width: 56px;
+    cursor: pointer;
 `;
 
 // =====================================================================================================================
@@ -31,21 +33,33 @@ class Menu extends Component {
         timeout: null,
     };
     render() {
-        const {list, className, way, offset, maxWidth} = this.props;
+        const {list, className, boxClassName, way, offset, maxWidth} = this.props;
         return (
             <Panel
                 className={className}
                 boxRef={this.vars.boxRef}
-                boxClassName={BOX}
+                boxClassName={cn(BOX, boxClassName)}
                 way={way}
                 offset={offset}
                 maxWidth={maxWidth}
             >
-                {Object.values(list).map((item) => (
-                    <Hint title={item.name} text={item.description}>
-                        <img key={item.id} src={item.icon} data-id={item.id} onClick={this.onIconClick} />
-                    </Hint>
-                ))}
+                {Object.values(list).map((item) => {
+                    const {Component} = item;
+                    if (Component) {
+                        return <Component {...item} onClick={this.onIconClick} />;
+                    }
+                    return (
+                        <Hint title={item.name} text={item.description}>
+                            <img
+                                class={ICON}
+                                key={item.id}
+                                src={item.icon}
+                                data-id={item.id}
+                                onClick={this.onIconClick}
+                            />
+                        </Hint>
+                    );
+                })}
             </Panel>
         );
     }
@@ -86,7 +100,7 @@ class Menu extends Component {
      *
      */
     onIconClick = (event) => {
-        this.props.onChoice(event.target.dataset.id);
+        this.props.onChoice(event.currentTarget.dataset.id);
     };
 }
 

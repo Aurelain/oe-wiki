@@ -4,6 +4,7 @@ import Menu from './Menu.jsx';
 import {NONE, SOUTH} from '../SETTINGS.js';
 import Hint from './Hint.jsx';
 import cn from '../utils/cn.js';
+import Subskill from './Subskill.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -87,13 +88,13 @@ class Skill extends Component {
     };
 
     render() {
-        const {nr, id, skills, heroData} = this.props;
+        const {nr, id, skills, heroData, sub1, sub2, onSubskillChange, emptyUrl} = this.props;
         const {isOpen} = this.state;
         const skillData = skills[id];
         const menuProps = MENU_PROPS[nr];
         const isDisabled = Boolean(heroData?.skills[nr]);
         return (
-            <div className={cn(ROOT_CSS, SLOTS[nr], isDisabled && FORBIDDEN)} data-nr={nr}>
+            <div className={cn(ROOT_CSS, SLOTS[nr], isDisabled && FORBIDDEN)}>
                 <div className={HIT_CSS} onClick={!isDisabled && this.onHitClick}>
                     {skillData && (
                         <Hint title={skillData.name} text={skillData.description}>
@@ -109,6 +110,28 @@ class Skill extends Component {
                         onChoice={this.onMenuChoice}
                         way={SOUTH}
                         {...menuProps}
+                    />
+                )}
+                {skillData && (
+                    <Subskill
+                        family={id}
+                        skillSlot={nr}
+                        index={sub1}
+                        level={1}
+                        skills={skills}
+                        onChange={onSubskillChange}
+                        emptyUrl={emptyUrl}
+                    />
+                )}
+                {sub1 !== undefined && (
+                    <Subskill
+                        family={id}
+                        skillSlot={nr}
+                        index={sub2}
+                        level={2}
+                        skills={skills}
+                        onChange={onSubskillChange}
+                        emptyUrl={emptyUrl}
                     />
                 )}
             </div>

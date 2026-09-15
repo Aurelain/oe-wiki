@@ -6,11 +6,23 @@ import {css} from 'goober';
 // =====================================================================================================================
 const ROOT = css`
     padding: 6px 8px;
+    display: flex;
+    gap: 4px;
+    &:hover {
+        background: #192b44;
+    }
+    &:active {
+        background: #191b2c;
+    }
+`;
+const ICON = css`
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
 `;
 const TITLE = css`
     font-weight: bold;
     color: #d6bc7c;
-    padding-bottom: 4px;
 `;
 const TEXT = css`
     color: #fff;
@@ -19,13 +31,16 @@ const TEXT = css`
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
-class HintContent extends Component {
+class SubskillInfo extends Component {
     render() {
-        const {title, text} = this.props;
+        const {id, icon, name, description, onClick} = this.props;
         return (
-            <div class={ROOT}>
-                {title && <div class={TITLE}>{title}</div>}
-                {text && <div class={TEXT} dangerouslySetInnerHTML={{__html: text}} />}
+            <div class={ROOT} data-id={id} onClick={onClick}>
+                <img class={ICON} src={icon} />
+                <div>
+                    <div class={TITLE}>{name}</div>
+                    <div class={TEXT} dangerouslySetInnerHTML={{__html: description}} />
+                </div>
             </div>
         );
     }
@@ -34,4 +49,4 @@ class HintContent extends Component {
 // =====================================================================================================================
 //  E X P O R T
 // =====================================================================================================================
-export default HintContent;
+export default SubskillInfo;
