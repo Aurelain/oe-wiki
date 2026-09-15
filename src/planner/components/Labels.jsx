@@ -1,6 +1,7 @@
 import {Component} from 'preact';
 import {css} from 'goober';
 import cn from '../utils/cn.js';
+import upgradeNumbers from '../helpers/upgradeNumbers.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -15,6 +16,7 @@ const ROOT_CSS = css`
 
     & > * {
         position: absolute;
+        text-shadow: 1px 1px 2px #000;
     }
 `;
 
@@ -74,18 +76,19 @@ const MORALE = css`
 // =====================================================================================================================
 class Labels extends Component {
     render() {
-        const {heroData, heroClassData} = this.props;
+        const {heroData: h, heroClassData: hc, level} = this.props;
+        const [attack, defense, spellPower, knowledge] = upgradeNumbers(hc.bases, level, hc.chances1);
         return (
             <div className={ROOT_CSS}>
-                {heroData && <div class={NAME_CSS}>{heroData.name}</div>}
-                {heroData && <div class={CLASS_CSS}>{heroData.className}</div>}
-                {heroData && <img class={HERO_CLASS_ICON} src={heroData.classIcon} />}
-                {heroClassData && <div class={cn(ATTRIBUTE, ATTACK)}>{heroClassData.attack}</div>}
-                {heroClassData && <div class={cn(ATTRIBUTE, DEFENSE)}>{heroClassData.defense}</div>}
-                {heroClassData && <div class={cn(ATTRIBUTE, SPELL_POWER)}>{heroClassData.spellPower}</div>}
-                {heroClassData && <div class={cn(ATTRIBUTE, KNOWLEDGE)}>{heroClassData.knowledge}</div>}
-                {heroClassData && <div class={cn(ATTRIBUTE, LUCK)}>{heroClassData.luck}</div>}
-                {heroClassData && <div class={cn(ATTRIBUTE, MORALE)}>{heroClassData.morale}</div>}
+                <div class={NAME_CSS}>{h.name}</div>
+                <div class={CLASS_CSS}>{h.className}</div>
+                <img class={HERO_CLASS_ICON} src={h.classIcon} />
+                <div class={cn(ATTRIBUTE, ATTACK)}>{attack}</div>
+                <div class={cn(ATTRIBUTE, DEFENSE)}>{defense}</div>
+                <div class={cn(ATTRIBUTE, SPELL_POWER)}>{spellPower}</div>
+                <div class={cn(ATTRIBUTE, KNOWLEDGE)}>{knowledge}</div>
+                <div class={cn(ATTRIBUTE, LUCK)}>{hc.luck}</div>
+                <div class={cn(ATTRIBUTE, MORALE)}>{hc.morale}</div>
             </div>
         );
     }

@@ -47,7 +47,7 @@ class App extends Component {
 
     render() {
         // console.log('render:', JSON.stringify(this.state, null, 4));
-        const {hero} = this.state;
+        const {hero, level = 1} = this.state;
         const {appRef} = this.vars;
         const {bgUrl, levelUrl, emptyUrl, heroes, skills, heroClasses} = this.props;
         const heroData = heroes[hero];
@@ -60,8 +60,8 @@ class App extends Component {
                 <img className={BG_CSS} src={bgUrl} alt="empty background" />
                 <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
                 <Specialization heroData={heroData} />
-                <Labels heroData={heroData} heroClassData={heroClassData} />
-                <Level src={levelUrl} />
+                {heroData && <Labels heroData={heroData} heroClassData={heroClassData} level={level} />}
+                {heroData && <Level levelUrl={levelUrl} value={level} onChance={this.onLevelChange} />}
                 {SKILL_NUMBERS.map((nr) => (
                     <Skill
                         key={'skill' + nr}
@@ -135,6 +135,13 @@ class App extends Component {
      */
     onHeroChange = (hero) => {
         this.save({...this.state, hero});
+    };
+
+    /**
+     *
+     */
+    onLevelChange = (value) => {
+        this.save({...this.state, level: value === 1 ? undefined : value});
     };
 
     /**

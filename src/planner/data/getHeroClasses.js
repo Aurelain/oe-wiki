@@ -20,7 +20,6 @@ async function getHeroClasses() {
             heroClasses[heroClass.id] = heroClass;
         }
     }
-    console.log('heroClasses:', heroClasses);
 
     return heroClasses;
 }
@@ -35,6 +34,10 @@ function parseRow(row) {
     // console.log('row:', row);
 
     const [, id] = match(row, /field_id.*?>([^<]*)/);
+    if (!id) {
+        return;
+    }
+
     const [, attack] = match(row, /field_offence.*?>([^<]*)/);
     const [, defense] = match(row, /field_defence.*?>([^<]*)/);
     const [, spellPower] = match(row, /field_spell_power.*?>([^<]*)/);
@@ -52,20 +55,11 @@ function parseRow(row) {
 
     return {
         id,
-        attack,
-        defense,
-        spellPower,
-        knowledge,
+        bases: [Number(attack), Number(defense), Number(spellPower), Number(knowledge)],
         luck,
         morale,
-        roll1Attack,
-        roll1Defense,
-        roll1Power,
-        roll1Knowledge,
-        roll24Attack,
-        roll24Defense,
-        roll24Power,
-        roll24Knowledge,
+        chances1: [Number(roll1Attack), Number(roll1Defense), Number(roll1Power), Number(roll1Knowledge)],
+        chances24: [Number(roll24Attack), Number(roll24Defense), Number(roll24Power), Number(roll24Knowledge)],
     };
 }
 

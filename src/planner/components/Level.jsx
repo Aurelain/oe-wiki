@@ -4,13 +4,20 @@ import {css} from 'goober';
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-const ROOT_CSS = css`
+const ROOT = css`
     position: absolute;
-    left: 29px;
-    top: 90px;
-    transform: scale(0.5);
+    left: 52px;
+    top: 113px;
+    width: 47px;
+    height: 47px;
     border-radius: 50%;
     cursor: pointer;
+    background-size: cover;
+    line-height: 47px;
+    text-align: center;
+    color: #bea76f;
+    font-size: 18px;
+    text-shadow: 1px 1px 2px #000;
 `;
 
 // =====================================================================================================================
@@ -18,13 +25,21 @@ const ROOT_CSS = css`
 // =====================================================================================================================
 class Level extends Component {
     render() {
-        const {src} = this.props;
-        return <img className={ROOT_CSS} src={src} />;
+        const {levelUrl, value} = this.props;
+        return (
+            <div class={ROOT} style={{backgroundImage: `url(${levelUrl})`}} onClick={this.onRootClick}>
+                {value}
+            </div>
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     // P R I V A T E
     // -----------------------------------------------------------------------------------------------------------------
+    onRootClick = () => {
+        const {value, onChance} = this.props;
+        onChance(value !== 23 ? 23 : 1);
+    };
 }
 
 // =====================================================================================================================
