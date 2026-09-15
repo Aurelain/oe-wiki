@@ -17,6 +17,8 @@ function sanitize(stateFragment, heroes, skills) {
     removeWrongCombatOrThaumaturgy(draft, heroes);
     removeDuplicateSkills(draft);
 
+    removeUnexpectedSubskills(draft);
+
     return draft;
 }
 
@@ -56,7 +58,35 @@ function removeUnknownSkill(draft, skills) {
 /**
  *
  */
-function removeUnknownSubskill(draft) {}
+function removeUnknownSubskill(draft, skills) {
+    for (let i = 0; i < 8; i++) {
+        const skillKey = `skill${i}Id`;
+        const skillId = draft[skillKey];
+
+        const sub1Key = `skill${i}Sub1`;
+        const sub1Index = draft[sub1Key];
+
+        const sub2Key = `skill${i}Sub2`;
+        const sub2Index = draft[sub2Key];
+
+        if (skillId) {
+            if (sub1Index !== undefined) {
+                const advancedSubs = skills[skillId + '_2']?.subs || [];
+                if (sub1Index >= advancedSubs.length) {
+                    delete draft[sub1Key];
+                    console.warn(`Out-of-bounds Advanced subskill was removed!`);
+                }
+            }
+            if (sub2Index !== undefined) {
+                const expertSubs = skills[skillId + '_3']?.subs || [];
+                if (sub2Index >= expertSubs.length) {
+                    delete draft[sub2Key];
+                    console.warn(`Out-of-bounds Expert subskill was removed!`);
+                }
+            }
+        }
+    }
+}
 
 /**
  *
@@ -109,6 +139,38 @@ function removeDuplicateSkills(draft) {
                 console.warn(`Duplicate skill "${skillId}" was removed!`);
             } else {
                 used[skillId] = true;
+            }
+        }
+    }
+}
+
+/**
+ *
+ */
+function removeUnexpectedSubskills(draft) {
+    for (let i = 0; i < 8; i++) {
+        const skillKey = `skill${i}Id`;
+        const skillId = draft[skillKey];
+
+        const sub1Key = `skill${i}Sub1`;
+        const sub1Index = draft[sub1Key];
+
+        const sub2Key = `skill${i}Sub2`;
+        const sub2Index = draft[sub2Key];
+
+        if (!skillId) {
+            if (sub1Index !== undefined) {
+                delete draft[sub1Key];
+                console.warn(`Unexpected Advanced subskill was removed!`);
+            }
+            if (sub2Index !== undefined) {
+                delete draft[sub2Key];
+                console.warn(`Unexpected Expert subskill was removed!`);
+            }
+        } else {
+            if (sub1Index === undefined && sub2Index !== undefined) {
+                delete draft[sub2Key];
+                console.warn(`Unsupported Expert subskill was removed!`);
             }
         }
     }

@@ -151,6 +151,9 @@ class App extends Component {
         const key = `skill${nr}Sub${level}`;
         const value = choice === -1 ? undefined : choice;
         const futureState = {...this.state, [key]: value};
+        if (level === 1 && value === undefined) {
+            futureState[`skill${nr}Sub2`] = undefined;
+        }
         this.save(futureState);
     };
 
