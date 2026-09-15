@@ -2,6 +2,7 @@ import mount from './helpers/mount.jsx';
 import App from './components/App.jsx';
 import getHeroes from './data/getHeroes.js';
 import getSkills from './data/getSkills.js';
+import getHeroClasses from './data/getHeroClasses.js';
 
 // =====================================================================================================================
 //  P U B L I C
@@ -44,6 +45,7 @@ async function run(root) {
         emptyUrl: root.querySelector('.empty img').src,
         heroes: await getHeroes(lang),
         skills: await getSkills(lang),
+        heroClasses: await getHeroClasses(),
     });
 }
 

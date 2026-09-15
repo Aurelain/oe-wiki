@@ -35,6 +35,8 @@ const BG_CSS = css`
     filter: drop-shadow(0 0 0.3rem black);
 `;
 
+const SKILL_NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7];
+
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -47,9 +49,10 @@ class App extends Component {
         // console.log('render:', JSON.stringify(this.state, null, 4));
         const {hero} = this.state;
         const {appRef} = this.vars;
-        const {bgUrl, levelUrl, emptyUrl, heroes, skills} = this.props;
+        const {bgUrl, levelUrl, emptyUrl, heroes, skills, heroClasses} = this.props;
         const heroData = heroes[hero];
-        const skillNumbers = [0, 1, 2, 3, 4, 5, 6, 7];
+        const heroClassId = getHeroClassId(heroData);
+        const heroClassData = heroClasses[heroClassId];
 
         return (
             <div className={APP_CSS} ref={appRef} onContextMenu={this.onRootContextMenu}>
@@ -57,9 +60,9 @@ class App extends Component {
                 <img className={BG_CSS} src={bgUrl} alt="empty background" />
                 <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
                 <Specialization heroData={heroData} />
-                <Labels heroData={heroData} />
+                <Labels heroData={heroData} heroClassData={heroClassData} />
                 <Level src={levelUrl} />
-                {skillNumbers.map((nr) => (
+                {SKILL_NUMBERS.map((nr) => (
                     <Skill
                         key={'skill' + nr}
                         nr={nr}
@@ -181,6 +184,14 @@ class App extends Component {
         const safeState = sanitize(futureState, heroes, skills);
         Persistence.remember(safeState);
     };
+}
+
+/**
+ *
+ */
+function getHeroClassId(heroData) {
+    const matched = heroData?.classIcon.match(/\dpx-(.*?)_icon/);
+    return matched ? matched[1].toLowerCase() : '';
 }
 
 // =====================================================================================================================

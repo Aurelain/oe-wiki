@@ -60,10 +60,11 @@ function parseRow(row, extraRow) {
     const isMight = typeColumn.includes('Might');
 
     // classIcon
-    const [, classIcon] = match(classColumn, /src=['"]([^'"]*)/);
+    let [, classIcon] = match(classColumn, /src=['"]([^'"]*)/);
     if (!classIcon) {
         return console.warn('No classIcon!');
     }
+    classIcon = classIcon.replace(/\d*px/, '64px'); // debatable, that image may not exist
 
     // className
     const [, className] = match(classColumn, /<a.*?>([^<]+)/);

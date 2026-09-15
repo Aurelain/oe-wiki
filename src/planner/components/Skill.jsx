@@ -87,8 +87,9 @@ class Skill extends Component {
     render() {
         const {nr, id, skills, heroData, sub1, sub2, onSubskillChange, emptyUrl} = this.props;
         const {isOpen} = this.state;
-        const skillData = skills[id];
         const isDisabled = Boolean(heroData?.skills[nr]);
+        const level = computeLevel(id in skills, sub1, sub2);
+        const skillData = skills[level === 1 ? id : id + '_' + level];
         return (
             <div className={cn(ROOT_CSS, SLOTS[nr], isDisabled && FORBIDDEN)}>
                 <div className={HIT_CSS} onClick={!isDisabled && this.onHitClick}>
@@ -129,7 +130,7 @@ class Skill extends Component {
                         emptyUrl={emptyUrl}
                     />
                 )}
-                <div class={LEVEL}>{computeLevel(skillData, sub1, sub2)}</div>
+                <div class={LEVEL}>{level}</div>
             </div>
         );
     }

@@ -1,5 +1,6 @@
 import {Component} from 'preact';
 import {css} from 'goober';
+import cn from '../utils/cn.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -9,8 +10,7 @@ const ROOT_CSS = css`
     left: 0;
     top: 0;
     color: #fff;
-    font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     white-space: nowrap;
 
     & > * {
@@ -19,6 +19,8 @@ const ROOT_CSS = css`
 `;
 
 const NAME_CSS = css`
+    font-weight: bold;
+    font-size: 18px;
     left: 208px;
     top: 8px;
 `;
@@ -26,8 +28,45 @@ const NAME_CSS = css`
 const CLASS_CSS = css`
     left: 208px;
     top: 42px;
-    font-size: 16px;
-    font-weight: normal;
+`;
+
+const HERO_CLASS_ICON = css`
+    position: absolute;
+    left: 148px;
+    top: 0;
+    width: 48px;
+`;
+
+const ATTRIBUTE = css`
+    width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    white-space: nowrap;
+`;
+const ATTACK = css`
+    left: 197px;
+    top: 80px;
+`;
+const DEFENSE = css`
+    left: 272px;
+    top: 80px;
+`;
+const SPELL_POWER = css`
+    left: 197px;
+    top: 125px;
+`;
+const KNOWLEDGE = css`
+    left: 272px;
+    top: 125px;
+`;
+const LUCK = css`
+    left: 197px;
+    top: 171px;
+`;
+const MORALE = css`
+    left: 272px;
+    top: 171px;
 `;
 
 // =====================================================================================================================
@@ -35,11 +74,18 @@ const CLASS_CSS = css`
 // =====================================================================================================================
 class Labels extends Component {
     render() {
-        const {heroData} = this.props;
+        const {heroData, heroClassData} = this.props;
         return (
             <div className={ROOT_CSS}>
-                {heroData && <div className={NAME_CSS}>{heroData.name}</div>}
-                {heroData && <div className={CLASS_CSS}>{heroData.className}</div>}
+                {heroData && <div class={NAME_CSS}>{heroData.name}</div>}
+                {heroData && <div class={CLASS_CSS}>{heroData.className}</div>}
+                {heroData && <img class={HERO_CLASS_ICON} src={heroData.classIcon} />}
+                {heroClassData && <div class={cn(ATTRIBUTE, ATTACK)}>{heroClassData.attack}</div>}
+                {heroClassData && <div class={cn(ATTRIBUTE, DEFENSE)}>{heroClassData.defense}</div>}
+                {heroClassData && <div class={cn(ATTRIBUTE, SPELL_POWER)}>{heroClassData.spellPower}</div>}
+                {heroClassData && <div class={cn(ATTRIBUTE, KNOWLEDGE)}>{heroClassData.knowledge}</div>}
+                {heroClassData && <div class={cn(ATTRIBUTE, LUCK)}>{heroClassData.luck}</div>}
+                {heroClassData && <div class={cn(ATTRIBUTE, MORALE)}>{heroClassData.morale}</div>}
             </div>
         );
     }
