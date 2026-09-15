@@ -29,7 +29,7 @@ class Hint extends Component {
         return (
             <div class={ROOT}>
                 {title && <div class={TITLE}>{title}</div>}
-                {text && <div class={TEXT}>{text}</div>}
+                {text && <div class={TEXT} dangerouslySetInnerHTML={{__html: text}} />}
             </div>
         );
     }

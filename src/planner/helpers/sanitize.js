@@ -13,11 +13,9 @@ function sanitize(stateFragment, heroes, skills) {
     removeUnknownArtifact(draft);
     removeUnknownUnit(draft);
 
-    removeWrongCombatOrThaumaturgy(draft, heroes);
-    removeWrongSkillsFromSlot1And2(draft, heroes);
-    removeDuplicateSkills(draft);
-
     ensureNativeSkills(draft, heroes);
+    removeWrongCombatOrThaumaturgy(draft, heroes);
+    removeDuplicateSkills(draft);
 
     return draft;
 }
@@ -91,26 +89,6 @@ function removeWrongCombatOrThaumaturgy(draft, heroes) {
                         delete draft[key];
                         console.warn(`Skill "${skillId}" was removed because it's only for Magic!`);
                     }
-                }
-            }
-        }
-    }
-}
-
-/**
- *
- */
-function removeWrongSkillsFromSlot1And2(draft, heroes) {
-    const {hero} = draft;
-    if (hero) {
-        const {skills} = heroes[hero];
-        for (let i = 0; i < skills.length; i++) {
-            const key = `skill${i}Id`;
-            const skillId = draft[key];
-            if (skillId) {
-                if (skillId !== skills[i].name) {
-                    delete draft[key];
-                    console.warn(`Skill "${skillId}" cannot occupy slot number ${i}!`);
                 }
             }
         }
