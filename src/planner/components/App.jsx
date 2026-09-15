@@ -41,6 +41,7 @@ class App extends Component {
     };
 
     render() {
+        // console.log('render:', JSON.stringify(this.state, null, 4));
         const {hero} = this.state;
         const {appRef} = this.vars;
         const {bgUrl, levelUrl, emptyUrl, heroes, skills} = this.props;
@@ -119,18 +120,17 @@ class App extends Component {
      *
      */
     onHeroChange = (hero) => {
-        Persistence.remember({
-            ...this.state,
-            hero,
-        });
+        this.save({...this.state, hero});
     };
 
     /**
      *
      */
     onSkillChange = (choice, nr) => {
-        const futureState = acceptSkill(choice, nr, this.state);
-        Persistence.remember(futureState);
+        const {heroes} = this.props;
+        const heroData = heroes[this.state.hero];
+        const futureState = acceptSkill(choice, nr, this.state, heroData);
+        this.save(futureState);
     };
 
     /**
@@ -147,6 +147,15 @@ class App extends Component {
         }
 
         this.setState(subState);
+    };
+
+    /**
+     *
+     */
+    save = (futureState) => {
+        const {heroes, skills} = this.props;
+        const safeState = sanitize(futureState, heroes, skills);
+        Persistence.remember(safeState);
     };
 }
 

@@ -17,7 +17,7 @@ function encode(hub) {
     for (let i = 0; i < FIELDS.length; i++) {
         const {key, bits, dictionary} = FIELDS[i];
         let value = hub[key];
-        if (value === undefined) {
+        if (!value) {
             jumpPending = true;
             continue;
         }
