@@ -18,6 +18,10 @@ const ROOT = css`
     border-radius: 4px;
 `;
 
+const BORDERED = css`
+    border: solid 1px palegoldenrod;
+`;
+
 const LEVEL_1 = css`
     left: 54px;
     top: -1px;
@@ -60,7 +64,7 @@ class Subskill extends Component {
         const {subs = []} = skills[family + '_' + (level + 1)] || {};
         const subskillData = subs[index];
         return (
-            <div className={cn(ROOT, level === 1 ? LEVEL_1 : LEVEL_2)}>
+            <div className={cn(ROOT, level === 1 ? LEVEL_1 : LEVEL_2, !subskillData && BORDERED)}>
                 <div className={HIT} onClick={this.onHitClick}>
                     {subskillData && (
                         <Hint title={subskillData.name} text={subskillData.description}>

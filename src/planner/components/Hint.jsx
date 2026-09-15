@@ -11,6 +11,7 @@ import HintContent from './HintContent.jsx';
 // =====================================================================================================================
 const ROOT = css`
     position: relative;
+    line-height: 0;
 `;
 const PANEL = css`
     position: fixed;

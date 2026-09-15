@@ -68,6 +68,14 @@ const MENU = css`
     top: 52px;
 `;
 
+const LEVEL = css`
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+    color: #fff;
+    font-family: Arial, sans-serif;
+`;
+
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -121,6 +129,7 @@ class Skill extends Component {
                         emptyUrl={emptyUrl}
                     />
                 )}
+                <div class={LEVEL}>{computeLevel(skillData, sub1, sub2)}</div>
             </div>
         );
     }
@@ -166,6 +175,21 @@ class Skill extends Component {
     };
 }
 
+/**
+ *
+ */
+function computeLevel(skillData, sub1, sub2) {
+    if (!skillData) {
+        return '';
+    }
+    if (sub1 === undefined) {
+        return 1;
+    }
+    if (sub2 === undefined) {
+        return 2;
+    }
+    return 3;
+}
 // =====================================================================================================================
 //  E X P O R T
 // =====================================================================================================================

@@ -1,5 +1,6 @@
 import {Component} from 'preact';
 import {css} from 'goober';
+import {NONE} from '../SETTINGS.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -13,6 +14,10 @@ const ROOT = css`
     }
     &:active {
         background: #191b2c;
+    }
+    &[data-id=${NONE}] img {
+        width: 32px;
+        height: 32px;
     }
 `;
 const ICON = css`
