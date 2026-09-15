@@ -94,6 +94,9 @@ class Subskill extends Component {
     onMenuChoice = (choice) => {
         console.log('choice:', choice);
         this.setState({isOpen: false});
+        if (choice === undefined) {
+            return;
+        }
         const {family, skillSlot, level, skills, index, onChange} = this.props;
         const {subs} = skills[family + '_' + (level + 1)];
         const chosenIndex = subs.findIndex((sub) => sub.id === choice);

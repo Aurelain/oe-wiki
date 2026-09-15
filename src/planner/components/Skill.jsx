@@ -68,17 +68,6 @@ const MENU = css`
     top: 52px;
 `;
 
-const MENU_PROPS = [
-    /* 0 */ {},
-    /* 1 */ {},
-    /* 2 */ {},
-    /* 3 */ {offset: 256},
-    /* 4 */ {},
-    /* 5 */ {},
-    /* 6 */ {},
-    /* 7 */ {offset: 256},
-];
-
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -91,7 +80,6 @@ class Skill extends Component {
         const {nr, id, skills, heroData, sub1, sub2, onSubskillChange, emptyUrl} = this.props;
         const {isOpen} = this.state;
         const skillData = skills[id];
-        const menuProps = MENU_PROPS[nr];
         const isDisabled = Boolean(heroData?.skills[nr]);
         return (
             <div className={cn(ROOT_CSS, SLOTS[nr], isDisabled && FORBIDDEN)}>
@@ -109,7 +97,6 @@ class Skill extends Component {
                         list={this.filterSkills(skills)}
                         onChoice={this.onMenuChoice}
                         way={SOUTH}
-                        {...menuProps}
                     />
                 )}
                 {skillData && (
@@ -150,7 +137,7 @@ class Skill extends Component {
     onMenuChoice = (choice) => {
         console.log('choice:', choice);
         this.setState({isOpen: false});
-        if (choice !== this.props.id) {
+        if (choice && choice !== this.props.id) {
             this.props.onChange(choice, this.props.nr);
         }
     };
