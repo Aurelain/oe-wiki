@@ -1,5 +1,5 @@
 import {Component, createRef} from 'preact';
-import {HEIGHT, WIDTH} from '../SETTINGS.js';
+import {ALL, HEIGHT, WIDTH} from '../SETTINGS.js';
 import {css} from 'goober';
 import Portrait from './Portrait.jsx';
 import Level from './Level.jsx';
@@ -45,10 +45,13 @@ class App extends Component {
     vars = {
         appRef: createRef(),
     };
+    state = {
+        backpackFilter: ALL,
+    };
 
     render() {
         // console.log('render:', JSON.stringify(this.state, null, 4));
-        const {hero, level = 1} = this.state;
+        const {hero, level = 1, backpackFilter} = this.state;
         const {appRef} = this.vars;
         const {images, heroes, skills, heroClasses} = this.props;
         const heroData = heroes[hero];
@@ -77,7 +80,7 @@ class App extends Component {
                         heroData={heroData}
                     />
                 ))}
-                <Backpack />
+                <Backpack images={images} filter={backpackFilter} onFilterClick={this.onFilterClick} />
                 <Reset />
             </div>
         );
@@ -130,6 +133,13 @@ class App extends Component {
         const scaleRatio = coreWidth / WIDTH;
         appElement.style.transform = `scale(${scaleRatio})`;
         appElement.style.left = Math.floor((width - coreWidth) / 2) + 'px';
+    };
+
+    /**
+     *
+     */
+    onFilterClick = (filter) => {
+        this.setState({backpackFilter: filter});
     };
 
     /**
