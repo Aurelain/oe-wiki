@@ -74,6 +74,8 @@ const LEVEL = css`
     bottom: 0;
     color: #fff;
     font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 4px #000;
 `;
 
 // =====================================================================================================================

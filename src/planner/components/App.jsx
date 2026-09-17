@@ -11,6 +11,7 @@ import FIELDS from '../helpers/compression/FIELDS.js';
 import Skill from './Skill.jsx';
 import sanitize from '../helpers/sanitize.js';
 import acceptSkill from '../helpers/acceptSkill.js';
+import Backpack from './Backpack.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -49,7 +50,7 @@ class App extends Component {
         // console.log('render:', JSON.stringify(this.state, null, 4));
         const {hero, level = 1} = this.state;
         const {appRef} = this.vars;
-        const {bgUrl, levelUrl, emptyUrl, heroes, skills, heroClasses} = this.props;
+        const {images, heroes, skills, heroClasses} = this.props;
         const heroData = heroes[hero];
         const heroClassId = getHeroClassId(heroData);
         const heroClassData = heroClasses[heroClassId];
@@ -57,11 +58,11 @@ class App extends Component {
         return (
             <div className={APP_CSS} ref={appRef} onContextMenu={this.onRootContextMenu}>
                 <style>{CSS}</style>
-                <img className={BG_CSS} src={bgUrl} alt="empty background" />
+                <img className={BG_CSS} src={images.background} alt="empty background" />
                 <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
                 <Specialization heroData={heroData} />
                 {heroData && <Labels heroData={heroData} heroClassData={heroClassData} level={level} />}
-                {heroData && <Level levelUrl={levelUrl} value={level} onChance={this.onLevelChange} />}
+                {heroData && <Level levelUrl={images.level} value={level} onChance={this.onLevelChange} />}
                 {SKILL_NUMBERS.map((nr) => (
                     <Skill
                         key={'skill' + nr}
@@ -72,10 +73,11 @@ class App extends Component {
                         skills={skills}
                         onChange={this.onSkillChange}
                         onSubskillChange={this.onSubskillChange}
-                        emptyUrl={emptyUrl}
+                        emptyUrl={images.empty}
                         heroData={heroData}
                     />
                 ))}
+                <Backpack />
                 <Reset />
             </div>
         );
