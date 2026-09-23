@@ -53,7 +53,7 @@ class App extends Component {
         // console.log('render:', JSON.stringify(this.state, null, 4));
         const {hero, level = 1, backpackFilter} = this.state;
         const {appRef} = this.vars;
-        const {images, heroes, skills, heroClasses} = this.props;
+        const {images, heroes, skills, heroClasses, artifacts} = this.props;
         const heroData = heroes[hero];
         const heroClassId = getHeroClassId(heroData);
         const heroClassData = heroClasses[heroClassId];
@@ -80,7 +80,12 @@ class App extends Component {
                         heroData={heroData}
                     />
                 ))}
-                <Backpack images={images} filter={backpackFilter} onFilterClick={this.onFilterClick} />
+                <Backpack
+                    images={images}
+                    filter={backpackFilter}
+                    onFilterClick={this.onFilterClick}
+                    artifacts={artifacts}
+                />
                 <Reset />
             </div>
         );

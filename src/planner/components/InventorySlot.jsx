@@ -22,7 +22,6 @@ const SLOT = css`
 class InventorySlot extends Component {
     render() {
         const {id, slotUrl} = this.props;
-        console.log('id:', id);
         return (
             <div class={ROOT} onClick={id && this.onRootClick}>
                 {!id && <img class={SLOT} src={slotUrl} />}

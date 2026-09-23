@@ -3,6 +3,7 @@ import App from './components/App.jsx';
 import getHeroes from './data/getHeroes.js';
 import getSkills from './data/getSkills.js';
 import getHeroClasses from './data/getHeroClasses.js';
+import getArtifacts from './data/getArtifacts.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -75,6 +76,7 @@ async function run(root) {
         images,
         heroes: await getHeroes(lang),
         skills: await getSkills(lang),
+        artifacts: await getArtifacts(lang),
         heroClasses: await getHeroClasses(),
     });
     console.log(`Mounted successfully (${Date.now() - now} ms).`);

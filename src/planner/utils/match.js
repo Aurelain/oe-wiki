@@ -5,6 +5,9 @@
  *
  */
 function match(text, pattern) {
+    if (!text) {
+        return [];
+    }
     if (pattern.global) {
         return [...text.matchAll(pattern)];
     } else {

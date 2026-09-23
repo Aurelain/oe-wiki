@@ -19,3 +19,8 @@ export const CAPE = 'CAPE';
 export const RING = 'RING';
 export const POUCH = 'POUCH';
 export const BANNER = 'BANNER';
+
+export const COMMON = 'COMMON';
+export const RARE = 'RARE';
+export const EPIC = 'EPIC';
+export const LEGENDARY = 'LEGENDARY';

@@ -74,7 +74,8 @@ class Backpack extends Component {
         sorting: null,
     };
     render() {
-        const {images, filter} = this.props;
+        const {images, filter, artifacts} = this.props;
+        console.log('artifacts:', artifacts);
         const list = buildList();
         return (
             <div class={ROOT}>
