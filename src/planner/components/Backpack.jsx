@@ -11,7 +11,7 @@ const ROOT = css`
     left: 385px;
     top: 236px;
     width: 294px;
-    height: 425px;
+    height: 424px;
     background: rgba(255, 0, 0, 0);
 `;
 
@@ -47,12 +47,12 @@ const INVENTORY = css`
     background: rgba(255, 0, 0, 0);
     display: flex;
     flex-wrap: wrap;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: #151e2e;
-    /*opacity: 0;*/
+    align-content: flex-start;
 `;
 
-const FILTERS = {
+const FILTER_TO_ICON = {
     [ALL]: 'filter_all',
     [SWORD]: 'filter_left_hand',
     [SHIELD]: 'filter_right_hand',
@@ -75,22 +75,26 @@ class Backpack extends Component {
     };
     render() {
         const {images, filter, artifacts} = this.props;
-        console.log('artifacts:', artifacts);
-        const list = buildList();
+        const list = buildList(artifacts, filter);
         return (
             <div class={ROOT}>
                 <div class={FILTERS_CSS}>
-                    {Object.keys(FILTERS).map((key) => {
+                    {Object.keys(FILTER_TO_ICON).map((key) => {
                         const highlight = filter === key ? FILTER_SELECTED : null;
-                        const src = images[FILTERS[key]];
+                        const src = images[FILTER_TO_ICON[key]];
                         return (
                             <img key={key} data-id={key} className={highlight} src={src} onClick={this.onFilterClick} />
                         );
                     })}
                 </div>
                 <div class={INVENTORY}>
-                    {list.map((id) => (
-                        <InventorySlot id={id} slotUrl={images.inventory} onClick={this.onArtifactClick} />
+                    {list.map((info) => (
+                        <InventorySlot
+                            info={info}
+                            slotUrl={images.inventory}
+                            onClick={this.onArtifactClick}
+                            images={images}
+                        />
                     ))}
                 </div>
             </div>
@@ -112,10 +116,14 @@ class Backpack extends Component {
 /**
  *
  */
-function buildList() {
-    const list = [];
-    const length = 24;
-    for (let i = 0; i < length; i++) {
+function buildList(artifacts, filter) {
+    let list = Object.values(artifacts.list);
+    if (filter !== ALL) {
+        list = list.filter((item) => item.slot === filter);
+    }
+    const rows = Math.ceil(Math.max(list.length, 24) / 4);
+    const length = rows * 4;
+    for (let i = list.length; i < length; i++) {
         list.push(null);
     }
     return list;

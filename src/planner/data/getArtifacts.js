@@ -1,7 +1,6 @@
 import match from '../utils/match.js';
 import downloadPage from '../helpers/downloadPage.js';
 import {
-    ALL,
     ARMOR,
     BANNER,
     BELT,
@@ -128,7 +127,7 @@ function parseRow(row, rarities) {
     // Some columns:
     const [, icon] = match(iconColumn, /([^ ]*) 2x/);
     const [, name] = match(nameColumn, />([^<]+)/);
-    const [, description] = match(descColumn, /td>(.*?)<\/td/);
+    const description = descColumn.replace(/<td.*?>/g, '');
 
     // Slot:
     let [, slot] = match(slotColumn, /([a-zA-Z]+)\.png/);

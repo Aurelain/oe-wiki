@@ -35,12 +35,12 @@ class Hint extends Component {
         isOpen: false,
     };
     render() {
-        const {text, title, way = NORTH, children, hintClassName} = this.props;
+        const {text, title, way = NORTH, children, hintClassName, className} = this.props;
         const {isOpen} = this.state;
         const kids = Array.isArray(children) ? children : [children];
         return (
             <div
-                class={ROOT}
+                class={cn(ROOT, className)}
                 ref={this.vars.triggerRef}
                 onPointerEnter={this.onRootPointerEnter}
                 onPointerLeave={this.onRootPointerLeave}

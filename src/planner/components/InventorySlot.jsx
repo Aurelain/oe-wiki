@@ -1,12 +1,15 @@
 import {Component} from 'preact';
 import {css} from 'goober';
+import Artifact from './Artifact.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const ROOT = css`
-    width: 66px;
-    height: 64px;
+    width: 68px;
+    height: 67px;
+    /*background: red;*/
+    position: relative;
 `;
 
 const SLOT = css`
@@ -21,10 +24,11 @@ const SLOT = css`
 // =====================================================================================================================
 class InventorySlot extends Component {
     render() {
-        const {id, slotUrl} = this.props;
+        const {info, slotUrl, images} = this.props;
         return (
-            <div class={ROOT} onClick={id && this.onRootClick}>
-                {!id && <img class={SLOT} src={slotUrl} />}
+            <div class={ROOT} onClick={info && this.onRootClick}>
+                {!info && <img class={SLOT} src={slotUrl} />}
+                {info && <Artifact info={info} images={images} />}
             </div>
         );
     }
