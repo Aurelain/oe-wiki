@@ -89,12 +89,7 @@ class Backpack extends Component {
                 </div>
                 <div class={INVENTORY}>
                     {list.map((info) => (
-                        <InventorySlot
-                            info={info}
-                            slotUrl={images.inventory}
-                            onClick={onArtifactClick}
-                            images={images}
-                        />
+                        <InventorySlot info={info} onClick={onArtifactClick} images={images} />
                     ))}
                 </div>
             </div>
@@ -116,11 +111,12 @@ function buildList(artifacts, filter) {
     let list = Object.values(artifacts.list);
     if (filter !== ALL) {
         list = list.filter((item) => item.slot === filter);
+        list.push(null);
     }
     const rows = Math.ceil(Math.max(list.length, 24) / 4);
     const length = rows * 4;
     for (let i = list.length; i < length; i++) {
-        list.push(null);
+        list.push(undefined);
     }
     return list;
 }

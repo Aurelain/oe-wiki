@@ -184,9 +184,15 @@ class App extends Component {
      *
      */
     onArtifactClick = (artifactId) => {
-        const {artifacts} = this.props;
-        const artifact = artifacts.list[artifactId];
-        const storageKey = chooseStorageKey(artifact.slot, this.state.recentDollStorage, this.state);
+        let slot;
+        if (!artifactId) {
+            slot = this.state.backpackFilter;
+        } else {
+            const {artifacts} = this.props;
+            const artifact = artifacts.list[artifactId];
+            slot = artifact.slot;
+        }
+        const storageKey = chooseStorageKey(slot, this.state.recentDollStorage, this.state);
         this.save({...this.state, [storageKey]: artifactId});
     };
 

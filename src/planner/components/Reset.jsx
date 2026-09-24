@@ -18,7 +18,7 @@ const ROOT_CSS = css`
         border: solid 2px yellow;
     }
     &:active {
-        border: solid 2px red;
+        border: solid 2px peru;
     }
 `;
 

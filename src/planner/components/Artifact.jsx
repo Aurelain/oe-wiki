@@ -15,9 +15,11 @@ const ROOT_CSS = css`
     cursor: pointer;
     border-radius: 8px;
     border: solid 2px transparent;
-
     &:hover {
         border-color: yellow;
+    }
+    &:active {
+        border-color: peru;
     }
 `;
 
@@ -25,7 +27,6 @@ const CONTAINER_CSS = css`
     width: 100%;
     height: 100%;
     background-size: 100%;
-
     & > img {
         width: 100%;
     }

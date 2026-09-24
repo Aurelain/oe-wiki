@@ -21,6 +21,9 @@ const EMPTY = css`
     &:hover {
         border-color: yellow;
     }
+    &:active {
+        border-color: peru;
+    }
 `;
 
 const POSITIONS = {
@@ -88,7 +91,6 @@ const POSITIONS = {
 class DollSlot extends PureComponent {
     render() {
         const {filled, images, storage, slotTranslation} = this.props;
-        console.log('filled:', filled);
         const positionClassName = POSITIONS[storage];
         return (
             <div class={cn(ROOT, positionClassName)} onClick={this.onRootClick}>
