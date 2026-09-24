@@ -1,5 +1,5 @@
 import {Component, createRef} from 'preact';
-import {ALL, HEIGHT, WIDTH} from '../SETTINGS.js';
+import {ALL, ARMOR, BANNER, BELT, BOOTS, CAPE, HEIGHT, HELMET, POUCH, RING, SHIELD, SWORD, WIDTH} from '../SETTINGS.js';
 import {css} from 'goober';
 import Portrait from './Portrait.jsx';
 import Level from './Level.jsx';
@@ -12,6 +12,7 @@ import Skill from './Skill.jsx';
 import sanitize from '../helpers/sanitize.js';
 import acceptSkill from '../helpers/acceptSkill.js';
 import Backpack from './Backpack.jsx';
+import DollSlot from './DollSlot.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -38,6 +39,25 @@ const BG_CSS = css`
 
 const SKILL_NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7];
 
+const DOLL_SLOTS = [
+    {slot: SWORD, storage: 'artifactSword'},
+    {slot: SHIELD, storage: 'artifactShield'},
+    {slot: ARMOR, storage: 'artifactArmor'},
+    {slot: HELMET, storage: 'artifactHelmet'},
+    {slot: BOOTS, storage: 'artifactBoots'},
+    {slot: BELT, storage: 'artifactBelt'},
+    {slot: CAPE, storage: 'artifactCape'},
+    {slot: RING, storage: 'artifactRingL'},
+    {slot: RING, storage: 'artifactRingR'},
+    {slot: POUCH, storage: 'artifactPouchTL'},
+    {slot: POUCH, storage: 'artifactPouchTR'},
+    {slot: POUCH, storage: 'artifactPouchBL'},
+    {slot: POUCH, storage: 'artifactPouchBR'},
+    {slot: BANNER, storage: 'artifactBanner'},
+];
+
+const SLOT_TO_STORAGE = computeSlotToStorage();
+
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -47,6 +67,7 @@ class App extends Component {
     };
     state = {
         backpackFilter: ALL,
+        recentDollStorage: null,
     };
 
     render() {
@@ -84,8 +105,20 @@ class App extends Component {
                     images={images}
                     filter={backpackFilter}
                     onFilterClick={this.onFilterClick}
+                    onArtifactClick={this.onArtifactClick}
                     artifacts={artifacts}
                 />
+                {DOLL_SLOTS.map((item) => (
+                    <DollSlot
+                        key={item.slot}
+                        slot={item.slot}
+                        slotTranslation={artifacts.categories[item.slot]}
+                        storage={item.storage}
+                        filled={artifacts.list[this.state[item.storage]]}
+                        images={images}
+                        onClick={this.onDollSlotClick}
+                    />
+                ))}
                 <Reset />
             </div>
         );
@@ -150,6 +183,16 @@ class App extends Component {
     /**
      *
      */
+    onArtifactClick = (artifactId) => {
+        const {artifacts} = this.props;
+        const artifact = artifacts.list[artifactId];
+        const storageKey = chooseStorageKey(artifact.slot, this.state.recentDollStorage, this.state);
+        this.save({...this.state, [storageKey]: artifactId});
+    };
+
+    /**
+     *
+     */
     onHeroChange = (hero) => {
         this.save({...this.state, hero});
     };
@@ -187,6 +230,16 @@ class App extends Component {
     /**
      *
      */
+    onDollSlotClick = (slot, storage) => {
+        this.setState({
+            backpackFilter: slot,
+            recentDollStorage: storage,
+        });
+    };
+
+    /**
+     *
+     */
     onHashChange = (stateFragment) => {
         const {heroes, skills} = this.props;
         const sanitized = sanitize(stateFragment, heroes, skills);
@@ -216,6 +269,37 @@ class App extends Component {
 function getHeroClassId(heroData) {
     const matched = heroData?.classIcon.match(/\dpx-(.*?)_icon/);
     return matched ? matched[1].toLowerCase() : '';
+}
+
+/**
+ *
+ */
+function computeSlotToStorage() {
+    const output = {};
+    for (const {slot, storage} of DOLL_SLOTS) {
+        output[slot] = output[slot] || [];
+        output[slot].push(storage);
+    }
+    return output;
+}
+
+/**
+ *
+ */
+function chooseStorageKey(nativeSlot, recentDollStorage, occupied) {
+    const candidates = SLOT_TO_STORAGE[nativeSlot];
+    if (candidates.length === 1) {
+        return candidates[0];
+    }
+    if (candidates.includes(recentDollStorage)) {
+        return recentDollStorage;
+    }
+    for (const candidate of candidates) {
+        if (!occupied[candidate]) {
+            return candidate;
+        }
+    }
+    return candidates[0];
 }
 
 // =====================================================================================================================

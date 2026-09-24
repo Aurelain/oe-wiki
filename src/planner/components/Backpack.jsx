@@ -74,7 +74,7 @@ class Backpack extends Component {
         sorting: null,
     };
     render() {
-        const {images, filter, artifacts} = this.props;
+        const {images, filter, artifacts, onArtifactClick} = this.props;
         const list = buildList(artifacts, filter);
         return (
             <div class={ROOT}>
@@ -92,7 +92,7 @@ class Backpack extends Component {
                         <InventorySlot
                             info={info}
                             slotUrl={images.inventory}
-                            onClick={this.onArtifactClick}
+                            onClick={onArtifactClick}
                             images={images}
                         />
                     ))}
@@ -106,10 +106,6 @@ class Backpack extends Component {
     // -----------------------------------------------------------------------------------------------------------------
     onFilterClick = (event) => {
         this.props.onFilterClick(event.currentTarget.dataset.id);
-    };
-
-    onArtifactClick = (id) => {
-        console.log('onArtifactClick:', id);
     };
 }
 

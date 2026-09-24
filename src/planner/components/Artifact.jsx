@@ -8,16 +8,16 @@ import Hint from './Hint.jsx';
 // =====================================================================================================================
 const ROOT_CSS = css`
     position: absolute;
-    width: 64px;
-    height: 64px;
-    left: 2px;
-    top: 2px;
+    width: 68px;
+    height: 68px;
+    left: 0;
+    top: 0;
     cursor: pointer;
     border-radius: 8px;
-    outline: solid 2px transparent;
+    border: solid 2px transparent;
 
     &:hover {
-        outline-color: yellow;
+        border-color: yellow;
     }
 `;
 
