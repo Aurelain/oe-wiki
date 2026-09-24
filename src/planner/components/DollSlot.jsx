@@ -29,15 +29,15 @@ const EMPTY = css`
 const POSITIONS = {
     artifactSword: css`
         left: 52px;
-        top: 429px;
+        top: 430px;
     `,
     artifactShield: css`
         left: 269px;
-        top: 429px;
+        top: 430px;
     `,
     artifactArmor: css`
         left: 162px;
-        top: 349px;
+        top: 348px;
     `,
     artifactHelmet: css`
         left: 162px;
@@ -45,11 +45,11 @@ const POSITIONS = {
     `,
     artifactBoots: css`
         left: 162px;
-        top: 627px;
+        top: 626px;
     `,
     artifactBelt: css`
         left: 162px;
-        top: 429px;
+        top: 430px;
     `,
     artifactCape: css`
         left: 269px;
@@ -57,11 +57,11 @@ const POSITIONS = {
     `,
     artifactRingL: css`
         left: 52px;
-        top: 349px;
+        top: 348px;
     `,
     artifactRingR: css`
         left: 269px;
-        top: 349px;
+        top: 348px;
     `,
     artifactPouchTL: css`
         left: 52px;
@@ -73,11 +73,11 @@ const POSITIONS = {
     `,
     artifactPouchBL: css`
         left: 52px;
-        top: 627px;
+        top: 626px;
     `,
     artifactPouchBR: css`
         left: 269px;
-        top: 627px;
+        top: 626px;
     `,
     artifactBanner: css`
         left: 52px;

@@ -13,41 +13,41 @@ const ROOT_CSS = css`
     position: absolute;
     cursor: pointer;
     /*background: red;*/
-    width: 50px;
-    height: 50px;
+    width: 54px;
+    height: 54px;
 `;
 const SLOTS = [
     /* 0 */ css`
-        left: 326px;
-        top: 83px;
+        left: 324px;
+        top: 81px;
     `,
     /* 1 */ css`
-        left: 417px;
-        top: 83px;
+        left: 415px;
+        top: 81px;
     `,
     /* 2 */ css`
-        left: 508px;
-        top: 83px;
+        left: 506px;
+        top: 81px;
     `,
     /* 3 */ css`
-        left: 599px;
-        top: 83px;
+        left: 597px;
+        top: 81px;
     `,
     /* 4 */ css`
-        left: 326px;
-        top: 143px;
+        left: 324px;
+        top: 141px;
     `,
     /* 5 */ css`
-        left: 417px;
-        top: 143px;
+        left: 415px;
+        top: 141px;
     `,
     /* 6 */ css`
-        left: 508px;
-        top: 143px;
+        left: 506px;
+        top: 141px;
     `,
     /* 7 */ css`
-        left: 599px;
-        top: 143px;
+        left: 597px;
+        top: 141px;
     `,
 ];
 
@@ -61,6 +61,17 @@ const HIT_CSS = css`
 
 const FORBIDDEN = css`
     cursor: not-allowed;
+`;
+
+const ALLOWED = css`
+    border: solid 2px transparent;
+    border-radius: 8px;
+    &:hover {
+        border-color: yellow;
+    }
+    &:active {
+        border-color: peru;
+    }
 `;
 
 const MENU = css`
@@ -93,8 +104,8 @@ class Skill extends Component {
         const level = computeLevel(id in skills, sub1, sub2);
         const skillData = skills[level === 1 ? id : id + '_' + level];
         return (
-            <div className={cn(ROOT_CSS, SLOTS[nr], isDisabled && FORBIDDEN)}>
-                <div className={HIT_CSS} onClick={!isDisabled && this.onHitClick}>
+            <div className={cn(ROOT_CSS, SLOTS[nr])}>
+                <div className={cn(HIT_CSS, isDisabled ? FORBIDDEN : ALLOWED)} onClick={!isDisabled && this.onHitClick}>
                     {skillData && (
                         <Hint title={skillData.name} text={skillData.description}>
                             <img src={skillData.icon} />

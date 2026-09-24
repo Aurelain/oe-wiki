@@ -16,6 +16,13 @@ const ROOT = css`
     width: 24px;
     height: 24px;
     border-radius: 4px;
+    border: solid 1px transparent;
+    &:hover {
+        border-color: yellow;
+    }
+    &:active {
+        border-color: peru;
+    }
 `;
 
 const BORDERED = css`
