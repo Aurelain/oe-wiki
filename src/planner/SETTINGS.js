@@ -2,6 +2,7 @@ export const WIDTH = 708;
 export const HEIGHT = 809;
 
 export const NONE = 'NONE';
+export const BREAK = 'BREAK';
 
 export const NORTH = 'NORTH';
 export const EAST = 'EAST';

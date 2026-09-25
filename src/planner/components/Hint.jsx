@@ -35,7 +35,7 @@ class Hint extends Component {
         isOpen: false,
     };
     render() {
-        const {text, title, way = NORTH, children, hintClassName, className} = this.props;
+        const {text, title, way = NORTH, children, boxClassName, className, onClick} = this.props;
         const {isOpen} = this.state;
         const kids = Array.isArray(children) ? children : [children];
         return (
@@ -44,6 +44,7 @@ class Hint extends Component {
                 ref={this.vars.triggerRef}
                 onPointerEnter={this.onRootPointerEnter}
                 onPointerLeave={this.onRootPointerLeave}
+                onClick={onClick}
             >
                 {kids[0]}
                 {isOpen &&
@@ -51,7 +52,7 @@ class Hint extends Component {
                     createPortal(
                         <Panel
                             rootRef={this.vars.panelRef}
-                            className={cn(PANEL, hintClassName)}
+                            className={cn(PANEL, boxClassName)}
                             boxClassName={BOX}
                             way={way}
                             maxWidth={320}

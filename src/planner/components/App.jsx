@@ -1,5 +1,20 @@
 import {Component, createRef} from 'preact';
-import {ALL, ARMOR, BANNER, BELT, BOOTS, CAPE, HEIGHT, HELMET, POUCH, RING, SHIELD, SWORD, WIDTH} from '../SETTINGS.js';
+import {
+    ALL,
+    ARMOR,
+    BANNER,
+    BELT,
+    BOOTS,
+    CAPE,
+    HEIGHT,
+    HELMET,
+    NONE,
+    POUCH,
+    RING,
+    SHIELD,
+    SWORD,
+    WIDTH,
+} from '../SETTINGS.js';
 import {css} from 'goober';
 import Portrait from './Portrait.jsx';
 import Level from './Level.jsx';
@@ -122,7 +137,14 @@ class App extends Component {
                     />
                 ))}
                 {ARMY_NUMBERS.map((nr) => (
-                    <ArmySlot key={'unit' + nr} nr={nr} units={units} onChange={this.onUnitChange} />
+                    <ArmySlot
+                        key={'unit' + nr}
+                        nr={nr}
+                        units={units}
+                        images={images}
+                        onChange={this.onUnitChange}
+                        unitId={this.state[`army${nr}Id`]}
+                    />
                 ))}
                 <Reset />
             </div>
@@ -252,7 +274,9 @@ class App extends Component {
      *
      */
     onUnitChange = (nr, id) => {
-        console.log('nr, id:', nr, id);
+        const key = `army${nr}Id`;
+        id = id === NONE ? undefined : id;
+        this.save({...this.state, [key]: id});
     };
 
     /**

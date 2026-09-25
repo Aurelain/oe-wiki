@@ -2,20 +2,21 @@ import {PureComponent} from 'preact/compat';
 import {css} from 'goober';
 import cn from '../utils/cn.js';
 import Menu from './Menu.jsx';
-import {NORTH, WIDTH} from '../SETTINGS.js';
+import {BREAK, NONE, NORTH} from '../SETTINGS.js';
+import Unit from './Unit.jsx';
+import Hint from './Hint.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const FIRST = 66;
-const STEP = 84;
+const STEP = 84.5;
 const HALF = 42;
 const ROOT = css`
     position: absolute;
     top: 707px;
     width: ${STEP}px;
     height: 99px;
-    cursor: pointer;
     color: transparent;
     /*background: rgba(255, 0, 0, 0.2);*/
     &:hover {
@@ -30,25 +31,26 @@ const IS_OPEN = css`
 `;
 const SVG = css`
     position: absolute;
-    left: -11px;
-    top: -6px;
-    width: 109px;
-    height: 111px;
+    left: -9px;
+    top: -3px;
+    width: 104px;
+    height: 105px;
     pointer-events: none;
 `;
 const HIT = css`
+    cursor: pointer;
     position: absolute;
     inset: 0;
 `;
 const MENU = css`
+    text-align: center;
     left: ${HALF}px;
     top: 0;
-    max-height: 681px;
     & img {
         outline: 1px solid transparent;
         outline-offset: -1px;
-        width: 54px;
-        height: 54px;
+        width: 50px;
+        height: 50px;
     }
     & img:hover {
         outline-color: yellow;
@@ -87,21 +89,34 @@ const POSITIONS = {
         left: ${FIRST + STEP * 6}px;
     `,
 };
+const UNIT_BG = css`
+    position: absolute;
+    left: -2px;
+    top: 0;
+    width: 89px;
+`;
 
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
 class ArmySlot extends PureComponent {
+    vars = {
+        cachedList: null,
+    };
     state = {
         isOpen: false,
     };
 
     render() {
-        const {nr, units} = this.props;
+        const {nr, images, units, unitId} = this.props;
         const {isOpen} = this.state;
         const positionClassName = POSITIONS[nr];
+        const unit = units[unitId];
         return (
             <div class={cn(ROOT, isOpen && IS_OPEN, positionClassName)}>
+                {unit && <img class={UNIT_BG} src={images.unit_back} />}
+                {unit && <Unit info={unit} />}
+                {unit && <img class={UNIT_BG} src={images.unit_top} />}
                 <svg className={SVG} viewBox="0 0 500 600" preserveAspectRatio="none">
                     <path
                         d="M 250,56
@@ -126,15 +141,21 @@ class ArmySlot extends PureComponent {
                         stroke-linejoin="round"
                     />
                 </svg>
-                <div class={HIT} onClick={this.onHitClick} />
+                <Hint
+                    className={HIT}
+                    boxClassName={HINT}
+                    title={!isOpen && unit?.name}
+                    text={!isOpen && unit?.description}
+                    onClick={this.onHitClick}
+                />
                 {isOpen && (
                     <Menu
                         className={MENU}
-                        hintClassName={HINT}
-                        maxWidth={WIDTH}
+                        hintBoxClassName={HINT}
+                        maxWidth={660}
                         way={NORTH}
-                        offset={FIRST + nr * STEP + HALF}
-                        list={units}
+                        offset={FIRST + nr * STEP + HALF - 32}
+                        list={this.listUnits()}
                         onChoice={this.onMenuChoice}
                     />
                 )}
@@ -158,11 +179,35 @@ class ArmySlot extends PureComponent {
      *
      */
     onMenuChoice = (choice) => {
-        console.log('choice:', choice);
+        const {nr, unitId} = this.props;
         this.setState({isOpen: false});
-        // if (choice && choice !== this.props.hero) {
-        //     this.props.onHeroChange(choice);
-        // }
+        if (choice && choice !== unitId) {
+            this.props.onChange(nr, choice);
+        }
+    };
+
+    /**
+     *
+     */
+    listUnits = () => {
+        let {cachedList} = this.vars;
+        if (!cachedList) {
+            cachedList = [];
+            const {units, images} = this.props;
+            let recentFaction;
+            for (const key in units) {
+                const unit = units[key];
+                const {faction} = unit;
+                if (recentFaction && recentFaction !== faction) {
+                    cachedList.push({id: BREAK});
+                }
+                recentFaction = faction;
+                cachedList.push(unit);
+            }
+            cachedList.push({id: NONE, icon: images.empty});
+        }
+        this.vars.cachedList = cachedList;
+        return cachedList;
     };
 }
 

@@ -2,7 +2,7 @@ import {Component, createRef} from 'preact';
 import {css} from 'goober';
 import Panel from './Panel.jsx';
 import Hint from './Hint.jsx';
-import {NONE} from '../SETTINGS.js';
+import {BREAK, NONE} from '../SETTINGS.js';
 import cn from '../utils/cn.js';
 
 // =====================================================================================================================
@@ -40,7 +40,7 @@ class Menu extends Component {
         timeout: null,
     };
     render() {
-        const {list, className, boxClassName, hintClassName, way, offset, maxWidth} = this.props;
+        const {list, className, boxClassName, hintBoxClassName, way, offset, maxWidth} = this.props;
         return (
             <Panel
                 className={className}
@@ -50,13 +50,16 @@ class Menu extends Component {
                 offset={offset}
                 maxWidth={maxWidth}
             >
-                {Object.values(list).map((item) => {
+                {Object.values(list).map((item, index) => {
                     const {Component} = item;
                     if (Component) {
                         return <Component {...item} onClick={this.onIconClick} />;
                     }
+                    if (item.id === BREAK) {
+                        return <br key={index} />;
+                    }
                     return (
-                        <Hint title={item.name} text={item.description} hintClassName={hintClassName}>
+                        <Hint title={item.name} text={item.description} boxClassName={hintBoxClassName}>
                             <img
                                 class={ICON}
                                 key={item.id}
