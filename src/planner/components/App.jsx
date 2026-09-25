@@ -13,6 +13,7 @@ import sanitize from '../helpers/sanitize.js';
 import acceptSkill from '../helpers/acceptSkill.js';
 import Backpack from './Backpack.jsx';
 import DollSlot from './DollSlot.jsx';
+import ArmySlot from './ArmySlot.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -38,6 +39,7 @@ const BG_CSS = css`
 `;
 
 const SKILL_NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7];
+const ARMY_NUMBERS = [0, 1, 2, 3, 4, 5, 6];
 
 const DOLL_SLOTS = [
     {slot: SWORD, storage: 'artifactSword'},
@@ -74,7 +76,7 @@ class App extends Component {
         // console.log('render:', JSON.stringify(this.state, null, 4));
         const {hero, level = 1, backpackFilter} = this.state;
         const {appRef} = this.vars;
-        const {images, heroes, skills, heroClasses, artifacts} = this.props;
+        const {images, heroes, skills, heroClasses, artifacts, units} = this.props;
         const heroData = heroes[hero];
         const heroClassId = getHeroClassId(heroData);
         const heroClassData = heroClasses[heroClassId];
@@ -118,6 +120,9 @@ class App extends Component {
                         images={images}
                         onClick={this.onDollSlotClick}
                     />
+                ))}
+                {ARMY_NUMBERS.map((nr) => (
+                    <ArmySlot key={'unit' + nr} nr={nr} units={units} onChange={this.onUnitChange} />
                 ))}
                 <Reset />
             </div>
@@ -241,6 +246,13 @@ class App extends Component {
             backpackFilter: slot,
             recentDollStorage: storage,
         });
+    };
+
+    /**
+     *
+     */
+    onUnitChange = (nr, id) => {
+        console.log('nr, id:', nr, id);
     };
 
     /**

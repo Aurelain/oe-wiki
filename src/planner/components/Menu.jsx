@@ -20,8 +20,15 @@ const BOX = css`
 `;
 
 const ICON = css`
-    width: 56px;
     cursor: pointer;
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    &:hover {
+        outline-color: yellow;
+    }
+    &:active {
+        outline-color: peru;
+    }
 `;
 
 // =====================================================================================================================
@@ -33,7 +40,7 @@ class Menu extends Component {
         timeout: null,
     };
     render() {
-        const {list, className, boxClassName, way, offset, maxWidth} = this.props;
+        const {list, className, boxClassName, hintClassName, way, offset, maxWidth} = this.props;
         return (
             <Panel
                 className={className}
@@ -49,7 +56,7 @@ class Menu extends Component {
                         return <Component {...item} onClick={this.onIconClick} />;
                     }
                     return (
-                        <Hint title={item.name} text={item.description}>
+                        <Hint title={item.name} text={item.description} hintClassName={hintClassName}>
                             <img
                                 class={ICON}
                                 key={item.id}

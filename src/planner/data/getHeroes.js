@@ -41,7 +41,7 @@ function parseRow(row, extraRow) {
     id = id.replaceAll('&#95;', '_');
 
     // icon
-    const [, icon] = match(iconColumn, /src=['"]([^'"]*)/);
+    const [, icon] = match(iconColumn, /([^ ]*) 2x/);
     if (!icon) {
         return console.warn('No icon!');
     }

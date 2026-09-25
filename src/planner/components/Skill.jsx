@@ -77,6 +77,10 @@ const ALLOWED = css`
 const MENU = css`
     left: 25px;
     top: 52px;
+    & img {
+        width: 56px;
+        height: 56px;
+    }
 `;
 
 const LEVEL = css`

@@ -4,6 +4,7 @@ import getHeroes from './data/getHeroes.js';
 import getSkills from './data/getSkills.js';
 import getHeroClasses from './data/getHeroClasses.js';
 import getArtifacts from './data/getArtifacts.js';
+import getUnits from './data/getUnits.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -78,6 +79,7 @@ async function run(root) {
         skills: await getSkills(lang),
         artifacts: await getArtifacts(lang),
         heroClasses: await getHeroClasses(),
+        units: await getUnits(lang),
     });
     console.log(`Mounted successfully (${Date.now() - now} ms).`);
 }

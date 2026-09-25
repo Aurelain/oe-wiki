@@ -35,6 +35,18 @@ const MENU = css`
     left: 152px;
     top: 84px;
     max-height: 681px;
+    & img {
+        width: 60px;
+        height: 60px;
+        outline: 1px solid transparent;
+        outline-offset: -1px;
+    }
+    & img:hover {
+        outline-color: yellow;
+    }
+    & img:active {
+        outline-color: peru;
+    }
 `;
 
 // =====================================================================================================================
@@ -64,7 +76,7 @@ class Portrait extends Component {
                 {isOpen && (
                     <Menu
                         className={MENU}
-                        maxWidth={508}
+                        maxWidth={543}
                         way={EAST}
                         offset={70}
                         list={heroes}
