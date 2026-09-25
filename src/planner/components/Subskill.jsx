@@ -87,6 +87,7 @@ class Subskill extends Component {
                         list={this.prepareMenuChoices(subs)}
                         onChoice={this.onMenuChoice}
                         way={SOUTH}
+                        selected={subskillData?.id}
                     />
                 )}
             </div>

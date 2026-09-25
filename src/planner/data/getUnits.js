@@ -44,6 +44,7 @@ function parseRow(row) {
     const [, icon] = match(first, /([^ ]*) 2x/);
     const [, name] = match(first, /<a.*?>([^< ][^<]+)/);
     const [, faction] = match(columns[0], /<a.*?>([^< ][^<]+)/);
+    const [, growth = 1] = match(columns[3], /\+(\d+)/);
 
     // csv
     const segments = [];
@@ -55,7 +56,7 @@ function parseRow(row) {
 
     const SPAN = "<span style='white-space:nowrap; margin-right:16px;'>";
     const description = segments.map((content) => SPAN + content + '</span>').join(' ');
-    return {id, icon, name, faction, description};
+    return {id, icon, name, faction, growth, description};
 }
 
 // =====================================================================================================================

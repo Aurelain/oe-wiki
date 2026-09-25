@@ -21,14 +21,17 @@ const BOX = css`
 
 const ICON = css`
     cursor: pointer;
-    outline: 1px solid transparent;
-    outline-offset: -1px;
+    border: 1px solid transparent;
     &:hover {
-        outline-color: yellow;
+        border-color: yellow;
     }
     &:active {
-        outline-color: peru;
+        border-color: peru;
     }
+`;
+
+const SELECTED = css`
+    border-color: cyan !important;
 `;
 
 // =====================================================================================================================
@@ -40,7 +43,7 @@ class Menu extends Component {
         timeout: null,
     };
     render() {
-        const {list, className, boxClassName, hintBoxClassName, way, offset, maxWidth} = this.props;
+        const {list, className, boxClassName, hintBoxClassName, way, offset, maxWidth, selected} = this.props;
         return (
             <Panel
                 className={className}
@@ -51,9 +54,10 @@ class Menu extends Component {
                 maxWidth={maxWidth}
             >
                 {Object.values(list).map((item, index) => {
+                    const isSelected = selected === item.id;
                     const {Component} = item;
                     if (Component) {
-                        return <Component {...item} onClick={this.onIconClick} />;
+                        return <Component {...item} onClick={this.onIconClick} isSelected={isSelected} />;
                     }
                     if (item.id === BREAK) {
                         return <br key={index} />;
@@ -61,7 +65,7 @@ class Menu extends Component {
                     return (
                         <Hint title={item.name} text={item.description} boxClassName={hintBoxClassName}>
                             <img
-                                class={ICON}
+                                class={cn(ICON, isSelected && SELECTED)}
                                 key={item.id}
                                 src={item.icon}
                                 data-id={item.id}

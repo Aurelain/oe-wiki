@@ -1,6 +1,7 @@
 import {Component} from 'preact';
 import {css} from 'goober';
 import {NONE} from '../SETTINGS.js';
+import cn from '../utils/cn.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -25,6 +26,9 @@ const ICON = css`
     height: 48px;
     flex-shrink: 0;
 `;
+const SELECTED = css`
+    background: #0b1521 !important;
+`;
 const TITLE = css`
     font-weight: bold;
     color: #d6bc7c;
@@ -38,9 +42,9 @@ const TEXT = css`
 // =====================================================================================================================
 class SubskillInfo extends Component {
     render() {
-        const {id, icon, name, description, onClick} = this.props;
+        const {id, icon, name, description, onClick, isSelected} = this.props;
         return (
-            <div class={ROOT} data-id={id} onClick={onClick}>
+            <div class={cn(ROOT, isSelected && SELECTED)} data-id={id} onClick={onClick}>
                 <img class={ICON} src={icon} />
                 <div>
                     <div class={TITLE}>{name}</div>

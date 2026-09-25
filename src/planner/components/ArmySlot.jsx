@@ -47,16 +47,8 @@ const MENU = css`
     left: ${HALF}px;
     top: 0;
     & img {
-        outline: 1px solid transparent;
-        outline-offset: -1px;
         width: 50px;
         height: 50px;
-    }
-    & img:hover {
-        outline-color: yellow;
-    }
-    & img:active {
-        outline-color: peru;
     }
 `;
 const HINT = css`
@@ -157,6 +149,7 @@ class ArmySlot extends PureComponent {
                         offset={FIRST + nr * STEP + HALF - 32}
                         list={this.listUnits()}
                         onChoice={this.onMenuChoice}
+                        selected={unit?.id}
                     />
                 )}
             </div>

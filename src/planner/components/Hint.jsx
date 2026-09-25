@@ -46,7 +46,7 @@ class Hint extends Component {
                 onPointerLeave={this.onRootPointerLeave}
                 onClick={onClick}
             >
-                {kids[0]}
+                {kids}
                 {isOpen &&
                     Boolean(title || text) &&
                     createPortal(

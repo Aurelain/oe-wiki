@@ -123,6 +123,7 @@ class Skill extends Component {
                         list={this.filterSkills(skills)}
                         onChoice={this.onMenuChoice}
                         way={SOUTH}
+                        selected={id}
                     />
                 )}
                 {skillData && (
