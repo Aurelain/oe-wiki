@@ -74,7 +74,7 @@ class Backpack extends Component {
         sorting: null,
     };
     render() {
-        const {images, filter, artifacts, onArtifactClick} = this.props;
+        const {images, filter, artifacts, onArtifactClick, usedIds} = this.props;
         const list = buildList(artifacts, filter);
         return (
             <div class={ROOT}>
@@ -89,7 +89,12 @@ class Backpack extends Component {
                 </div>
                 <div class={INVENTORY}>
                     {list.map((info) => (
-                        <InventorySlot info={info} onClick={onArtifactClick} images={images} />
+                        <InventorySlot
+                            info={info}
+                            onClick={onArtifactClick}
+                            images={images}
+                            isSelected={usedIds.has(info?.id)}
+                        />
                     ))}
                 </div>
             </div>

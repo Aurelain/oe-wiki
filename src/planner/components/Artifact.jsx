@@ -2,6 +2,7 @@ import {Component} from 'preact';
 import {css} from 'goober';
 import {COMMON, EPIC, LEGENDARY, RARE} from '../SETTINGS.js';
 import Hint from './Hint.jsx';
+import cn from '../utils/cn.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -21,6 +22,9 @@ const ROOT_CSS = css`
     &:active {
         border-color: peru;
     }
+`;
+const IS_SELECTED = css`
+    border-color: cyan !important;
 `;
 
 const CONTAINER_CSS = css`
@@ -44,11 +48,11 @@ const RARITY_TO_IMAGE = {
 // =====================================================================================================================
 class Artifact extends Component {
     render() {
-        const {info, images} = this.props;
+        const {info, images, isSelected} = this.props;
         const {icon, rarity, name, description} = info;
         const bg = images[RARITY_TO_IMAGE[rarity]];
         return (
-            <Hint className={ROOT_CSS} title={name} text={description}>
+            <Hint className={cn(ROOT_CSS, isSelected && IS_SELECTED)} title={name} text={description}>
                 <div class={CONTAINER_CSS} style={{backgroundImage: `url(${bg})`}}>
                     <img src={icon} />
                 </div>

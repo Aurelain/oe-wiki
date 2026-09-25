@@ -124,6 +124,7 @@ class App extends Component {
                     onFilterClick={this.onFilterClick}
                     onArtifactClick={this.onArtifactClick}
                     artifacts={artifacts}
+                    usedIds={new Set(Object.values(this.state))}
                 />
                 {DOLL_SLOTS.map((item) => (
                     <DollSlot

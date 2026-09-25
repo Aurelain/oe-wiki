@@ -2,6 +2,7 @@ import {Component} from 'preact';
 import {css} from 'goober';
 import Menu from './Menu.jsx';
 import {EAST} from '../SETTINGS.js';
+import cn from '../utils/cn.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -27,8 +28,27 @@ const MEDALLION_CSS = css`
     -webkit-mask: url(#compoundMask);
     mask: url(#compoundMask);
     cursor: pointer;
-    /*background: red;*/
-    /*filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));*/
+    color: transparent;
+    &:hover {
+        color: yellow;
+    }
+    &:active {
+        color: peru;
+    }
+`;
+
+const IS_OPEN = css`
+    color: yellow;
+`;
+const BORDER = css`
+    position: absolute;
+    left: 18px;
+    top: 23px;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    border: solid 2px currentColor;
+    mask-image: linear-gradient(to top, black 0%, transparent 60%, transparent 100%);
 `;
 
 const MENU = css`
@@ -54,7 +74,7 @@ class Portrait extends Component {
         const {isOpen} = this.state;
         return (
             <div className={ROOT_CSS}>
-                <div className={MEDALLION_CSS} onClick={this.onMedallionClick}>
+                <div className={cn(MEDALLION_CSS, isOpen && IS_OPEN)} onClick={this.onMedallionClick}>
                     <svg width="0" height="0" style="position:absolute">
                         <defs>
                             <mask id="compoundMask" maskContentUnits="objectBoundingBox">
@@ -64,6 +84,7 @@ class Portrait extends Component {
                         </defs>
                     </svg>
                     {hero && <img className={PIC_CSS} src={heroes[hero].portrait} />}
+                    <div className={BORDER} />
                 </div>
                 {isOpen && (
                     <Menu

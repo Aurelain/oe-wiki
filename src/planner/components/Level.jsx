@@ -6,18 +6,26 @@ import {css} from 'goober';
 // =====================================================================================================================
 const ROOT = css`
     position: absolute;
-    left: 52px;
-    top: 113px;
-    width: 47px;
-    height: 47px;
+    left: 50px;
+    top: 111px;
+    width: 51px;
+    height: 51px;
     border-radius: 50%;
     cursor: pointer;
     background-size: cover;
+    background-repeat: no-repeat;
     line-height: 47px;
     text-align: center;
     color: #bea76f;
     font-size: 18px;
     text-shadow: 1px 1px 2px #000;
+    border: solid 2px transparent;
+    &:hover {
+        border-color: yellow;
+    }
+    &:active {
+        border-color: peru;
+    }
 `;
 
 // =====================================================================================================================
