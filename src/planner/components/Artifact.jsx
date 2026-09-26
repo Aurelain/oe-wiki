@@ -49,7 +49,7 @@ const RARITY_TO_IMAGE = {
 // =====================================================================================================================
 class Artifact extends Component {
     render() {
-        const {info, images, isSelected, usedArtifacts} = this.props;
+        const {info, images, isSelected, usedArtifacts, artifacts} = this.props;
         // console.log('Artifact', usedArtifacts);
         const {icon, rarity, name, description} = info;
         const bg = images[RARITY_TO_IMAGE[rarity]];
@@ -59,7 +59,7 @@ class Artifact extends Component {
                 title={name}
                 text={description}
                 appendage={ArtifactSet}
-                appendageProps={{usedArtifacts}}
+                appendageProps={{usedArtifacts, artifacts, currentArtifact: info}}
             >
                 <div class={CONTAINER_CSS} style={{backgroundImage: `url(${bg})`}}>
                     <img src={icon} />

@@ -95,6 +95,7 @@ class Backpack extends PureComponent {
                             onClick={onArtifactClick}
                             images={images}
                             isSelected={usedArtifacts.has(info?.id)}
+                            artifacts={artifacts}
                             usedArtifacts={usedArtifacts}
                         />
                     ))}

@@ -44,13 +44,21 @@ const REMOVE = css`
 // =====================================================================================================================
 class InventorySlot extends Component {
     render() {
-        const {info, images, isSelected, usedArtifacts} = this.props;
+        const {info, images, isSelected, usedArtifacts, artifacts} = this.props;
         const hasClick = info !== undefined;
         return (
             <div class={cn(ROOT, hasClick && HAS_CLICK)} onClick={hasClick && this.onRootClick}>
                 {!info && <img class={SLOT} src={images.inventory} />}
                 {info === null && <img class={REMOVE} src={images.empty} />}
-                {info && <Artifact info={info} images={images} isSelected={isSelected} usedArtifacts={usedArtifacts} />}
+                {info && (
+                    <Artifact
+                        info={info}
+                        images={images}
+                        isSelected={isSelected}
+                        usedArtifacts={usedArtifacts}
+                        artifacts={artifacts}
+                    />
+                )}
             </div>
         );
     }

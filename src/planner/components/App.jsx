@@ -137,6 +137,7 @@ class App extends Component {
                         filled={artifacts.list[this.state[item.storage]]}
                         images={images}
                         onClick={this.onDollSlotClick}
+                        artifacts={artifacts}
                         usedArtifacts={usedArtifacts}
                     />
                 ))}
