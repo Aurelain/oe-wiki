@@ -81,6 +81,7 @@ const SLOT_TO_STORAGE = computeSlotToStorage();
 class App extends Component {
     vars = {
         appRef: createRef(),
+        usedArtifacts: new Set(),
     };
     state = {
         backpackFilter: ALL,
@@ -88,7 +89,7 @@ class App extends Component {
     };
 
     render() {
-        // console.log('render:', JSON.stringify(this.state, null, 4));
+        // console.log('App:', JSON.stringify(this.state, null, 4));
         const {hero, level = 1, backpackFilter} = this.state;
         const {appRef} = this.vars;
         const {images, heroes, skills, heroClasses, artifacts, units} = this.props;
@@ -103,7 +104,7 @@ class App extends Component {
                 <Portrait hero={hero} heroes={heroes} onHeroChange={this.onHeroChange} />
                 <Specialization heroData={heroData} />
                 {heroData && <Labels heroData={heroData} heroClassData={heroClassData} level={level} />}
-                {heroData && <Level levelUrl={images.level} value={level} onChance={this.onLevelChange} />}
+                <Level levelUrl={images.level} value={level} onChance={this.onLevelChange} />
                 {SKILL_NUMBERS.map((nr) => (
                     <Skill
                         key={'skill' + nr}
@@ -124,7 +125,7 @@ class App extends Component {
                     onFilterClick={this.onFilterClick}
                     onArtifactClick={this.onArtifactClick}
                     artifacts={artifacts}
-                    usedIds={new Set(Object.values(this.state))}
+                    usedIds={this.computeUsedArtifacts()}
                 />
                 {DOLL_SLOTS.map((item) => (
                     <DollSlot
@@ -303,6 +304,23 @@ class App extends Component {
         const {heroes, skills} = this.props;
         const safeState = sanitize(futureState, heroes, skills);
         Persistence.remember(safeState);
+    };
+
+    /**
+     *
+     */
+    computeUsedArtifacts = () => {
+        const output = new Set();
+        for (const {storage} of DOLL_SLOTS) {
+            const value = this.state[storage];
+            value && output.add(value);
+        }
+        const {usedArtifacts} = this.vars;
+        if (output.size === usedArtifacts.size && output.isSubsetOf(usedArtifacts)) {
+            return usedArtifacts;
+        }
+        this.vars.usedArtifacts = output;
+        return output;
     };
 }
 

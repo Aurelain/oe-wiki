@@ -1,4 +1,4 @@
-import {Component} from 'preact';
+import {PureComponent} from 'preact/compat';
 import {css} from 'goober';
 import {ALL, ARMOR, BANNER, BELT, BOOTS, CAPE, HELMET, POUCH, RING, SHIELD, SWORD} from '../SETTINGS.js';
 import InventorySlot from './InventorySlot.jsx';
@@ -69,11 +69,12 @@ const FILTER_TO_ICON = {
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
-class Backpack extends Component {
+class Backpack extends PureComponent {
     state = {
         sorting: null,
     };
     render() {
+        // console.log('Backpack:');
         const {images, filter, artifacts, onArtifactClick, usedIds} = this.props;
         const list = buildList(artifacts, filter);
         return (

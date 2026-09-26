@@ -2,6 +2,7 @@ import {Component} from 'preact';
 import {css} from 'goober';
 import cn from '../utils/cn.js';
 import upgradeNumbers from '../helpers/upgradeNumbers.js';
+import Hint from './Hint.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -40,35 +41,43 @@ const HERO_CLASS_ICON = css`
 `;
 
 const ATTRIBUTE = css`
+    width: 62px;
+    height: 22px;
+    /*background: rgba(255, 0, 0, 0.3);*/
+`;
+const ATTACK = css`
+    left: 158px;
+    top: 81px;
+`;
+const DEFENSE = css`
+    left: 231px;
+    top: 81px;
+`;
+const SPELL_POWER = css`
+    left: 158px;
+    top: 126px;
+`;
+const KNOWLEDGE = css`
+    left: 231px;
+    top: 126px;
+`;
+const LUCK = css`
+    left: 158px;
+    top: 172px;
+`;
+const MORALE = css`
+    left: 231px;
+    top: 172px;
+`;
+const ATTRIBUTE_TEXT = css`
+    position: absolute;
+    left: 42px;
+    top: 11px;
     width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     white-space: nowrap;
-`;
-const ATTACK = css`
-    left: 197px;
-    top: 80px;
-`;
-const DEFENSE = css`
-    left: 272px;
-    top: 80px;
-`;
-const SPELL_POWER = css`
-    left: 197px;
-    top: 125px;
-`;
-const KNOWLEDGE = css`
-    left: 272px;
-    top: 125px;
-`;
-const LUCK = css`
-    left: 197px;
-    top: 171px;
-`;
-const MORALE = css`
-    left: 272px;
-    top: 171px;
 `;
 
 // =====================================================================================================================
@@ -83,12 +92,24 @@ class Labels extends Component {
                 <div class={NAME_CSS}>{h.name}</div>
                 <div class={CLASS_CSS}>{h.className}</div>
                 <img class={HERO_CLASS_ICON} src={h.classIcon} />
-                <div class={cn(ATTRIBUTE, ATTACK)}>{attack}</div>
-                <div class={cn(ATTRIBUTE, DEFENSE)}>{defense}</div>
-                <div class={cn(ATTRIBUTE, SPELL_POWER)}>{spellPower}</div>
-                <div class={cn(ATTRIBUTE, KNOWLEDGE)}>{knowledge}</div>
-                <div class={cn(ATTRIBUTE, LUCK)}>{hc.luck}</div>
-                <div class={cn(ATTRIBUTE, MORALE)}>{hc.morale}</div>
+                <Hint className={cn(ATTRIBUTE, ATTACK)} text={hc.chances1[0] + '%'}>
+                    <div className={ATTRIBUTE_TEXT}>{attack}</div>
+                </Hint>
+                <Hint className={cn(ATTRIBUTE, DEFENSE)} text={hc.chances1[1] + '%'}>
+                    <div className={ATTRIBUTE_TEXT}>{defense}</div>
+                </Hint>
+                <Hint className={cn(ATTRIBUTE, SPELL_POWER)} text={hc.chances1[2] + '%'}>
+                    <div className={ATTRIBUTE_TEXT}>{spellPower}</div>
+                </Hint>
+                <Hint className={cn(ATTRIBUTE, KNOWLEDGE)} text={hc.chances1[3] + '%'}>
+                    <div className={ATTRIBUTE_TEXT}>{knowledge}</div>
+                </Hint>
+                <Hint className={cn(ATTRIBUTE, LUCK)}>
+                    <div className={ATTRIBUTE_TEXT}>{hc.luck}</div>
+                </Hint>
+                <Hint className={cn(ATTRIBUTE, MORALE)}>
+                    <div className={ATTRIBUTE_TEXT}>{hc.morale}</div>
+                </Hint>
             </div>
         );
     }
