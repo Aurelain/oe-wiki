@@ -90,12 +90,12 @@ const POSITIONS = {
 // =====================================================================================================================
 class DollSlot extends PureComponent {
     render() {
-        const {filled, images, storage, slotTranslation} = this.props;
+        const {filled, images, storage, slotTranslation, usedArtifacts} = this.props;
         const positionClassName = POSITIONS[storage];
         return (
             <div class={cn(ROOT, positionClassName)} onClick={this.onRootClick}>
                 {!filled && <Hint title={slotTranslation} className={EMPTY}></Hint>}
-                {filled && <Artifact info={filled} images={images} />}
+                {filled && <Artifact info={filled} images={images} usedArtifacts={usedArtifacts} />}
             </div>
         );
     }

@@ -96,6 +96,7 @@ class App extends Component {
         const heroData = heroes[hero];
         const heroClassId = getHeroClassId(heroData);
         const heroClassData = heroClasses[heroClassId];
+        const usedArtifacts = this.computeUsedArtifacts();
 
         return (
             <div className={APP_CSS} ref={appRef} onContextMenu={this.onRootContextMenu}>
@@ -125,7 +126,7 @@ class App extends Component {
                     onFilterClick={this.onFilterClick}
                     onArtifactClick={this.onArtifactClick}
                     artifacts={artifacts}
-                    usedIds={this.computeUsedArtifacts()}
+                    usedArtifacts={usedArtifacts}
                 />
                 {DOLL_SLOTS.map((item) => (
                     <DollSlot
@@ -136,6 +137,7 @@ class App extends Component {
                         filled={artifacts.list[this.state[item.storage]]}
                         images={images}
                         onClick={this.onDollSlotClick}
+                        usedArtifacts={usedArtifacts}
                     />
                 ))}
                 {ARMY_NUMBERS.map((nr) => (

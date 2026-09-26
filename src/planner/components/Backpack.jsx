@@ -74,8 +74,8 @@ class Backpack extends PureComponent {
         sorting: null,
     };
     render() {
-        // console.log('Backpack:');
-        const {images, filter, artifacts, onArtifactClick, usedIds} = this.props;
+        const {images, filter, artifacts, onArtifactClick, usedArtifacts} = this.props;
+        // console.log('Backpack:', usedArtifacts);
         const list = buildList(artifacts, filter);
         return (
             <div class={ROOT}>
@@ -94,7 +94,8 @@ class Backpack extends PureComponent {
                             info={info}
                             onClick={onArtifactClick}
                             images={images}
-                            isSelected={usedIds.has(info?.id)}
+                            isSelected={usedArtifacts.has(info?.id)}
+                            usedArtifacts={usedArtifacts}
                         />
                     ))}
                 </div>

@@ -3,6 +3,7 @@ import {css} from 'goober';
 import {COMMON, EPIC, LEGENDARY, RARE} from '../SETTINGS.js';
 import Hint from './Hint.jsx';
 import cn from '../utils/cn.js';
+import ArtifactSet from './ArtifactSet.jsx';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -48,11 +49,18 @@ const RARITY_TO_IMAGE = {
 // =====================================================================================================================
 class Artifact extends Component {
     render() {
-        const {info, images, isSelected} = this.props;
+        const {info, images, isSelected, usedArtifacts} = this.props;
+        // console.log('Artifact', usedArtifacts);
         const {icon, rarity, name, description} = info;
         const bg = images[RARITY_TO_IMAGE[rarity]];
         return (
-            <Hint className={cn(ROOT_CSS, isSelected && IS_SELECTED)} title={name} text={description}>
+            <Hint
+                className={cn(ROOT_CSS, isSelected && IS_SELECTED)}
+                title={name}
+                text={description}
+                appendage={ArtifactSet}
+                appendageProps={{usedArtifacts}}
+            >
                 <div class={CONTAINER_CSS} style={{backgroundImage: `url(${bg})`}}>
                     <img src={icon} />
                 </div>

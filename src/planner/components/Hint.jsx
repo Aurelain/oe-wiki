@@ -35,7 +35,19 @@ class Hint extends Component {
         isOpen: false,
     };
     render() {
-        const {text, title, way = NORTH, children, boxClassName, className, onClick} = this.props;
+        const {
+            text,
+            title,
+            way = NORTH,
+            children,
+            boxClassName,
+            className,
+            onClick,
+            appendage,
+            appendageProps,
+        } = this.props;
+        // console.log('Hint:', appendageProps);
+
         const {isOpen} = this.state;
         const kids = Array.isArray(children) ? children : [children];
         return (
@@ -57,7 +69,12 @@ class Hint extends Component {
                             way={way}
                             maxWidth={320}
                         >
-                            <HintContent title={title} text={text} />
+                            <HintContent
+                                title={title}
+                                text={text}
+                                appendage={appendage}
+                                appendageProps={appendageProps}
+                            />
                         </Panel>,
                         document.body,
                     )}

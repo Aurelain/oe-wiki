@@ -4,38 +4,20 @@ import {css} from 'goober';
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-const ROOT = css`
-    padding: 6px 8px;
-`;
-const TITLE = css`
-    font-weight: bold;
-    color: #d6bc7c;
-    padding-bottom: 4px;
-`;
-const TEXT = css`
-    color: #fff;
-`;
+const ROOT = css``;
 
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
-class HintContent extends Component {
+class ArtifactSet extends Component {
     render() {
-        const {title, text, appendage, appendageProps} = this.props;
-        // console.log('HintContent:', appendageProps);
-
-        const Appendage = appendage;
-        return (
-            <div class={ROOT}>
-                {title && <div class={TITLE}>{title}</div>}
-                {text && <div class={TEXT} dangerouslySetInnerHTML={{__html: text}} />}
-                {Appendage && <Appendage {...appendageProps} />}
-            </div>
-        );
+        const {usedArtifacts} = this.props;
+        console.log('ArtifactSet:', usedArtifacts);
+        return <div class={ROOT}>foo</div>;
     }
 }
 
 // =====================================================================================================================
 //  E X P O R T
 // =====================================================================================================================
-export default HintContent;
+export default ArtifactSet;
