@@ -1,4 +1,5 @@
 import to from './utils/to.js';
+import findFiles from './helpers/findFiles.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -7,6 +8,7 @@ let actuatorFunction;
 let addMessageHandler;
 let removeMessageHandler;
 let postMessageToHost;
+let gameDir;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -14,7 +16,12 @@ let postMessageToHost;
 /**
  *
  */
-async function initialize(actuator) {
+async function initialize(actuator, forcedGameDir = '') {
+    if (forcedGameDir) {
+        gameDir = forcedGameDir;
+        console.log(await actuator());
+        return;
+    }
     await detectEnvironment();
     actuatorFunction = actuator;
     addMessageHandler(onMessageFromParent);
@@ -25,14 +32,24 @@ async function initialize(actuator) {
  *
  */
 async function find(...args) {
-    return await sendAndReceive('find', args);
+    if (!gameDir) {
+        return await sendAndReceive('find', args);
+    } else {
+        const [pattern, exclude, onlyFirstResult] = args;
+        const result = await findFiles(gameDir, pattern, exclude, onlyFirstResult);
+        return result;
+    }
 }
 
 /**
  *
  */
 function log(...args) {
-    send('log', args);
+    if (!gameDir) {
+        send('log', args);
+    } else {
+        console.log(...args);
+    }
 }
 
 // =====================================================================================================================

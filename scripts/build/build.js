@@ -133,6 +133,7 @@ async function createBuild(config) {
         sourcemap: isDev,
         jsx: 'automatic', // for planner
         jsxImportSource: 'preact', // for planner
+        external: ['node:fs/promises', 'node:path'],
         outfile,
     });
 

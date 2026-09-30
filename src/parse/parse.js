@@ -156,4 +156,5 @@ function convertValue(value) {
 //  R U N
 // =====================================================================================================================
 API.initialize(parse);
+// API.initialize(parse, '/home/user/.steam/debian-installation/steamapps/common/Heroes of Might and Magic Olden Era');
 export default parse;

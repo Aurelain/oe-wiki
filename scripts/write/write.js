@@ -1,5 +1,5 @@
 import {Worker} from 'node:worker_threads';
-import findFiles from './findFiles.js';
+import findFiles from '../../src/parse/helpers/findFiles.js';
 import fs from 'node:fs';
 
 // =====================================================================================================================
@@ -20,7 +20,7 @@ async function write() {
     const time = Date.now();
     await loadWorker();
     const results = await sendAndReceive(worker, 'run');
-    console.log(Date.now() - time);
+    console.log(`Parsing took ${Date.now() - time} ms.`);
 
     for (const key in results) {
         const path = WIKI_MIRROR_DIR + '/' + key;
