@@ -82,7 +82,7 @@ const DEFAULT_DATA = {
     },
 };
 
-const MAX_EVALUATION_FAILURES = 1;
+const MAX_EVALUATION_FAILURES = 100;
 let evaluationFailures;
 let words;
 let args;
@@ -112,7 +112,7 @@ function translate(translationRequests) {
         const data = generateData(request);
         for (const lang in LANGUAGES) {
             if (DEBUG.size && lang !== 'en') {
-                // continue;
+                continue;
             }
             const langMap = words[lang];
             const def = {_type: 'TranslationDef'};
@@ -285,7 +285,7 @@ function adaptTranslation(textId, request, langMap, data, isDebug = false) {
         return;
     }
     const {target_id} = request;
-    isDebug = isDebug || (DEBUG.size && DEBUG.has(target_id) && langMap._lang === 'en');
+    isDebug = isDebug || (DEBUG.size && (DEBUG.has(target_id) || DEBUG.has(textId)) && langMap._lang === 'en');
 
     const text = langMap.get(textId);
     isDebug && console.log('===========' + textId);
@@ -333,7 +333,9 @@ function resolveArg(textId, nr, langMap, request, data, isDebug) {
     if (error) {
         evaluationFailures++;
         const extra = error.extra || [];
-        log('Failed to evaluate!', error.message, ...extra);
+        log('Failed to evaluate!');
+        log(`${textId}: ${langMap.get(textId)}`);
+        log(error.message, ...extra);
         if (evaluationFailures >= MAX_EVALUATION_FAILURES) {
             assume(false);
         }
