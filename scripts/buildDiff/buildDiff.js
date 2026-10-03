@@ -14,7 +14,7 @@ const OUTPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'dev'
 /**
  *
  */
-async function diff() {
+async function buildDiff() {
     try {
         await build('src/diff/diff.js', '-o', OUTPUT_DIR, '--dev');
         // await build('src/planner/planner.js', '-o', OUTPUT_DIR);
@@ -71,4 +71,4 @@ function sleep(ms) {
 // =====================================================================================================================
 //  R U N
 // =====================================================================================================================
-diff();
+buildDiff();

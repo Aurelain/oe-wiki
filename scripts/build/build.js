@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import esbuild from 'esbuild';
+import PluginMockNodeJs from './PluginMockNodeJs.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -133,7 +134,7 @@ async function createBuild(config) {
         sourcemap: isDev,
         jsx: 'automatic', // for planner
         jsxImportSource: 'preact', // for planner
-        external: ['node:fs/promises', 'node:path'],
+        plugins: [PluginMockNodeJs],
         outfile,
     });
 
@@ -153,5 +154,5 @@ function displaySummary(outfile, milliseconds) {
 // =====================================================================================================================
 //  R U N
 // =====================================================================================================================
-process.argv.join('').includes('build') && (await build(...process.argv));
+process.argv.join('').includes('build.js') && (await build(...process.argv));
 export default build;

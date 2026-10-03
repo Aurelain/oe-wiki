@@ -39,7 +39,7 @@ import UnitStat from './parsers/UnitStat.js';
 // =====================================================================================================================
 const DEBUG = new Set([
     // -- Use this to focus on only some parsers:
-    // Difficulty,
+    Difficulty,
 ]);
 
 const PARSERS = [
@@ -80,7 +80,11 @@ const PARSERS = [
 /**
  *
  */
-async function parse() {
+async function parse(customApi) {
+    if (customApi) {
+        API.redirect(customApi);
+    }
+
     const zipHub = await unzipCore();
     buildCache(zipHub);
 

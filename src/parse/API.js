@@ -1,5 +1,4 @@
 import to from './utils/to.js';
-import findFiles from './helpers/findFiles.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -8,7 +7,7 @@ let actuatorFunction;
 let addMessageHandler;
 let removeMessageHandler;
 let postMessageToHost;
-let gameDir;
+let redirectApi;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -16,41 +15,40 @@ let gameDir;
 /**
  *
  */
-async function initialize(actuator, forcedGameDir = '') {
-    if (forcedGameDir) {
-        gameDir = forcedGameDir;
-        const results = await actuator();
-        console.log('Parsed count:', Object.values(results).length);
-        return;
+async function initialize(actuator) {
+    const hasPreparedEnvironment = await prepareEnvironment();
+    if (hasPreparedEnvironment) {
+        actuatorFunction = actuator;
+        addMessageHandler(onMessageFromParent);
+        send('ready');
     }
-    await detectEnvironment();
-    actuatorFunction = actuator;
-    addMessageHandler(onMessageFromParent);
-    send('ready');
 }
 
 /**
  *
  */
 async function find(...args) {
-    if (!gameDir) {
-        return await sendAndReceive('find', args);
-    } else {
-        const [pattern, exclude, onlyFirstResult] = args;
-        const result = await findFiles(gameDir, pattern, exclude, onlyFirstResult);
-        return result;
+    if (redirectApi) {
+        return await redirectApi.find(...args);
     }
+    return await sendAndReceive('find', args);
 }
 
 /**
  *
  */
 function log(...args) {
-    if (!gameDir) {
-        send('log', args);
-    } else {
-        console.log(...args);
+    if (redirectApi) {
+        return redirectApi.log(...args);
     }
+    send('log', args);
+}
+
+/**
+ *
+ */
+function redirect(otherApi) {
+    redirectApi = otherApi;
 }
 
 // =====================================================================================================================
@@ -59,13 +57,14 @@ function log(...args) {
 /**
  *
  */
-async function detectEnvironment() {
+async function prepareEnvironment() {
     const isNode = typeof process !== 'undefined' && process.versions?.node !== null;
     if (isNode) {
         const nodeWorkerModule = 'node:worker_threads'; // hide the import from ESLint
         const {parentPort} = await import(nodeWorkerModule);
         if (!parentPort) {
-            throw new Error('No parent port!');
+            // throw new Error('No parent port!');
+            return;
         }
         addMessageHandler = (fn) => parentPort.on('message', fn);
         removeMessageHandler = (fn) => parentPort.off('message', fn);
@@ -75,6 +74,7 @@ async function detectEnvironment() {
         removeMessageHandler = (fn) => self.removeEventListener('message', fn);
         postMessageToHost = (data) => self.postMessage(data);
     }
+    return true;
 }
 
 /**
@@ -132,5 +132,6 @@ const API = {
     initialize,
     find,
     log,
+    redirect,
 };
 export default API;

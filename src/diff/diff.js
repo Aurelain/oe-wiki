@@ -1,6 +1,13 @@
+import compareArchives from './compareArchives.js';
+import BrowserApi from '../helpers/BrowserApi.js';
+import parse from '../parse/parse.js';
+
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
+// const PARSE = 'http://localhost:8000/parse/parse.js';
+const PARSE = parse;
+
 let archiveA;
 let archiveB;
 let outputElement;
@@ -51,7 +58,7 @@ function run(root) {
     root.querySelector('.inputA').addEventListener('change', onInputAChange);
     root.querySelector('.inputB').addEventListener('change', onInputBChange);
     root.querySelector('.btnCompare').addEventListener('click', onBtnCompareClick);
-    outputElement = root.querySelector('.inputA');
+    outputElement = root.querySelector('.output');
 }
 
 /**
@@ -77,8 +84,9 @@ function onInputBChange(event) {
 /**
  *
  */
-function onBtnCompareClick() {
-    console.log('hello');
+async function onBtnCompareClick() {
+    const output = await compareArchives(archiveA, archiveB, BrowserApi, PARSE);
+    outputElement.value = output;
 }
 
 // =====================================================================================================================
