@@ -19,7 +19,8 @@ let gameDir;
 async function initialize(actuator, forcedGameDir = '') {
     if (forcedGameDir) {
         gameDir = forcedGameDir;
-        console.log(await actuator());
+        const results = await actuator();
+        console.log('Parsed count:', Object.values(results).length);
         return;
     }
     await detectEnvironment();

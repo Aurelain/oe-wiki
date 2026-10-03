@@ -7,7 +7,8 @@
         "parse": "node src/parse/parse.js",
         "build": "node scripts/build/build",
         "write": "node scripts/write/write",
-        "planner": "node scripts/planner/planner.js"
+        "planner": "node scripts/planner/planner.js",
+        "diff": "node scripts/diff/diff.js"
     },
     "dependencies": {
         "diff-match-patch": "^1.0.5",
