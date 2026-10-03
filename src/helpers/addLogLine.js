@@ -1,3 +1,5 @@
+import styled from '../utils/styled.js';
+
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
@@ -8,6 +10,65 @@ const ICONS = {
     warning: '⚠️',
     error: '⛔',
 };
+const LOG_HOST = 'tool-log';
+const CSS = styled`
+    .${LOG_HOST} {
+        overflow-y: scroll;
+        height: 200px;
+        flex-shrink: 0;
+    }
+
+    .${LOG_HOST} table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .${LOG_HOST} th {
+        text-align: left;
+    }
+
+    .${LOG_HOST} th,
+    .${LOG_HOST} td {
+        border: solid 1px rgba(255, 255, 255, 0.1);
+        border-left: none;
+        border-right: none;
+        vertical-align: top;
+        padding: 4px;
+    }
+
+    .${LOG_HOST} th {
+        border-top: none;
+    }
+
+    .${LOG_HOST} table {
+        border: solid 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .${LOG_HOST} th {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .${LOG_HOST} td:nth-child(1) {
+        width: 90px;
+    }
+
+    .${LOG_HOST} td:nth-child(2),
+    .${LOG_HOST} th:nth-child(2) {
+        width: 20px;
+        text-align: center;
+    }
+
+    .${LOG_HOST} td > div > div {
+        cursor: pointer;
+        color: yellow;
+    }
+
+    .${LOG_HOST} textarea {
+        width: calc(100% - 8px);
+        height: 200px;
+    }
+`;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -15,7 +76,7 @@ const ICONS = {
 /**
  *
  */
-function log(message, ...args) {
+function addLogLine(message, ...args) {
     const type = message.endsWith('!') ? (message.startsWith('!') ? 'error' : 'warning') : 'info';
     add(type, message, args);
 }
@@ -25,6 +86,16 @@ function log(message, ...args) {
  */
 function setLogHost(element) {
     host = element;
+    host.classList.add(LOG_HOST);
+    host.innerHTML = `
+        <style>${CSS}</style>
+        <table class='wikitable'>
+            <tr>
+                <th>Timestamp</th>
+                <th>🆗</th>
+                <th>Message</th>
+            </tr>
+        </table>`;
     table = host.querySelector('table');
 }
 
@@ -116,4 +187,4 @@ function stringifyArgs(args) {
 //  E X P O R T
 // =====================================================================================================================
 export {setLogHost};
-export default log;
+export default addLogLine;

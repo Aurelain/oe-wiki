@@ -1,5 +1,5 @@
 import HTML_USER from './html/HTML_USER.js';
-import log, {setLogHost} from './log.js';
+import addLogLine, {setLogHost} from '../helpers/addLogLine.js';
 import {LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
 import {readFromDb} from './utils/LocalDb.js';
@@ -34,7 +34,7 @@ async function setup() {
     // Markup:
     root.innerHTML = isDev ? HTML_DEV : HTML_USER;
     setLogHost(root.querySelector('.' + LOG_HOST));
-    log('Initialized.');
+    addLogLine('Initialized.');
 
     // Import parser:
     await importParser(parsePath);
@@ -52,9 +52,9 @@ async function setup() {
 async function importParser(url) {
     // log('Connecting to parser...');
     parser = new Worker(`data:application/javascript,importScripts('${url}?${Math.random()}');`);
-    parser.addEventListener('error', () => log('!Parser error!'));
+    parser.addEventListener('error', () => addLogLine('!Parser error!'));
     await sendAndReceive(parser, 'ready');
-    log('Connected to parser.');
+    addLogLine('Connected to parser.');
     parser.addEventListener('message', onMessageFromParser);
 }
 
@@ -75,7 +75,7 @@ async function onMessageFromParser(event) {
         }
         case 'log': {
             // console.log(`Parent received a "${type}" command.`);
-            log(...payload);
+            addLogLine(...payload);
             break;
         }
     }
@@ -85,9 +85,9 @@ async function onMessageFromParser(event) {
  *
  */
 async function runParse() {
-    log('Started parsing...');
+    addLogLine('Started parsing...');
     const result = await sendAndReceive(parser, 'run');
-    log(`Received ${Object.keys(result).length} parsing results.`);
+    addLogLine(`Received ${Object.keys(result).length} parsing results.`);
     return result;
 }
 

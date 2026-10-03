@@ -1,4 +1,4 @@
-import styled from '../utils/styled.js';
+import styled from '../../utils/styled.js';
 import CSS_COMMON from './CSS_COMMON.js';
 
 // noinspection CssUnusedSymbol

@@ -1,4 +1,4 @@
-import log from '../log.js';
+import addLogLine from '../../helpers/addLogLine.js';
 import convertPathToTitle from './convertPathToTitle.js';
 import {ask} from './ask.js';
 
@@ -11,14 +11,14 @@ import {ask} from './ask.js';
 async function savePages(parserResult, mirrorResult) {
     const updates = findUpdates(parserResult, mirrorResult);
     if (!updates.length) {
-        log('All pages are already updated.');
+        addLogLine('All pages are already updated.');
         return true;
     }
 
     // Csrf
     const csrfToken = await getCsrfToken();
     if (!csrfToken) {
-        log('Cannot get csrf token!');
+        addLogLine('Cannot get csrf token!');
         return false;
     }
 
@@ -30,7 +30,7 @@ async function savePages(parserResult, mirrorResult) {
             count++;
         }
     }
-    log(`Successfully saved ${count} pages.`);
+    addLogLine(`Successfully saved ${count} pages.`);
     return true;
 }
 
@@ -69,7 +69,7 @@ async function getCsrfToken() {
  *
  */
 async function savePage(title, content, csrfToken) {
-    log(`Saving content for "${title}"...`);
+    addLogLine(`Saving content for "${title}"...`);
     const editResponse = await ask({
         method: 'POST',
         action: 'edit',
@@ -78,7 +78,7 @@ async function savePage(title, content, csrfToken) {
         token: csrfToken,
     });
     if (editResponse?.edit?.result !== 'Success') {
-        log('Save failed!', title, content);
+        addLogLine('Save failed!', title, content);
         return false;
     }
     return true;

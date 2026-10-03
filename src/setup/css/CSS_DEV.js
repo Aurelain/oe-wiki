@@ -1,4 +1,4 @@
-import styled from '../utils/styled.js';
+import styled from '../../utils/styled.js';
 import {DIFF_LIST} from '../SETTINGS.js';
 import CSS_COMMON from './CSS_COMMON.js';
 import CSS_DIFF from './CSS_DIFF.js';

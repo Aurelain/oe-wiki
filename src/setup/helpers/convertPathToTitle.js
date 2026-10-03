@@ -1,4 +1,4 @@
-import log from '../log.js';
+import addLogLine from '../../helpers/addLogLine.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -18,11 +18,11 @@ const ILLEGAL_CHARACTERS = new RegExp('[ :]');
  */
 function convertPathToTitle(filePath) {
     if (filePath.match(ILLEGAL_CHARACTERS)) {
-        log('Path contains an illegal character!', filePath);
+        addLogLine('Path contains an illegal character!', filePath);
         return;
     }
     if (filePath.match('/.*?/')) {
-        log('Path contains too many slashes!', filePath);
+        addLogLine('Path contains too many slashes!', filePath);
         return;
     }
     let title = filePath;

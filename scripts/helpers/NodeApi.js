@@ -12,7 +12,6 @@ async function find() {
  *
  */
 function log(...args) {
-    console.log('NodeApi:');
     console.log(...args);
 }
 

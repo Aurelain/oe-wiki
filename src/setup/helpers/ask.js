@@ -1,4 +1,4 @@
-import log from '../log.js';
+import addLogLine from '../../helpers/addLogLine.js';
 import to from '../utils/to.js';
 
 // =====================================================================================================================
@@ -35,14 +35,14 @@ async function ask(params) {
     // Actual request:
     const [response, fetchError] = await to(fetch(url, options));
     if (!response) {
-        log('Failed to fetch!', fetchError);
+        addLogLine('Failed to fetch!', fetchError);
         return;
     }
 
     // Output:
     const [json, jsonError] = await to(response.json());
     if (!json) {
-        log('Invalid json!', jsonError);
+        addLogLine('Invalid json!', jsonError);
         return;
     }
     return json;

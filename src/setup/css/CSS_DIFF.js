@@ -1,4 +1,4 @@
-import styled from '../utils/styled.js';
+import styled from '../../utils/styled.js';
 import {
     DIFF_CHANGED,
     DIFF_COLLAPSED,

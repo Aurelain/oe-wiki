@@ -1,5 +1,5 @@
 // https://wiki.hoodedhorse.com/Heroes_of_Might_and_Magic_Olden_Era/api.php?action=query&meta=siteinfo&siprop=namespaces&format=json
-import log from '../log.js';
+import addLogLine from '../../helpers/addLogLine.js';
 
 const KNOWN_NAMESPACES = new Set([
     'Main',
@@ -40,7 +40,7 @@ const ILLEGAL_CHARACTERS = new RegExp('~');
  */
 function convertTitleToPath(title) {
     if (title.match(ILLEGAL_CHARACTERS)) {
-        log('Title contains an illegal character!', title);
+        addLogLine('Title contains an illegal character!', title);
     }
     const {namespace, titleWithoutNamespace} = extractNamespace(title);
     let filePath = titleWithoutNamespace;

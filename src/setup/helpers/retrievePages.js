@@ -1,5 +1,5 @@
 import convertPathToTitle from './convertPathToTitle.js';
-import log from '../log.js';
+import addLogLine from '../../helpers/addLogLine.js';
 import convertTitleToPath from './convertTitleToPath.js';
 import {ask} from './ask.js';
 
@@ -26,13 +26,13 @@ async function retrievePages(parserResult) {
         if (path) {
             const content = result[key];
             if (content === undefined) {
-                log('Invalid page content!', key);
+                addLogLine('Invalid page content!', key);
             } else {
                 output[path] = result[key];
             }
         }
     }
-    log(`Retrieved ${Object.keys(output).length} pages.`);
+    addLogLine(`Retrieved ${Object.keys(output).length} pages.`);
     return output;
 }
 
@@ -47,7 +47,7 @@ async function fetchWikiPages(titles) {
     for (let i = 0; i < titles.length; i += CHUNK_SIZE) {
         const endIndex = Math.min(i + CHUNK_SIZE, titles.length);
         const chunk = titles.slice(i, endIndex);
-        log(`Retrieving ${i + 1}-${endIndex} of ${titles.length} pages (${chunk[0]})...`);
+        addLogLine(`Retrieving ${i + 1}-${endIndex} of ${titles.length} pages (${chunk[0]})...`);
 
         const data = await ask({
             action: 'query',

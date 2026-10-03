@@ -1,4 +1,4 @@
-import styled from '../utils/styled.js';
+import styled from '../../utils/styled.js';
 import {DIFF_LIST, IS_DISABLED, LOG_HOST, STATUS_OK, STATUS_PROGRESS, STATUS_WARNING} from '../SETTINGS.js';
 
 // noinspection CssUnusedSymbol
