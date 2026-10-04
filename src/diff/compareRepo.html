@@ -11,7 +11,41 @@
                 a: {},
                 b: {},
             },
-            output: [],
+            output: {},
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'some-none',
+            input: {
+                a: {
+                    general: {
+                        foo: {nr: 5}
+                    }
+                },
+                b: {},
+            },
+            output: {
+                general: [
+                    {id: 'foo', summary: 'REMOVED'},
+                ]
+            },
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'none-some',
+            input: {
+                a: {},
+                b: {
+                    general: {
+                        foo: {nr: 5}
+                    }
+                },
+            },
+            output: {
+                general: [
+                    {id: 'foo', summary: 'ADDED'},
+                ]
+            },
         },
         // -------------------------------------------------------------------------------------------------------------
         {
@@ -42,17 +76,17 @@
             },
             output: {
                 general: [
-                    {id:'foo', field: 'nr', summary: '❮5▸6❯'},
+                    {id: 'foo', field: 'nr', summary: '❮5▸6❯'},
                 ],
                 en: [
-                    {id:'foo', field: 'name', summary: 'Foo❮5▸6❯En'},
+                    {id: 'foo', field: 'name', summary: '❮Foo5En▸Foo6En❯', lang:'en'},
                 ],
                 fr: [
-                    {id:'foo', field: 'name', summary: 'Foo❮5▸6❯Fn'},
+                    {id: 'foo', field: 'name', summary: '❮Foo5Fr▸Foo6Fr❯', lang:'fr'},
                 ]
             }
         },
     ];
 
-    await focus(compareRepo, TESTS);
+    await focus(compareRepo, TESTS, {sendInputAsArguments: true});
 </script>

@@ -1,11 +1,34 @@
+import compareDef from './compareDef.js';
+
 // =====================================================================================================================
 //  P U B L I C
 // =====================================================================================================================
 /**
  *
  */
-function compareHub(hubA, hubB) {
-    return 'compareHub';
+function compareHub(hubA = {}, hubB = {}) {
+    const output = [];
+    for (const id in hubA) {
+        const list = compareDef(hubA[id], hubB[id]);
+        for (const item of list) {
+            output.push({
+                id,
+                ...item,
+            });
+        }
+    }
+    for (const id in hubB) {
+        if (!hubA.hasOwnProperty(id)) {
+            const list = compareDef(undefined, hubB[id]);
+            for (const item of list) {
+                output.push({
+                    id,
+                    ...item,
+                });
+            }
+        }
+    }
+    return output;
 }
 
 // =====================================================================================================================

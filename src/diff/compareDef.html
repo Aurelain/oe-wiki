@@ -67,11 +67,13 @@
                 b: {name: 'Foobar', description: 'Improved Foo'},
             },
             output: [
-                {field: 'name', summary: 'Foo❮▸bar❯'},
+                {field: 'name', summary: '❮Foo▸Foobar❯'},
                 {field: 'description', summary: '❮Basic▸Improved❯ Foo'}
             ],
         },
     ];
 
-    await focus(compareDef, TESTS);
+    await focus(compareDef, TESTS, {
+        sendInputAsArguments: true
+    });
 </script>

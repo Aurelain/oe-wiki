@@ -53,13 +53,15 @@
                 },
             },
             output: [
-                {id: 'foo', field: 'name', summary: 'f❮1▸❯ f2❮▸4❯ f❮3▸5❯'},
-                {id: 'foo', field: 'description', summary: 'h❮i▸ello❯'},
+                {id: 'foo', field: 'name', summary: '❮f1▸f❯ ❮f2▸f24❯ ❮f3▸f5❯'},
+                {id: 'foo', field: 'description', summary: '❮hi▸hello❯'},
                 {id: 'rem', summary: 'REMOVED'},
                 {id: 'add', summary: 'ADDED'},
             ]
         },
     ];
 
-    await focus(compareHub, TESTS);
+    await focus(compareHub, TESTS, {
+        sendInputAsArguments: true,
+    });
 </script>
