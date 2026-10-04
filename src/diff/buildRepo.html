@@ -1,7 +1,7 @@
 <meta charset='UTF-8'/>
 <script type='module'>
     import focus from '../../scripts/focus/focus.js';
-    import createRepo from './createRepo.js';
+    import buildRepo from './buildRepo.js';
 
     const TESTS = [
         // -------------------------------------------------------------------------------------------------------------
@@ -45,7 +45,6 @@
             output: {
                 GENERAL: {
                     Easy: {
-                        id: 'Easy',
                         name_sid: 'EasyDifficultySid',
                         neutral_power_multiplier: '0.5',
                         player_gold: '30000',
@@ -67,9 +66,7 @@
                 },
                 en: {
                     Easy: {
-                        id: 'Easy',
                         type: 'difficulty',
-                        language: 'en',
                         description: 'This is an Easy difficulty setting.',
                     }
                 }
@@ -77,5 +74,5 @@
         },
     ];
 
-    await focus(createRepo, TESTS);
+    await focus(buildRepo, TESTS);
 </script>

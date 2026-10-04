@@ -11,7 +11,9 @@
                 a: {},
                 b: {},
             },
-            output: {},
+            output: {
+                GENERAL: []
+            },
         },
         // -------------------------------------------------------------------------------------------------------------
         {
@@ -43,7 +45,7 @@
             },
             output: {
                 GENERAL: [
-                    {id: 'foo', summary: 'ADDED'},
+                    {id: 'foo', field: 'nr', summary: '❮▸5❯'},
                 ]
             },
         },
@@ -79,12 +81,62 @@
                     {id: 'foo', field: 'nr', summary: '❮5▸6❯'},
                 ],
                 en: [
-                    {id: 'foo', field: 'name', summary: '❮Foo5En▸Foo6En❯', lang:'en'},
+                    {id: 'foo', field: 'name', summary: '❮Foo5En▸Foo6En❯', lang: 'en'},
                 ],
                 fr: [
-                    {id: 'foo', field: 'name', summary: '❮Foo5Fr▸Foo6Fr❯', lang:'fr'},
+                    {id: 'foo', field: 'name', summary: '❮Foo5Fr▸Foo6Fr❯', lang: 'fr'},
                 ]
             }
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'completely removed',
+            input: {
+                a: {
+                    GENERAL: {
+                        foo: {nr: 5}
+                    },
+                    en: {
+                        foo: {name: 'Foo'}
+                    }
+                },
+                b: {
+                    GENERAL: {},
+                    en: {}
+                },
+            },
+            output: {
+                GENERAL: [
+                    {id: 'foo', summary: 'REMOVED'},
+                ],
+                en: [],
+            },
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'partially removed',
+            input: {
+                a: {
+                    GENERAL: {
+                        foo: {nr: 5}
+                    },
+                    en: {
+                        foo: {name: 'Foo'}
+                    }
+                },
+                b: {
+                    GENERAL: {
+                        foo: {nr: 5}
+                    },
+                    en: {}
+                },
+            },
+            output: {
+                GENERAL: [],
+                en: [
+                    {id: 'foo', field: 'name', summary: '❮Foo▸❯', lang: 'en'},
+                ],
+            },
         },
     ];
 

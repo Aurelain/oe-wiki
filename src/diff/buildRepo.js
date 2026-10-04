@@ -1,5 +1,6 @@
 import {GENERAL} from './CONSTANTS.js';
 import match from '../utils/match.js';
+import log from '../utils/log.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -14,7 +15,7 @@ const KEY_TRANSLATION = {
 /**
  *
  */
-function createRepo(hubPathToContent) {
+function buildRepo(hubPathToContent) {
     const list = [];
     for (const path in hubPathToContent) {
         const items = parseDefFile(hubPathToContent[path]);
@@ -22,13 +23,18 @@ function createRepo(hubPathToContent) {
     }
     const repo = {};
     for (const item of list) {
-        const lang = item.language || GENERAL;
-        repo[lang] = repo[lang] || {};
-        const {id} = item;
-        if (repo[lang][id]) {
-            throw new Error(`Duplicate id "${id}"!`);
+        const {id, language, ...def} = item;
+        if (!id) {
+            log('Definition lacks id!', item);
+            continue;
         }
-        repo[lang][id] = item;
+        const lang = language || GENERAL;
+        repo[lang] = repo[lang] || {};
+        if (repo[lang][id]) {
+            log('Duplicate id!', item);
+            continue;
+        }
+        repo[lang][id] = def;
     }
     return repo;
 }
@@ -67,4 +73,4 @@ function adaptKey(key) {
 // =====================================================================================================================
 //  E X P O R T
 // =====================================================================================================================
-export default createRepo;
+export default buildRepo;

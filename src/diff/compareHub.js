@@ -8,7 +8,8 @@ import compareDef from './compareDef.js';
  */
 function compareHub(hubA = {}, hubB = {}) {
     const output = [];
-    for (const id in hubA) {
+    const ids = new Set([...Object.keys(hubA), ...Object.keys(hubB)]);
+    for (const id of ids) {
         const list = compareDef(hubA[id], hubB[id]);
         for (const item of list) {
             output.push({
@@ -17,23 +18,8 @@ function compareHub(hubA = {}, hubB = {}) {
             });
         }
     }
-    for (const id in hubB) {
-        if (!hubA.hasOwnProperty(id)) {
-            const list = compareDef(undefined, hubB[id]);
-            for (const item of list) {
-                output.push({
-                    id,
-                    ...item,
-                });
-            }
-        }
-    }
     return output;
 }
-
-// =====================================================================================================================
-//  P R I V A T E
-// =====================================================================================================================
 
 // =====================================================================================================================
 //  E X P O R T

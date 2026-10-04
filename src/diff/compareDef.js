@@ -1,4 +1,3 @@
-import {ADDED, REMOVED} from './CONSTANTS.js';
 import compareValue from './compareValue.js';
 
 // =====================================================================================================================
@@ -7,21 +6,12 @@ import compareValue from './compareValue.js';
 /**
  *
  */
-function compareDef(defA, defB) {
-    if (!defA) {
-        return [{summary: ADDED}];
-    }
-    if (!defB) {
-        return [{summary: REMOVED}];
-    }
+function compareDef(defA = {}, defB = {}) {
     const output = [];
-    for (const field in defA) {
+    const fields = new Set([...Object.keys(defA), ...Object.keys(defB)]);
+    for (const field of fields) {
         const summary = compareValue(defA[field], defB[field]);
-        output.push({field, summary});
-    }
-    for (const field in defB) {
-        if (!defA.hasOwnProperty(field)) {
-            const summary = compareValue(undefined, defB[field]);
+        if (summary !== String(defA[field])) {
             output.push({field, summary});
         }
     }
