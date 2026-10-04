@@ -1,7 +1,7 @@
 import filterHub from '../helpers/filterHub.js';
 import add from '../helpers/add.js';
 import translate from '../helpers/translate.js';
-import match from '../utils/match.js';
+import match from '../../utils/match.js';
 import Faction from './Faction.js';
 import parseBonuses from '../helpers/parseBonuses.js';
 

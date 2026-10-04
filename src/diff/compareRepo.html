@@ -18,14 +18,14 @@
             name: 'some-none',
             input: {
                 a: {
-                    general: {
+                    GENERAL: {
                         foo: {nr: 5}
                     }
                 },
                 b: {},
             },
             output: {
-                general: [
+                GENERAL: [
                     {id: 'foo', summary: 'REMOVED'},
                 ]
             },
@@ -36,13 +36,13 @@
             input: {
                 a: {},
                 b: {
-                    general: {
+                    GENERAL: {
                         foo: {nr: 5}
                     }
                 },
             },
             output: {
-                general: [
+                GENERAL: [
                     {id: 'foo', summary: 'ADDED'},
                 ]
             },
@@ -52,7 +52,7 @@
             name: 'mixed',
             input: {
                 a: {
-                    general: {
+                    GENERAL: {
                         foo: {nr: 5,}
                     },
                     en: {
@@ -63,7 +63,7 @@
                     }
                 },
                 b: {
-                    general: {
+                    GENERAL: {
                         foo: {nr: 6,}
                     },
                     en: {
@@ -75,7 +75,7 @@
                 },
             },
             output: {
-                general: [
+                GENERAL: [
                     {id: 'foo', field: 'nr', summary: '❮5▸6❯'},
                 ],
                 en: [

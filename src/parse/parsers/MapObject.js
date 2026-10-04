@@ -1,7 +1,7 @@
 import filterHub from '../helpers/filterHub.js';
 import add from '../helpers/add.js';
 import translate, {checkExists} from '../helpers/translate.js';
-import match from '../utils/match.js';
+import match from '../../utils/match.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

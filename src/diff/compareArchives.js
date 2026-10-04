@@ -1,6 +1,7 @@
 import createHorse from '../helpers/createHorse.js';
 import compareRepo from './compareRepo.js';
 import log, {setLoggingFunction} from '../parse/utils/log.js';
+import createRepo from './createRepo.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -26,20 +27,22 @@ async function compareArchives(bufferA, bufferB, ApiReference, parsePathOrFuncti
     currentBuffer = bufferA;
     const timeA = Date.now();
     log('Parsing the first archive...');
-    const resultA = await horse.run();
+    const parsedA = await horse.run();
     log(`Finished parsing the first archive in ${Date.now() - timeA} ms.`);
 
     // Second:
     currentBuffer = bufferB;
     const timeB = Date.now();
     log('Parsing the second archive...');
-    const resultB = await horse.run();
+    const parsedB = await horse.run();
     log(`Finished parsing the second archive in ${Date.now() - timeB} ms.`);
 
     // Comparison:
     log('Staring comparison...');
     const timeC = Date.now();
-    const output = compareRepo(resultA, resultB);
+    const repoA = createRepo(parsedA);
+    const repoB = createRepo(parsedB);
+    const output = compareRepo(repoA, repoB);
     log(`Finished comparison in ${Date.now() - timeC} ms.`);
 
     // Output:
