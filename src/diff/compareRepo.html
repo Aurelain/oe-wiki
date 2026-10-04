@@ -1,0 +1,58 @@
+<meta charset='UTF-8'/>
+<script type='module'>
+    import focus from '../../scripts/focus/focus.js';
+    import compareRepo from './compareRepo.js';
+
+    const TESTS = [
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'none-none',
+            input: {
+                a: {},
+                b: {},
+            },
+            output: [],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'mixed',
+            input: {
+                a: {
+                    general: {
+                        foo: {nr: 5,}
+                    },
+                    en: {
+                        foo: {name: 'Foo5En',}
+                    },
+                    fr: {
+                        foo: {name: 'Foo5Fr',}
+                    }
+                },
+                b: {
+                    general: {
+                        foo: {nr: 6,}
+                    },
+                    en: {
+                        foo: {name: 'Foo6En',}
+                    },
+                    fr: {
+                        foo: {name: 'Foo6Fr',}
+                    }
+                },
+            },
+            output: {
+                general: [
+                    {id:'foo', field: 'nr', summary: '❮5▸6❯'},
+                ],
+                en: [
+                    {id:'foo', field: 'name', summary: 'Foo❮5▸6❯En'},
+                ],
+                fr: [
+                    {id:'foo', field: 'name', summary: 'Foo❮5▸6❯Fn'},
+                ]
+            }
+        },
+    ];
+
+    await focus(compareRepo, TESTS);
+</script>

@@ -1,0 +1,65 @@
+<meta charset='UTF-8'/>
+<script type='module'>
+    import focus from '../../scripts/focus/focus.js';
+    import compareHub from './compareHub.js';
+
+    const TESTS = [
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'none-none',
+            input: {
+                a: {},
+                b: {},
+            },
+            output: [],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'some-none',
+            input: {
+                a: {
+                    foo: {nr: 5,},
+                },
+                b: {},
+            },
+            output: [
+                {id: 'foo', summary: 'REMOVED',}
+            ],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'none-some',
+            input: {
+                a: {},
+                b: {
+                    foo: {nr: 5},
+                },
+            },
+            output: [
+                {id: 'foo', summary: 'ADDED',}
+            ],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'mixed',
+            input: {
+                a: {
+                    foo: {name: 'f1 f2 f3', description: 'hi',},
+                    rem: {nr: 0,}
+                },
+                b: {
+                    foo: {name: 'f f24 f5', description: 'hello',},
+                    add: {nr: 1,}
+                },
+            },
+            output: [
+                {id: 'foo', field: 'name', summary: 'f❮1▸❯ f2❮▸4❯ f❮3▸5❯'},
+                {id: 'foo', field: 'description', summary: 'h❮i▸ello❯'},
+                {id: 'rem', summary: 'REMOVED'},
+                {id: 'add', summary: 'ADDED'},
+            ]
+        },
+    ];
+
+    await focus(compareHub, TESTS);
+</script>

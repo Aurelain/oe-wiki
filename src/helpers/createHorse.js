@@ -15,7 +15,6 @@ import createHorseBrowser from './createHorseBrowser.js';
 async function createHorse(pathOrFunction, ApiReference) {
     if (typeof pathOrFunction === 'string') {
         const isNode = typeof process !== 'undefined' && process.versions?.node !== null;
-        console.log('isNode:', isNode);
         if (isNode) {
             return await createHorseNode(pathOrFunction, ApiReference);
         } else {

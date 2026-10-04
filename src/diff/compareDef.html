@@ -1,0 +1,77 @@
+<meta charset='UTF-8'/>
+<script type='module'>
+    import focus from '../../scripts/focus/focus.js';
+    import compareDef from './compareDef.js';
+
+    const TESTS = [
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'some-none',
+            input: {
+                a: {nr: 5,},
+                b: undefined,
+            },
+            output: [
+                {summary: 'REMOVED'}
+            ],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'none-some',
+            input: {
+                a: undefined,
+                b: {nr: 5,},
+            },
+            output: [
+                {summary: 'ADDED'}
+            ],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'field added',
+            input: {
+                a: {},
+                b: {nr: 5,},
+            },
+            output: [
+                {field: 'nr', summary: '❮▸5❯'}
+            ],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'field removed',
+            input: {
+                a: {nr: 5,},
+                b: {},
+            },
+            output: [
+                {field: 'nr', summary: '❮5▸❯'}
+            ],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'field changed',
+            input: {
+                a: {nr: 5},
+                b: {nr: 6},
+            },
+            output: [
+                {field: 'nr', summary: '❮5▸6❯'}
+            ],
+        },
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            name: 'multiple',
+            input: {
+                a: {name: 'Foo', description: 'Basic Foo'},
+                b: {name: 'Foobar', description: 'Improved Foo'},
+            },
+            output: [
+                {field: 'name', summary: 'Foo❮▸bar❯'},
+                {field: 'description', summary: '❮Basic▸Improved❯ Foo'}
+            ],
+        },
+    ];
+
+    await focus(compareDef, TESTS);
+</script>

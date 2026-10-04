@@ -21,7 +21,7 @@ let outputElement;
  *
  */
 async function diff() {
-    const root = document.querySelector('#setup');
+    const root = document.querySelector('.diff-root');
     if (!root) {
         if (document.readyState !== 'complete') {
             window.addEventListener('load', onWindowLoad);
