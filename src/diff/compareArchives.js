@@ -39,7 +39,7 @@ async function compareArchives(bufferA, bufferB, ApiReference, parsePathOrFuncti
     log(`Finished parsing the second archive in ${Date.now() - timeB} ms.`);
 
     // Comparison:
-    log('Staring comparison...');
+    log('Starting comparison...');
     const timeC = Date.now();
     const hubA = buildHub(parsedA);
     const hubB = buildHub(parsedB);

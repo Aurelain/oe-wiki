@@ -5,7 +5,15 @@ import {LANG_MARKER, UID_SEPARATOR} from './CONSTANTS.js';
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-const ID_BLACKLIST = /campaign|arena/;
+const ID_BLACKLIST = /campaign|arena|tutorial/;
+const SPAWNERS = {
+    TranslationDef: spawnTranslationDef,
+    BonusDef: spawnBonusDef,
+    SkillLevelDef: spawnSkillLevelDef,
+    EntryDef: null,
+    AttackPassiveDef: null,
+    LawTreePositionDef: spawnLawTreePositionDef,
+};
 
 // =====================================================================================================================
 //  P U B L I C
@@ -75,22 +83,13 @@ function parseDefFile(content) {
  *
  */
 function improveDef(def, meta) {
-    let output;
-    switch (meta.name) {
-        case 'TranslationDef':
-            output = spawnImprovedTranslationDef(def);
-            break;
-        case 'BonusDef':
-            output = spawnImprovedBonusDef(def);
-            break;
-        case 'SkillLevelDef':
-            output = spawnImprovedSkillLevelDef(def);
-            break;
-        default:
-            output = {...def};
+    const spawner = SPAWNERS[meta.name];
+    if (spawner === null) {
+        return;
     }
-    output.meta = meta;
-    return output;
+    const improvedDef = spawner ? spawner(def) : {...def};
+    improvedDef.meta = meta;
+    return improvedDef;
 }
 
 /**
@@ -102,7 +101,7 @@ function improveDef(def, meta) {
  * | description = Using spells, the hero can summon creatures onto any free hex.
  * }
  */
-function spawnImprovedTranslationDef(def) {
+function spawnTranslationDef(def) {
     const {target_id, type, subtype, variant, language, ...rest} = def;
     const uid = LANG_MARKER + buildUid(language, type, subtype, variant);
     const fresh = {
@@ -123,7 +122,7 @@ function spawnImprovedTranslationDef(def) {
  * | parameters = movementPerBonus,0.10
  * }
  */
-function spawnImprovedBonusDef(def) {
+function spawnBonusDef(def) {
     const {parent_id, parent_type, ordinal, type, ...rest} = def;
     const uid = buildUid(parent_type, ordinal, type);
     const fresh = {
@@ -144,11 +143,32 @@ function spawnImprovedBonusDef(def) {
  * | icon = skill_assault
  * }
  */
-function spawnImprovedSkillLevelDef(def) {
+function spawnSkillLevelDef(def) {
     const {skill_id, level, ...rest} = def;
     const uid = buildUid('level', level);
     const fresh = {
         id: skill_id,
+    };
+    for (const field in rest) {
+        fresh[uid + UID_SEPARATOR + field] = rest[field];
+    }
+    return fresh;
+}
+
+/**
+ * {LawTreePositionDef
+ * | faction = human
+ * | tier = 1
+ * | side = army
+ * | slot = 0
+ * | law_id = fraction_law_human_4
+ * }
+ */
+function spawnLawTreePositionDef(def) {
+    const {law_id, ...rest} = def;
+    const uid = 'tree';
+    const fresh = {
+        id: law_id,
     };
     for (const field in rest) {
         fresh[uid + UID_SEPARATOR + field] = rest[field];
