@@ -1,14 +1,16 @@
 import compareArchives from './compareArchives.js';
 import BrowserApi from '../helpers/BrowserApi.js';
-import parse from '../parse/parse.js';
+// import parse from '../parse/parse.js';
 import addLogLine, {setLogHost} from '../helpers/addLogLine.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-// const PARSE = 'http://localhost:8000/parse/parse.js';
-const PARSE = parse;
+const PARSE = 'http://localhost:8000/parse/parse.js';
+// const PARSE = parse;
 
+let patchId;
+let patchDate;
 let archiveA;
 let archiveB;
 let buttonElement;
@@ -49,6 +51,9 @@ async function onWindowLoad() {
  */
 function run(root) {
     root.innerHTML = `
+        Patch version: <input class='patchId' /><br>
+        Patch date: <input class='patchDate'/><br>
+        <br>
         Archive A: <input class='inputA' type='file'/><br>
         Archive B: <input class='inputB' type='file'/><br>
         <br>
@@ -60,6 +65,8 @@ function run(root) {
         Log:<br>
         <div class='toolLog'></div>
     `;
+    root.querySelector('.patchId').addEventListener('change', onPatchIdChange);
+    root.querySelector('.patchDate').addEventListener('change', onPatchDateChange);
     root.querySelector('.inputA').addEventListener('change', onInputAChange);
     root.querySelector('.inputB').addEventListener('change', onInputBChange);
 
@@ -75,32 +82,40 @@ function run(root) {
 /**
  *
  */
+function onPatchIdChange(event) {
+    patchId = event.target.value;
+    checkCompare();
+}
+
+/**
+ *
+ */
+function onPatchDateChange(event) {
+    patchDate = event.target.value;
+    checkCompare();
+}
+
+/**
+ *
+ */
 function onInputAChange(event) {
-    const file = event.target.files[0];
-    if (file) {
-        archiveA = file;
-        addLogLine('Archive A has been set.');
-        checkCompare();
-    }
+    archiveA = event.target.files[0];
+    checkCompare();
 }
 
 /**
  *
  */
 function onInputBChange(event) {
-    const file = event.target.files[0];
-    if (file) {
-        archiveB = file;
-        addLogLine('Archive B has been set.');
-        checkCompare();
-    }
+    archiveB = event.target.files[0];
+    checkCompare();
 }
 
 /**
  *
  */
 function checkCompare() {
-    if (archiveA && archiveB) {
+    if (patchId && patchDate && archiveA && archiveB) {
         buttonElement.disabled = false;
         addLogLine('You may now click "Compare" to obtain the output...');
     } else {
@@ -112,7 +127,8 @@ function checkCompare() {
  *
  */
 async function onBtnCompareClick() {
-    const output = await compareArchives(archiveA, archiveB, BrowserApi, PARSE);
+    const patchInfo = {id: patchId, date: patchDate};
+    const output = await compareArchives(archiveA, archiveB, BrowserApi, PARSE, patchInfo);
     outputElement.value = output;
 }
 

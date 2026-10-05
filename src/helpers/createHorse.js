@@ -14,14 +14,16 @@ import createHorseBrowser from './createHorseBrowser.js';
  */
 async function createHorse(pathOrFunction, ApiReference) {
     if (typeof pathOrFunction === 'string') {
+        const path = pathOrFunction;
         const isNode = typeof process !== 'undefined' && process.versions?.node !== null;
         if (isNode) {
-            return await createHorseNode(pathOrFunction, ApiReference);
+            return await createHorseNode(path, ApiReference);
         } else {
-            return await createHorseBrowser(pathOrFunction, ApiReference);
+            return await createHorseBrowser(path, ApiReference);
         }
     } else {
-        return await createHorseFromFunction(pathOrFunction, ApiReference);
+        const fn = pathOrFunction;
+        return await createHorseFromFunction(fn, ApiReference);
     }
 }
 

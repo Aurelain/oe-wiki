@@ -16,7 +16,6 @@ async function createHorseBrowser(workerUrl, ApiReference) {
     worker.addEventListener('message', onWorkerMessage.bind(null, worker));
     return {
         run: async () => {
-            console.log('createHorseBrowser.run:');
             return await sendAndReceive(worker, 'run');
         },
     };
@@ -29,7 +28,6 @@ async function createHorseBrowser(workerUrl, ApiReference) {
  *
  */
 async function loadWorker(workerUrl, ApiReference) {
-    console.log('workerUrl:', workerUrl);
     const worker = new Worker(`data:application/javascript,importScripts('${workerUrl}?${Math.random()}');`);
     worker.addEventListener('error', () => ApiReference.log('!Worker error!'));
     return new Promise((resolve) => {
@@ -47,14 +45,16 @@ async function loadWorker(workerUrl, ApiReference) {
 /**
  *
  */
-async function onWorkerMessage(worker, data) {
+async function onWorkerMessage(worker, event) {
     const ApiReference = workers.get(worker);
-    const {type, payload} = data;
+    const {type, payload} = event.data;
+    // console.log(`Parent received "${type}".`);
     if (typeof ApiReference[type] !== 'function') {
         return;
     }
     const result = ApiReference[type](payload);
     if (result !== undefined) {
+        // console.log(`Parent sends the result of "${type}".`);
         worker.postMessage({type, payload: result});
     }
 }
@@ -67,12 +67,13 @@ async function sendAndReceive(worker, type, payload) {
         const listener = (event) => {
             const data = event.data && typeof event.data === 'object' ? event.data : {};
             if (data.type === type) {
-                console.log(`Parent received a "${type}" reply.`);
+                // console.log(`Parent received the result of "${type}".`);
                 worker.removeEventListener('message', listener);
                 resolve(data.payload);
             }
         };
         worker.addEventListener('message', listener);
+        // console.log(`Parent sends "${type}" and waits...`);
         worker.postMessage({type, payload});
     });
 }

@@ -89,7 +89,7 @@ async function onMessageFromParent(eventOrData) {
             const [result, error] = await to(actuatorFunction);
             if (error) {
                 const extra = error.extra || [];
-                log('!Error encountered while parsing!', error.message, ...extra);
+                log('!Error encountered!', error.message, ...extra);
                 send('run', {});
             } else {
                 send('run', result);

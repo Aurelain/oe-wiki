@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import compareArchives from '../../src/diff/compareArchives.js';
 import NodeApi from '../helpers/NodeApi.js';
 import parse from '../../src/parse/parse.js';
-import log, {toggleRecording} from '../../src/utils/log.js';
+import {toggleRecording} from '../../src/utils/log.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -14,8 +14,8 @@ const PATCH_INFO = {
 const ARCHIVE_A = '/a/aims/obelisk/Core_2026-07-06_v0.80.33.zip';
 const ARCHIVE_B = '/a/aims/obelisk/Core_2026-07-10_v0.80.34.zip';
 
-const PARSE = '/a/aims/oe-wiki/src/parse/parse.js';
-// const PARSE = parse;
+// const PARSE = '/a/aims/oe-wiki/src/parse/parse.js';
+const PARSE = parse;
 
 // =====================================================================================================================
 //  P U B L I C
