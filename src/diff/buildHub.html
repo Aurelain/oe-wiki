@@ -1,7 +1,7 @@
 <meta charset='UTF-8'/>
 <script type='module'>
     import focus from '../../scripts/focus/focus.js';
-    import buildRepo from './buildRepo.js';
+    import buildHub from './buildHub.js';
 
     const TESTS = [
         // -------------------------------------------------------------------------------------------------------------
@@ -43,36 +43,29 @@
                 `
             },
             output: {
-                GENERAL: {
-                    Easy: {
-                        name_sid: 'EasyDifficultySid',
-                        neutral_power_multiplier: '0.5',
-                        player_gold: '30000',
-                        player_wood: '30',
-                        player_ore: '30',
-                        player_gemstones: '15',
-                        player_crystals: '15',
-                        player_mercury: '15',
-                        player_dust: '150',
-                        ai_gold: '10000',
-                        ai_wood: '10',
-                        ai_ore: '10',
-                        ai_gemstones: '5',
-                        ai_crystals: '5',
-                        ai_mercury: '5',
-                        ai_dust: '50',
-                        source_path: 'DB/difficulties.json',
-                    }
-                },
-                en: {
-                    Easy: {
-                        type: 'difficulty',
-                        description: 'This is an Easy difficulty setting.',
-                    }
+                Easy: {
+                    name_sid: 'EasyDifficultySid',
+                    neutral_power_multiplier: '0.5',
+                    player_gold: '30000',
+                    player_wood: '30',
+                    player_ore: '30',
+                    player_gemstones: '15',
+                    player_crystals: '15',
+                    player_mercury: '15',
+                    player_dust: '150',
+                    ai_gold: '10000',
+                    ai_wood: '10',
+                    ai_ore: '10',
+                    ai_gemstones: '5',
+                    ai_crystals: '5',
+                    ai_mercury: '5',
+                    ai_dust: '50',
+                    source_path: 'DB/difficulties.json',
+                    $en_difficulty_description: 'This is an Easy difficulty setting.',
                 }
             },
         },
     ];
 
-    await focus(buildRepo, TESTS);
+    await focus(buildHub, TESTS);
 </script>

@@ -1,8 +1,8 @@
 import createHorse from '../helpers/createHorse.js';
-import compareRepo from './compareRepo.js';
 import log, {setLoggingFunction} from '../utils/log.js';
-import buildRepo from './buildRepo.js';
+import buildHub from './buildHub.js';
 import printPatch from './printPatch.js';
+import compareHub from './compareHub.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -17,11 +17,11 @@ let ParentApi;
  *
  */
 async function compareArchives(bufferA, bufferB, ApiReference, parsePathOrFunction, patchInfo) {
-    const time = Date.now();
-    ApiReference.log('Beginning comparison...');
-
     ParentApi = ApiReference;
     setLoggingFunction(ParentApi.log); // all `log()` calls now point to the parent
+
+    const time = Date.now();
+    log('Beginning comparison...');
     const horse = await createHorse(parsePathOrFunction, InternalApi);
 
     // First:
@@ -41,9 +41,9 @@ async function compareArchives(bufferA, bufferB, ApiReference, parsePathOrFuncti
     // Comparison:
     log('Staring comparison...');
     const timeC = Date.now();
-    const repoA = buildRepo(parsedA);
-    const repoB = buildRepo(parsedB);
-    const comparison = compareRepo(repoA, repoB);
+    const hubA = buildHub(parsedA);
+    const hubB = buildHub(parsedB);
+    const comparison = compareHub(hubA, hubB);
     const output = printPatch(patchInfo.id, patchInfo.date, comparison);
     log(`Finished comparison in ${Date.now() - timeC} ms.`);
 
