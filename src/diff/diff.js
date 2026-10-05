@@ -1,13 +1,13 @@
 import compareArchives from './compareArchives.js';
 import BrowserApi from '../helpers/BrowserApi.js';
-// import parse from '../parse/parse.js';
+import parse from '../parse/parse.js';
 import addLogLine, {setLogHost} from '../helpers/addLogLine.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
-const PARSE = 'http://localhost:8000/parse/parse.js';
-// const PARSE = parse;
+// const PARSE = 'http://localhost:8000/parse/parse.js';
+const PARSE = parse;
 
 let patchId;
 let patchDate;
