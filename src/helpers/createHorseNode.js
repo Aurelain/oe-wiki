@@ -1,4 +1,5 @@
 import worker_threads from 'node:worker_threads';
+import to from '../parse/utils/to.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -52,8 +53,8 @@ async function onWorkerMessage(worker, data) {
     if (typeof ApiReference[type] !== 'function') {
         return;
     }
-    const result = ApiReference[type](...payload);
-    if (result !== undefined) {
+    const [result, error] = await to(ApiReference[type], ...payload);
+    if (!error) {
         worker.postMessage({type, payload: result});
     }
 }

@@ -8,8 +8,8 @@ import parseCore from '../../src/update/parseCore.js';
 // =====================================================================================================================
 const WIKI_MIRROR_DIR = '/a/aims/oe-local/wiki';
 
-// const PARSE = '/a/aims/oe-wiki/src/parse/parse.js';
-const PARSE = parse;
+// const PARSE = '/a/aims/oe-wiki/src/parse/parse.js'; // loads `parse()` as a Worker (just for fun)
+const PARSE = parse; // loads `parse()` directly
 
 // =====================================================================================================================
 //  P U B L I C

@@ -6,7 +6,6 @@
         "start": "node scripts/start/start",
         "parse": "node src/parse/parse.js",
         "build": "node scripts/build/build",
-        "write": "node scripts/write/write",
         "planner": "node scripts/planner/planner.js",
         "buildDiff": "node scripts/buildDiff/buildDiff.js",
         "runDiff": "node scripts/runDiff/runDiff.js",

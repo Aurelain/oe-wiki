@@ -8,7 +8,8 @@ import path from 'node:path';
  *
  */
 async function findFiles(rootPath, pattern, exclude, onlyFirstResult) {
-    return find(rootPath, '', pattern, exclude, onlyFirstResult);
+    const output = await find(rootPath, '', pattern, exclude, onlyFirstResult);
+    return output;
 }
 
 // =====================================================================================================================
