@@ -52,7 +52,7 @@ async function onWorkerMessage(worker, event) {
     if (typeof ApiReference[type] !== 'function') {
         return;
     }
-    const result = ApiReference[type](payload);
+    const result = ApiReference[type](...payload);
     if (result !== undefined) {
         // console.log(`Parent sends the result of "${type}".`);
         worker.postMessage({type, payload: result});

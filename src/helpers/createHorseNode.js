@@ -52,7 +52,7 @@ async function onWorkerMessage(worker, data) {
     if (typeof ApiReference[type] !== 'function') {
         return;
     }
-    const result = ApiReference[type](payload);
+    const result = ApiReference[type](...payload);
     if (result !== undefined) {
         worker.postMessage({type, payload: result});
     }
