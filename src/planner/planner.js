@@ -1,4 +1,4 @@
-import mount from './helpers/mount.jsx';
+import mount from '../@shared/mount.jsx';
 import App from './components/App.jsx';
 import getHeroes from './data/getHeroes.js';
 import getSkills from './data/getSkills.js';

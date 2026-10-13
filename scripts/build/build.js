@@ -47,16 +47,21 @@ async function build(...args) {
 function parseArguments(args) {
     let isDev = false;
     let isMute = false;
+    let banner = null;
     let inputArg = undefined;
     let outputArg = undefined;
     const freeArgs = [];
-    for (const [i, arg] of args.entries()) {
+
+    for (let i = 0; i < args.length; i++) {
+        const arg = args[i];
         switch (arg) {
             case '-i':
                 inputArg = args[i + 1];
+                i++;
                 break;
             case '-o':
                 outputArg = args[i + 1];
+                i++;
                 break;
             case '--dev':
                 isDev = true;
@@ -64,10 +69,11 @@ function parseArguments(args) {
             case '--mute':
                 isMute = true;
                 break;
+            case '--prefix':
+                banner = {js: args[i + 1]};
+                i++;
+                break;
             default:
-                if (arg === inputArg || arg === outputArg) {
-                    continue;
-                }
                 if (arg.includes('node') || arg.includes('build')) {
                     continue;
                 }
@@ -79,13 +85,13 @@ function parseArguments(args) {
     if (!inputArg && !freeArgs.length) {
         entryPoints.push(...collectEntryPoints(INPUT_PATH));
     }
-    return generateConfigurations(entryPoints, outputDir, isDev, isMute);
+    return generateConfigurations(entryPoints, outputDir, isDev, isMute, banner);
 }
 
 /**
  *
  */
-function generateConfigurations(entryPoints, outputArg, isDev, isMute) {
+function generateConfigurations(entryPoints, outputArg, isDev, isMute, banner) {
     const isMultiple = entryPoints.length > 0;
     const configurations = [];
     for (const entryPoint of entryPoints) {
@@ -97,6 +103,7 @@ function generateConfigurations(entryPoints, outputArg, isDev, isMute) {
             outfile,
             isDev,
             isMute,
+            banner,
         });
     }
     return configurations;
@@ -124,7 +131,7 @@ function collectEntryPoints(dirPath) {
  *
  */
 async function createBuild(config) {
-    const {entryPoint, outfile, isDev, isMute} = config;
+    const {entryPoint, outfile, isDev, isMute, banner} = config;
     const now = Date.now();
 
     await esbuild.build({
@@ -135,6 +142,7 @@ async function createBuild(config) {
         jsx: 'automatic', // for planner
         jsxImportSource: 'preact', // for planner
         plugins: [PluginMockNodeJs],
+        banner,
         outfile,
     });
 
