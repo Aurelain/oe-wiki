@@ -1,4 +1,4 @@
-import styled from '../utils/styled.js';
+import styled from './styled.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

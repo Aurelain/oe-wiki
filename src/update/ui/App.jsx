@@ -5,7 +5,7 @@ import to from '../../@shared/to.js';
 import {readFromDb, writeToDb} from '../@shared/LocalDb.js';
 import {GAME_DIR_HANDLE} from '../SETTINGS.js';
 import parseCore from '../parseCore.js';
-import BrowserApi from '../../helpers/BrowserApi.js';
+import BrowserApi from '../../@shared/BrowserApi.js';
 import checkPermission from '../helpers/checkPermission.js';
 import retrievePages from '../helpers/retrievePages.js';
 import {applySettings} from '../helpers/ask.js';

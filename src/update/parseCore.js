@@ -1,5 +1,5 @@
-import createHorse from '../helpers/createHorse.js';
-import log, {setLoggingFunction} from '../utils/log.js';
+import createHorse from '../@shared/createHorse.js';
+import log, {setLoggingFunction} from '../@shared/log.js';
 
 // =====================================================================================================================
 //  P U B L I C

@@ -1,13 +1,14 @@
 import compareArchives from './compareArchives.js';
-import BrowserApi from '../helpers/BrowserApi.js';
-import parse from '../parse/parse.js';
+import BrowserApi from '../@shared/BrowserApi.js';
 import addLogLine, {setLogHost} from '../@shared/addLogLine.js';
+// import parse from '../parse/parse.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 // const PARSE = 'http://localhost:8000/parse/parse.js';
-const PARSE = parse;
+const PARSE = 'MediaWiki:ParseCore.js';
+// const PARSE = parse;
 
 let patchId;
 let patchDate;
@@ -22,7 +23,7 @@ let outputElement;
 /**
  *
  */
-async function diff() {
+function diff() {
     const root = document.querySelector('.diff-root');
     if (!root) {
         if (document.readyState !== 'complete') {
@@ -54,8 +55,8 @@ function run(root) {
         Patch version: <input class='patchId' /><br>
         Patch date: <input class='patchDate'/><br>
         <br>
-        Archive A: <input class='inputA' type='file'/><br>
-        Archive B: <input class='inputB' type='file'/><br>
+        Archive A (older): <input class='inputA' type='file'/><br>
+        Archive B (newer): <input class='inputB' type='file'/><br>
         <br>
         <button class='btnCompare' disabled>Compare</button><br>
         <br>

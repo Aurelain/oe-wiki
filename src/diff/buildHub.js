@@ -1,5 +1,5 @@
-import match from '../utils/match.js';
-import log from '../utils/log.js';
+import match from '../@shared/match.js';
+import log from '../@shared/log.js';
 import {LANG_MARKER, UID_SEPARATOR} from './CONSTANTS.js';
 
 // =====================================================================================================================

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import compareArchives from '../../src/diff/compareArchives.js';
 import NodeApi from '../helpers/NodeApi.js';
 import parse from '../../src/parse/parse.js';
-import {toggleRecording} from '../../src/utils/log.js';
+import {toggleRecording} from '../../src/@shared/log.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

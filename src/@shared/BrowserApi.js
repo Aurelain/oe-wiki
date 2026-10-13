@@ -1,5 +1,5 @@
-import addLogLine from '../@shared/addLogLine.js';
-import findFilesInHandle from '../@shared/findFilesInHandle.js';
+import addLogLine from './addLogLine.js';
+import findFilesInHandle from './findFilesInHandle.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
