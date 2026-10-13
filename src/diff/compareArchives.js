@@ -1,8 +1,8 @@
 import createHorse from '../@shared/createHorse.js';
 import log, {setLoggingFunction} from '../@shared/log.js';
-import buildHub from './buildHub.js';
-import printPatch from './printPatch.js';
-import compareHub from './compareHub.js';
+import buildHub from './helpers/buildHub.js';
+import printPatch from './helpers/printPatch.js';
+import compareHub from './helpers/compareHub.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

@@ -1,5 +1,5 @@
-import {LANG_MARKER, UID_SEPARATOR} from './CONSTANTS.js';
-import add from '../parse/helpers/add.js';
+import {LANG_MARKER, UID_SEPARATOR} from '../SETTINGS.js';
+import add from '../../parse/helpers/add.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

@@ -1,6 +1,6 @@
-import match from '../@shared/match.js';
-import log from '../@shared/log.js';
-import {LANG_MARKER, UID_SEPARATOR} from './CONSTANTS.js';
+import match from '../../@shared/match.js';
+import log from '../../@shared/log.js';
+import {LANG_MARKER, UID_SEPARATOR} from '../SETTINGS.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
