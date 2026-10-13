@@ -6,6 +6,7 @@ import {execSync} from 'child_process';
 //  D E C L A R A T I O N S
 // =====================================================================================================================
 const OUTPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'dev')); // not docs!
+const PREFIX = '//Source:https://github.com/Aurelain/oe-wiki/tree/main/src/diff';
 
 // =====================================================================================================================
 //  P U B L I C
@@ -16,8 +17,7 @@ const OUTPUT_DIR = path.resolve(path.join(import.meta.dirname, '..', '..', 'dev'
  */
 async function buildDiff() {
     try {
-        // await build('src/diff/diff.js', '-o', OUTPUT_DIR, '--dev');
-        await build('src/diff/diff.js', '-o', OUTPUT_DIR);
+        await build('src/diff/diff.js', '-o', OUTPUT_DIR, '--prefix', PREFIX);
     } catch (e) {
         console.error('Build failed!');
         return;

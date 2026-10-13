@@ -1,5 +1,5 @@
 import convertPathToTitle from './convertPathToTitle.js';
-import addLogLine from '../../helpers/addLogLine.js';
+import addLogLine from '../../@shared/addLogLine.js';
 import convertTitleToPath from './convertTitleToPath.js';
 import {ask} from './ask.js';
 

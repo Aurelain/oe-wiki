@@ -1,4 +1,4 @@
-import addLogLine from './addLogLine.js';
+import addLogLine from '../@shared/addLogLine.js';
 
 // =====================================================================================================================
 //  P U B L I C

@@ -1,7 +1,7 @@
 import compareArchives from './compareArchives.js';
 import BrowserApi from '../helpers/BrowserApi.js';
 import parse from '../parse/parse.js';
-import addLogLine, {setLogHost} from '../helpers/addLogLine.js';
+import addLogLine, {setLogHost} from '../@shared/addLogLine.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

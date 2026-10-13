@@ -1,4 +1,4 @@
-import addLogLine from '../../helpers/addLogLine.js';
+import addLogLine from '../../@shared/addLogLine.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

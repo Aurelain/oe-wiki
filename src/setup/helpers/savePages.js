@@ -1,4 +1,4 @@
-import addLogLine from '../../helpers/addLogLine.js';
+import addLogLine from '../../@shared/addLogLine.js';
 import convertPathToTitle from './convertPathToTitle.js';
 import {ask} from './ask.js';
 

@@ -1,5 +1,5 @@
 // https://wiki.hoodedhorse.com/Heroes_of_Might_and_Magic_Olden_Era/api.php?action=query&meta=siteinfo&siprop=namespaces&format=json
-import addLogLine from '../../helpers/addLogLine.js';
+import addLogLine from '../../@shared/addLogLine.js';
 
 const KNOWN_NAMESPACES = new Set([
     'Main',

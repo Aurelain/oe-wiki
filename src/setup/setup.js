@@ -1,5 +1,5 @@
 import HTML_USER from './html/HTML_USER.js';
-import addLogLine, {setLogHost} from '../helpers/addLogLine.js';
+import addLogLine, {setLogHost} from '../@shared/addLogLine.js';
 import {LOG_HOST} from './SETTINGS.js';
 import HTML_DEV from './html/HTML_DEV.js';
 import {readFromDb} from './utils/LocalDb.js';
