@@ -5,13 +5,13 @@ import to from '../../@shared/to.js';
 import {readFromDb, writeToDb} from '../@shared/LocalDb.js';
 import {GAME_DIR_HANDLE} from '../SETTINGS.js';
 import parseCore from '../parseCore.js';
-import parse from '../../parse/parse.js';
 import BrowserApi from '../../helpers/BrowserApi.js';
 import checkPermission from '../helpers/checkPermission.js';
 import retrievePages from '../helpers/retrievePages.js';
 import {applySettings} from '../helpers/ask.js';
 import openPopup from '../popup/openPopup.js';
 import savePages from '../helpers/savePages.js';
+// import parse from '../../parse/parse.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -51,7 +51,8 @@ const STATUS_WARNING = css`
 `;
 
 // const PARSE = 'http://localhost:8000/parse/parse.js';
-const PARSE = parse;
+const PARSE = 'MediaWiki:ParseCore.js';
+// const PARSE = parse;
 
 // =====================================================================================================================
 //  C O M P O N E N T

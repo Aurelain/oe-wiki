@@ -1,3 +1,5 @@
+import to from '../parse/utils/to.js';
+
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
@@ -28,8 +30,15 @@ async function createHorseBrowser(workerUrl, ApiReference) {
  *
  */
 async function loadWorker(workerUrl, ApiReference) {
-    const worker = new Worker(`data:application/javascript,importScripts('${workerUrl}?${Math.random()}');`);
-    worker.addEventListener('error', () => ApiReference.log('!Worker error!'));
+    let worker;
+    if (window.mw) {
+        worker = await createWikiWorker(workerUrl, ApiReference);
+    } else {
+        worker = new Worker(`data:application/javascript,importScripts('${workerUrl}?${Math.random()}');`);
+    }
+    if (worker) {
+        worker.addEventListener('error', () => ApiReference.log('!Worker error!'));
+    }
     return new Promise((resolve) => {
         const listener = (event) => {
             const data = event.data && typeof event.data === 'object' ? event.data : {};
@@ -52,8 +61,8 @@ async function onWorkerMessage(worker, event) {
     if (typeof ApiReference[type] !== 'function') {
         return;
     }
-    const result = ApiReference[type](...payload);
-    if (result !== undefined) {
+    const [result, error] = await to(ApiReference[type], ...payload);
+    if (!error) {
         // console.log(`Parent sends the result of "${type}".`);
         worker.postMessage({type, payload: result});
     }
@@ -76,6 +85,37 @@ async function sendAndReceive(worker, type, payload) {
         // console.log(`Parent sends "${type}" and waits...`);
         worker.postMessage({type, payload});
     });
+}
+
+/**
+ *
+ */
+async function createWikiWorker(pageTitle, ApiReference) {
+    // 1. Fetch raw JS using the MediaWiki action=raw endpoint
+    const rawUrl = mw.util.getUrl(pageTitle, {
+        action: 'raw',
+        ctype: 'text/javascript',
+        v: Date.now(),
+    });
+
+    const response = await fetch(rawUrl, {cache: 'no-cache'});
+    if (!response.ok) {
+        ApiReference.log('!Failed to load wiki worker!', response.statusText);
+        return;
+    }
+    const workerCode = await response.text();
+
+    // 2. Wrap the code in a Blob and create a local Object URL
+    const blob = new Blob([workerCode], {type: 'application/javascript'});
+    const blobUrl = URL.createObjectURL(blob);
+
+    // 3. Instantiate the Worker
+    const worker = new Worker(blobUrl);
+
+    // 4. Revoke the Object URL to avoid memory leaks
+    URL.revokeObjectURL(blobUrl);
+
+    return worker;
 }
 
 // =====================================================================================================================

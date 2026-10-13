@@ -6,10 +6,11 @@
         "start": "node scripts/start/start",
         "parse": "node src/parse/parse.js",
         "build": "node scripts/build/build",
-        "planner": "node scripts/planner/planner.js",
         "buildDiff": "node scripts/buildDiff/buildDiff.js",
-        "runDiff": "node scripts/runDiff/runDiff.js",
+        "buildParse": "node scripts/buildParse/buildParse.js",
         "buildUpdate": "node scripts/buildUpdate/buildUpdate.js",
+        "planner": "node scripts/planner/planner.js",
+        "runDiff": "node scripts/runDiff/runDiff.js",
         "runUpdate": "node scripts/runUpdate/runUpdate.js"
     },
     "dependencies": {
