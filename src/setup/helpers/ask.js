@@ -1,5 +1,5 @@
 import addLogLine from '../../@shared/addLogLine.js';
-import to from '../utils/to.js';
+import to from '../../@shared/to.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S

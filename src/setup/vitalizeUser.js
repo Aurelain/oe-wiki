@@ -21,7 +21,7 @@ import setButtonStatus from './helpers/setButtonStatus.js';
 import savePages from './helpers/savePages.js';
 import {applySettings} from './helpers/ask.js';
 import getWikiUrl from './helpers/getWikiUrl.js';
-import to from './utils/to.js';
+import to from '../@shared/to.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
