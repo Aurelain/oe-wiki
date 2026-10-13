@@ -10,6 +10,7 @@ import {unzipSync} from 'fflate';
  */
 async function unzipCore() {
     const file = await API.find('HeroesOldenEra_Data/StreamingAssets/Core.zip', null, true);
+    console.log('file:', file);
     if (!file) {
         API.log('!Invalid zip!');
         return {};

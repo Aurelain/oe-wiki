@@ -1,4 +1,4 @@
-import compareTexts from '../utils/compareTexts.js';
+import compareTexts from './compareTexts.js';
 import {
     DIFF_CHANGED,
     DIFF_COLLAPSED,
@@ -8,7 +8,6 @@ import {
     DIFF_NEW,
     DIFF_PATH,
 } from '../SETTINGS.js';
-import on from '../utils/on.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -41,7 +40,7 @@ function buildDiff(oldHub, freshHub, hostElement) {
     }
     hostElement.innerHTML = lines.join('');
     const titles = Array.from(hostElement.querySelectorAll('.' + DIFF_PATH));
-    on('click', titles, onPathClick);
+    titles.map((element) => element.addEventListener('click', onPathClick));
     scrollToFirstUncollapsed(hostElement);
 }
 

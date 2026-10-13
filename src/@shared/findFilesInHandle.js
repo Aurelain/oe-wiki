@@ -4,7 +4,7 @@
 /**
  *
  */
-async function findFiles(dirHandle, pattern, exclude, onlyFirstResult) {
+async function findFilesInHandle(dirHandle, pattern, exclude, onlyFirstResult) {
     return find(dirHandle, '', pattern, exclude, onlyFirstResult);
 }
 
@@ -58,4 +58,4 @@ async function getFiles(dirHandle) {
 // =====================================================================================================================
 //  E X P O R T
 // =====================================================================================================================
-export default findFiles;
+export default findFilesInHandle;

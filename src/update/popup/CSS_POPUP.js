@@ -11,7 +11,7 @@ import {
 } from '../SETTINGS.js';
 
 // noinspection CssUnusedSymbol
-const CSS_DIFF = styled`
+const CSS_POPUP = styled`
     html, body {
         padding: 0;
         margin: 0;
@@ -22,6 +22,7 @@ const CSS_DIFF = styled`
 
     .${DIFF_LIST} pre {
         font-family: "JetBrains Mono", monospace;
+        white-space: pre-wrap;
     }
 
     .${DIFF_PATH} {
@@ -88,4 +89,4 @@ const CSS_DIFF = styled`
     }
 `;
 
-export default CSS_DIFF;
+export default CSS_POPUP;

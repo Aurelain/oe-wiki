@@ -1,4 +1,10 @@
 import addLogLine from '../@shared/addLogLine.js';
+import findFilesInHandle from '../@shared/findFilesInHandle.js';
+
+// =====================================================================================================================
+//  D E C L A R A T I O N S
+// =====================================================================================================================
+let dirHandle;
 
 // =====================================================================================================================
 //  P U B L I C
@@ -7,8 +13,10 @@ import addLogLine from '../@shared/addLogLine.js';
 /**
  *
  */
-async function find() {
-    console.log('todo implement node find');
+async function find(...args) {
+    const [pattern, exclude, onlyFirstResult] = args;
+    const result = await findFilesInHandle(dirHandle, pattern, exclude, onlyFirstResult);
+    return result;
 }
 
 /**
@@ -16,6 +24,13 @@ async function find() {
  */
 function log(...args) {
     addLogLine(...args);
+}
+
+/**
+ *
+ */
+function setDirHandle(handle) {
+    dirHandle = handle;
 }
 
 // =====================================================================================================================
@@ -28,5 +43,6 @@ function log(...args) {
 const BrowserApi = {
     find,
     log,
+    setDirHandle,
 };
 export default BrowserApi;

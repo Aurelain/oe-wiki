@@ -2,13 +2,16 @@ import {Component, createRef} from 'preact';
 import {css} from 'goober';
 import addLogLine, {setLogHost} from '../../@shared/addLogLine.js';
 import to from '../../@shared/to.js';
-import checkPermission from '../helpers/checkPermission.js';
-import {readFromDb} from '../../setup/utils/LocalDb.js';
+import {readFromDb, writeToDb} from '../@shared/LocalDb.js';
 import {GAME_DIR_HANDLE} from '../SETTINGS.js';
-import {writeToDb} from '../@shared/LocalDb.js';
 import parseCore from '../parseCore.js';
-import BrowserApi from '../../helpers/BrowserApi.js';
 import parse from '../../parse/parse.js';
+import BrowserApi from '../../helpers/BrowserApi.js';
+import checkPermission from '../helpers/checkPermission.js';
+import retrievePages from '../helpers/retrievePages.js';
+import {applySettings} from '../helpers/ask.js';
+import openPopup from '../popup/openPopup.js';
+import savePages from '../helpers/savePages.js';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -56,20 +59,20 @@ const PARSE = parse;
 class App extends Component {
     vars = {
         logRef: createRef(),
-        parsedHub: null,
-        mirrorHub: null,
+        dirHandle: null,
     };
     state = {
         busy: 0,
         hasDirAccess: false,
-        isRetrieved: false,
+        parsedHub: null,
+        mirrorHub: null,
         isPreviewed: false,
         isSaved: false,
     };
 
     render() {
         const {logRef} = this.vars;
-        const {busy, hasDirAccess, isRetrieved, isPreviewed, isSaved} = this.state;
+        const {busy, hasDirAccess, isPreviewed, isSaved, mirrorHub} = this.state;
         return (
             <div class={ROOT}>
                 <div class={STEP}>
@@ -100,7 +103,7 @@ class App extends Component {
                     <div class={ACTION_BAR}>
                         <button
                             disabled={!!busy || !hasDirAccess}
-                            class={isRetrieved && STATUS_OK}
+                            class={mirrorHub && STATUS_OK}
                             onClick={this.onRetrieveClick}
                         >
                             Retrieve {busy === 2 && <progress />}
@@ -115,7 +118,11 @@ class App extends Component {
                         differences.
                     </div>
                     <div class={ACTION_BAR}>
-                        <button disabled={!!busy || !hasDirAccess || !isRetrieved} class={isPreviewed && STATUS_OK}>
+                        <button
+                            disabled={!!busy || !hasDirAccess || !mirrorHub}
+                            class={isPreviewed && STATUS_OK}
+                            onClick={this.onPreviewClick}
+                        >
                             Preview {busy === 3 && <progress />}
                         </button>
                     </div>
@@ -127,7 +134,11 @@ class App extends Component {
                         Write the changes to each page using the current account, just as if you had done them manually.
                     </div>
                     <div class={ACTION_BAR}>
-                        <button disabled={!!busy || !hasDirAccess} class={isSaved && STATUS_OK}>
+                        <button
+                            disabled={!!busy || !hasDirAccess}
+                            class={isSaved && STATUS_OK}
+                            onClick={this.onSaveClick}
+                        >
                             SAVE {busy === 4 && <progress />}
                         </button>
                     </div>
@@ -148,6 +159,10 @@ class App extends Component {
         this.setState({
             hasDirAccess,
         });
+
+        applySettings({
+            API_URL: document.location.href.replace(/[^\/]*$/, '') + 'api.php',
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -157,7 +172,7 @@ class App extends Component {
      *
      */
     onPickDirectoryClick = async () => {
-        const {hasDirAccess} = this.state;
+        let {hasDirAccess} = this.state;
         let {dirHandle} = this.vars;
         let needsPicker = false;
         if (!dirHandle) {
@@ -175,45 +190,64 @@ class App extends Component {
             dirHandle = this.vars.dirHandle = freshDirHandle;
             await writeToDb(GAME_DIR_HANDLE, dirHandle);
         }
-        this.setState({
-            hasDirAccess: await checkPermission(dirHandle),
-        });
+        hasDirAccess = await checkPermission(dirHandle);
+        if (!hasDirAccess) {
+            this.setState({
+                parsedHub: null,
+                mirrorHub: null,
+                isPreviewed: false,
+                isSaved: false,
+            });
+        }
+        this.setState({hasDirAccess});
     };
 
     /**
      *
      */
     onRetrieveClick = async () => {
-        await this.ensureParserResult(2);
-        // this.setState({
-        //     mirrorResult: await retrievePages(state.parserResult),
-        // });
+        await this.ensureParsedHub(2);
+        const mirrorHub = await retrievePages(this.state.parsedHub);
+        this.setState({mirrorHub});
     };
 
     /**
      *
      */
     onPreviewClick = async () => {
-        await this.ensureParserResult(3);
+        await this.ensureParsedHub(3);
+        const {mirrorHub, parsedHub} = this.state;
+        openPopup(mirrorHub, parsedHub);
+        this.setState({isPreviewed: true});
     };
 
     /**
      *
      */
     onSaveClick = async () => {
-        await this.ensureParserResult(4);
+        await this.ensureParsedHub(4);
+        const {mirrorHub, parsedHub} = this.state;
+        this.setState({busy: 4});
+        const isSaved = await savePages(parsedHub, mirrorHub);
+        this.setState({
+            busy: 0,
+            isSaved,
+        });
     };
 
     /**
      *
      */
-    ensureParserResult = async (busy) => {
-        if (this.vars.parsedHub) {
+    ensureParsedHub = async (busy) => {
+        if (this.state.parsedHub) {
             return;
         }
         this.setState({busy});
-        this.vars.parsedHub = await parseCore(BrowserApi, PARSE);
-        this.setState({busy: 0});
+        BrowserApi.setDirHandle(this.vars.dirHandle);
+        this.setState({
+            busy: 0,
+            parsedHub: await parseCore(BrowserApi, PARSE),
+        });
     };
 }
 

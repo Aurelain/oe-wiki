@@ -40,7 +40,7 @@ import UnitStat from './parsers/UnitStat.js';
 const DEBUG = new Set([
     // -- Use this to focus on only some parsers:
     // Skill,
-    Difficulty,
+    // Difficulty,
     // Hero,
 ]);
 
